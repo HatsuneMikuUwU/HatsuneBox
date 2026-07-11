@@ -14,6 +14,8 @@ import androidx.activity.addCallback
 import androidx.annotation.IdRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.preference.PreferenceDataStore
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
@@ -84,6 +86,20 @@ class MainActivity : ThemedActivity(),
         binding.cardBottomStatus.setOnClickListener { if (DataStore.serviceState.connected) testConnection() }
 
         setContentView(binding.root)
+
+        val cardBaseBottomMargin = (binding.cardBottomStatus.layoutParams
+                as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams).bottomMargin
+        ViewCompat.setOnApplyWindowInsetsListener(binding.cardBottomStatus) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            val bottomInset = maxOf(systemBars.bottom, displayCutout.bottom)
+            val params = view.layoutParams as androidx.coordinatorlayout.widget.CoordinatorLayout.LayoutParams
+            params.bottomMargin = cardBaseBottomMargin + bottomInset
+            view.layoutParams = params
+            insets
+        }
+        ViewCompat.requestApplyInsets(binding.cardBottomStatus)
+
         changeState(BaseService.State.Idle)
         connection.connect(this, this)
         DataStore.configurationStore.registerChangeListener(this)
@@ -305,8 +321,10 @@ class MainActivity : ThemedActivity(),
     fun displayFragment(fragment: ToolbarFragment) {
         if (fragment is ConfigurationFragment) {
             binding.cardBottomStatus.visibility = android.view.View.VISIBLE
-        } else if (!DataStore.showBottomBar) {
+            binding.fab.show()
+        } else {
             binding.cardBottomStatus.visibility = android.view.View.GONE
+            binding.fab.hide()
         }
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_holder, fragment)
