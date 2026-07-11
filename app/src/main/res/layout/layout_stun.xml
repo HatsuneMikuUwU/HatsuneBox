@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/stun_attest_loading"
-                android:textAppearance="?attr/textAppearanceMedium" />
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
         </LinearLayout>
 
 
