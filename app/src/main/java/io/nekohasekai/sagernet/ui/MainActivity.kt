@@ -319,13 +319,7 @@ class MainActivity : ThemedActivity(),
 
     @SuppressLint("CommitTransaction")
     fun displayFragment(fragment: ToolbarFragment) {
-        if (fragment is ConfigurationFragment) {
-            binding.cardBottomStatus.visibility = android.view.View.VISIBLE
-            binding.fab.show()
-        } else {
-            binding.cardBottomStatus.visibility = android.view.View.GONE
-            binding.fab.hide()
-        }
+        
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_holder, fragment)
             .commitAllowingStateLoss()
