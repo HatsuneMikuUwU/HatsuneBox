@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.RemoteException
 import android.view.KeyEvent
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.addCallback
 import androidx.annotation.IdRes
 import androidx.core.app.ActivityCompat
@@ -87,15 +88,6 @@ class MainActivity : ThemedActivity(),
         binding.cardBottomStatus.setOnClickListener { if (DataStore.serviceState.connected) testConnection() }
 
         setContentView(binding.root)
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.cardBottomStatus) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
-            val bottomInset = maxOf(systemBars.bottom, displayCutout.bottom)
-            view.updatePadding(bottom = bottomInset)
-            insets
-        }
-
         changeState(BaseService.State.Idle)
         connection.connect(this, this)
         DataStore.configurationStore.registerChangeListener(this)
@@ -125,6 +117,29 @@ class MainActivity : ThemedActivity(),
                 .setMessage(R.string.preview_version_hint)
                 .setPositiveButton(android.R.string.ok, null)
                 .show()
+        }
+    }
+
+    override fun onContentChanged() {
+        super.onContentChanged()
+
+        val root = findViewById<View>(R.id.coordinator) ?: return
+
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            view.updatePadding(
+                top = 0,
+                left = maxOf(systemBars.left, displayCutout.left),
+                right = maxOf(systemBars.right, displayCutout.right),
+                bottom = maxOf(systemBars.bottom, displayCutout.bottom)
+            )
+
+            val bottomInset = maxOf(systemBars.bottom, displayCutout.bottom)
+            binding.cardBottomStatus.updatePadding(bottom = bottomInset)
+
+            insets
         }
     }
 
