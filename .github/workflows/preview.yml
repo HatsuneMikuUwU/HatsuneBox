@@ -1,6 +1,9 @@
 name: Preview Build
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -35,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - libcore
-    if: github.event_name == 'workflow_dispatch' || github.actor == 'HSSkyBoy'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.actor == 'HatsuneMikuUwU'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
