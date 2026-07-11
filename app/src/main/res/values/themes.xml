@@ -16,7 +16,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_pink_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_pink_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_pink_500</item>
 
         <item name="accentOrTextSecondary">?colorAccent</item>
         <item name="accentOrTextPrimary">?colorAccent</item>
@@ -62,7 +61,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_pink_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_pink_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_pink_500</item>
 
         <item name="accentOrTextSecondary">?colorAccent</item>
         <item name="accentOrTextPrimary">?colorAccent</item>
@@ -134,7 +132,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_red_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_red_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_red_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Red">
@@ -150,7 +147,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_red_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_red_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_red_500</item>
     </style>
 
     <style name="Theme.SagerNet.Purple">
@@ -166,7 +162,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_purple_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_purple_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_purple_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Purple">
@@ -182,7 +177,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_purple_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_purple_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_purple_500</item>
     </style>
 
     <style name="Theme.SagerNet.DeepPurple">
@@ -198,7 +192,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_deep_purple_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_deep_purple_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_deep_purple_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.DeepPurple">
@@ -214,7 +207,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_deep_purple_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_deep_purple_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_deep_purple_500</item>
     </style>
 
     <style name="Theme.SagerNet.Indigo">
@@ -230,7 +222,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_indigo_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_indigo_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_indigo_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Indigo">
@@ -246,7 +237,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_indigo_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_indigo_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_indigo_500</item>
     </style>
 
     <style name="Theme.SagerNet.Blue">
@@ -262,7 +252,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_blue_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_blue_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_blue_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Blue">
@@ -278,7 +267,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_blue_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_blue_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_blue_500</item>
     </style>
 
     <style name="Theme.SagerNet.LightBlue">
@@ -294,7 +282,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_light_blue_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_light_blue_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_light_blue_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.LightBlue">
@@ -310,7 +297,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_light_blue_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_light_blue_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_light_blue_500</item>
     </style>
 
     <style name="Theme.SagerNet.Cyan">
@@ -326,7 +312,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_cyan_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_cyan_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_cyan_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Cyan">
@@ -342,7 +327,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_cyan_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_cyan_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_cyan_500</item>
     </style>
 
     <style name="Theme.SagerNet.Teal">
@@ -358,7 +342,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_teal_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_teal_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_teal_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Teal">
@@ -374,7 +357,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_teal_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_teal_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_teal_500</item>
     </style>
 
     <style name="Theme.SagerNet.Green">
@@ -390,7 +372,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_green_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_green_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_green_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Green">
@@ -406,7 +387,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_green_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_green_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_green_500</item>
     </style>
 
     <style name="Theme.SagerNet.LightGreen">
@@ -422,7 +402,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_light_green_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_light_green_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_light_green_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.LightGreen">
@@ -438,7 +417,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_light_green_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_light_green_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_light_green_500</item>
     </style>
 
     <style name="Theme.SagerNet.Lime">
@@ -454,7 +432,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_lime_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_lime_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_lime_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Lime">
@@ -470,7 +447,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_lime_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_lime_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_lime_500</item>
     </style>
 
     <style name="Theme.SagerNet.Yellow">
@@ -486,7 +462,6 @@
         <item name="colorOnSecondary">@color/black</item>
         <item name="colorSecondaryContainer">@color/material_yellow_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_yellow_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_yellow_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Yellow">
@@ -502,7 +477,6 @@
         <item name="colorOnSecondary">@color/black</item>
         <item name="colorSecondaryContainer">@color/material_yellow_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_yellow_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_yellow_500</item>
     </style>
 
     <style name="Theme.SagerNet.Amber">
@@ -518,7 +492,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_amber_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_amber_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_amber_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Amber">
@@ -534,7 +507,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_amber_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_amber_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_amber_500</item>
     </style>
 
     <style name="Theme.SagerNet.Orange">
@@ -550,7 +522,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_orange_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_orange_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_orange_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Orange">
@@ -566,7 +537,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_orange_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_orange_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_orange_500</item>
     </style>
 
     <style name="Theme.SagerNet.DeepOrange">
@@ -582,7 +552,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_deep_orange_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_deep_orange_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_deep_orange_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.DeepOrange">
@@ -598,7 +567,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_deep_orange_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_deep_orange_accent_700</item>
-        <item name="colorSurfaceTint">@color/material_deep_orange_500</item>
     </style>
 
     <style name="Theme.SagerNet.Brown">
@@ -614,7 +582,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_brown_100</item>
         <item name="colorOnSecondaryContainer">@color/material_brown_900</item>
-        <item name="colorSurfaceTint">@color/material_brown_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Brown">
@@ -630,7 +597,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_brown_100</item>
         <item name="colorOnSecondaryContainer">@color/material_brown_900</item>
-        <item name="colorSurfaceTint">@color/material_brown_500</item>
     </style>
 
     <style name="Theme.SagerNet.Grey">
@@ -646,7 +612,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_grey_100</item>
         <item name="colorOnSecondaryContainer">@color/material_grey_900</item>
-        <item name="colorSurfaceTint">@color/material_grey_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Grey">
@@ -662,7 +627,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_grey_100</item>
         <item name="colorOnSecondaryContainer">@color/material_grey_900</item>
-        <item name="colorSurfaceTint">@color/material_grey_500</item>
     </style>
 
     <style name="Theme.SagerNet.BlueGrey">
@@ -678,7 +642,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_blue_grey_100</item>
         <item name="colorOnSecondaryContainer">@color/material_blue_grey_900</item>
-        <item name="colorSurfaceTint">@color/material_blue_grey_500</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.BlueGrey">
@@ -694,7 +657,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_blue_grey_100</item>
         <item name="colorOnSecondaryContainer">@color/material_blue_grey_900</item>
-        <item name="colorSurfaceTint">@color/material_blue_grey_500</item>
     </style>
     <style name="Theme.SagerNet.Pink_SSR">
         <item name="colorPrimary">@color/color_pink_ssr</item>
@@ -710,7 +672,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_pink_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_pink_accent_700</item>
-        <item name="colorSurfaceTint">@color/color_pink_ssr</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Pink_SSR">
@@ -727,7 +688,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorSecondaryContainer">@color/material_pink_accent_100</item>
         <item name="colorOnSecondaryContainer">@color/material_pink_accent_700</item>
-        <item name="colorSurfaceTint">@color/color_pink_ssr</item>
     </style>
 
     <style name="Theme.SagerNet.Black">
@@ -755,7 +715,6 @@
         <item name="colorOnSecondary">?android:textColorPrimary</item>
         <item name="colorSecondaryContainer">@color/color_ng_black_primary</item>
         <item name="colorOnSecondaryContainer">?android:textColorPrimary</item>
-        <item name="colorSurfaceTint">@color/color_ng_black_accent</item>
     </style>
 
     <style name="Theme.SagerNet.Dialog.Black">
@@ -783,7 +742,6 @@
         <item name="colorOnSecondary">?android:textColorPrimary</item>
         <item name="colorSecondaryContainer">@color/color_ng_black_primary</item>
         <item name="colorOnSecondaryContainer">?android:textColorPrimary</item>
-        <item name="colorSurfaceTint">@color/color_ng_black_accent</item>
     </style>
 
     <style name="Theme.Start" parent="Theme.Material3.DayNight">
