@@ -10,14 +10,10 @@ import android.os.Bundle
 import android.os.RemoteException
 import android.view.KeyEvent
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.addCallback
 import androidx.annotation.IdRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.preference.PreferenceDataStore
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
@@ -117,29 +113,6 @@ class MainActivity : ThemedActivity(),
                 .setMessage(R.string.preview_version_hint)
                 .setPositiveButton(android.R.string.ok, null)
                 .show()
-        }
-    }
-
-    override fun onContentChanged() {
-        super.onContentChanged()
-
-        val root = findViewById<View>(R.id.coordinator) ?: return
-
-        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
-
-            view.updatePadding(
-                top = 0,
-                left = maxOf(systemBars.left, displayCutout.left),
-                right = maxOf(systemBars.right, displayCutout.right),
-                bottom = maxOf(systemBars.bottom, displayCutout.bottom)
-            )
-
-            val bottomInset = maxOf(systemBars.bottom, displayCutout.bottom)
-            binding.cardBottomStatus.updatePadding(bottom = bottomInset)
-
-            insets
         }
     }
 
@@ -332,10 +305,8 @@ class MainActivity : ThemedActivity(),
     fun displayFragment(fragment: ToolbarFragment) {
         if (fragment is ConfigurationFragment) {
             binding.cardBottomStatus.visibility = android.view.View.VISIBLE
-            binding.fab.show()
-        } else {
+        } else if (!DataStore.showBottomBar) {
             binding.cardBottomStatus.visibility = android.view.View.GONE
-            binding.fab.hide()
         }
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_holder, fragment)
