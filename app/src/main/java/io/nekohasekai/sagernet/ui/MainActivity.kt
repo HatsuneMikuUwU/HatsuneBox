@@ -62,7 +62,6 @@ class MainActivity : ThemedActivity(),
         super.onCreate(savedInstanceState)
 
         binding = LayoutMainBinding.inflate(layoutInflater)
-        binding.fab.initProgress(binding.fabProgress)
         navigation = binding.navView
         navigation.setNavigationItemSelectedListener(this)
 
@@ -82,7 +81,7 @@ class MainActivity : ThemedActivity(),
                 null
             )
         }
-        binding.stats.setOnClickListener { if (DataStore.serviceState.connected) binding.stats.testConnection() }
+        binding.cardBottomStatus.setOnClickListener { if (DataStore.serviceState.connected) testConnection() }
 
         setContentView(binding.root)
         changeState(BaseService.State.Idle)
@@ -305,11 +304,10 @@ class MainActivity : ThemedActivity(),
     @SuppressLint("CommitTransaction")
     fun displayFragment(fragment: ToolbarFragment) {
         if (fragment is ConfigurationFragment) {
-            binding.stats.allowShow = true
+            binding.cardBottomStatus.visibility = android.view.View.VISIBLE
             binding.fab.show()
-        } else if (!DataStore.showBottomBar) {
-            binding.stats.allowShow = false
-            binding.stats.performHide()
+        } else {
+            binding.cardBottomStatus.visibility = android.view.View.GONE
             binding.fab.hide()
         }
         supportFragmentManager.beginTransaction()
@@ -345,9 +343,85 @@ class MainActivity : ThemedActivity(),
     ) {
         DataStore.serviceState = state
 
-        binding.fab.changeState(state, DataStore.serviceState, animate)
-        binding.stats.changeState(state)
+        binding.fab.setImageResource(
+            when (state) {
+                BaseService.State.Connecting -> R.drawable.ic_service_connecting
+                BaseService.State.Connected -> R.drawable.ic_service_connected
+                BaseService.State.Stopping -> R.drawable.ic_service_stopping
+                else -> R.drawable.ic_service_stopped
+            }
+        )
+        (binding.fab.drawable as? android.graphics.drawable.Animatable)?.start()
+        val description = getText(if (state.canStop) R.string.stop else R.string.connect)
+        binding.fab.contentDescription = description
+        androidx.appcompat.widget.TooltipCompat.setTooltipText(binding.fab, description)
+        binding.fab.isEnabled = state.canStop || state == BaseService.State.Stopped
+
+        if (state == BaseService.State.Connected) {
+            setStatusText(getText(R.string.vpn_connected))
+        } else {
+            updateSpeed(0, 0)
+            setStatusText(
+                getText(
+                    when (state) {
+                        BaseService.State.Connecting -> R.string.connecting
+                        BaseService.State.Stopping -> R.string.stopping
+                        else -> R.string.not_connected
+                    }
+                )
+            )
+        }
+
         if (msg != null) snackbar(getString(R.string.vpn_error, msg)).show()
+    }
+
+    private fun setStatusText(text: CharSequence) {
+        binding.status.text = text
+        androidx.appcompat.widget.TooltipCompat.setTooltipText(binding.cardBottomStatus, text)
+    }
+
+    private fun updateSpeed(txRate: Long, rxRate: Long) {
+        binding.tx.text = "▲  ${
+            getString(
+                R.string.speed, android.text.format.Formatter.formatFileSize(this, txRate)
+            )
+        }"
+        binding.rx.text = "▼  ${
+            getString(
+                R.string.speed, android.text.format.Formatter.formatFileSize(this, rxRate)
+            )
+        }"
+    }
+
+    private fun testConnection() {
+        binding.cardBottomStatus.isEnabled = false
+        setStatusText(getText(R.string.connection_test_testing))
+        runOnDefaultDispatcher {
+            try {
+                val elapsed = urlTest()
+                onMainDispatcher {
+                    binding.cardBottomStatus.isEnabled = true
+                    setStatusText(
+                        getString(
+                            if (DataStore.connectionTestURL.startsWith("https://")) {
+                                R.string.connection_test_available
+                            } else {
+                                R.string.connection_test_available_http
+                            }, elapsed
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                io.nekohasekai.sagernet.ktx.Logs.w(e.toString())
+                onMainDispatcher {
+                    binding.cardBottomStatus.isEnabled = true
+                    setStatusText(getText(R.string.connection_test_testing))
+                    snackbar(
+                        getString(R.string.connection_test_error, e.readableMessage)
+                    ).show()
+                }
+            }
+        }
     }
 
     override fun snackbarInternal(text: CharSequence): Snackbar {
@@ -385,7 +459,7 @@ class MainActivity : ThemedActivity(),
     // may NOT called when app is in background
     // ONLY do UI update here, write DB in bg process
     override fun cbSpeedUpdate(stats: SpeedDisplayData) {
-        binding.stats.updateSpeed(stats.txRateProxy, stats.rxRateProxy)
+        updateSpeed(stats.txRateProxy, stats.rxRateProxy)
     }
 
     override fun cbTrafficUpdate(data: TrafficData) {
