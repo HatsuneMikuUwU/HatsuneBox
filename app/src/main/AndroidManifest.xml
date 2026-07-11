@@ -69,6 +69,10 @@
             android:resource="@xml/shortcuts" />
 
         <activity
+            android:name="io.nekohasekai.sagernet.ui.BlankActivity"
+            android:configChanges="uiMode" />
+
+        <activity
             android:name="io.nekohasekai.sagernet.ui.MainActivity"
             android:configChanges="uiMode"
             android:exported="true"
@@ -260,13 +264,6 @@
             android:configChanges="uiMode"
             android:launchMode="singleTask"
             android:parentActivityName="io.nekohasekai.sagernet.ui.MainActivity" />
-
-        <activity
-            android:name="io.nekohasekai.sagernet.ui.SwitchActivity"
-            android:configChanges="uiMode"
-            android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:theme="@style/Theme.SagerNet.Dialog" />
 
         <service
             android:name="io.nekohasekai.sagernet.bg.ProxyService"

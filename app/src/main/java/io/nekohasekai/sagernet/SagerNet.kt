@@ -34,7 +34,6 @@ import moe.matsuri.nb4a.utils.JavaUtil
 import moe.matsuri.nb4a.utils.cleanWebview
 import java.io.File
 import androidx.work.Configuration as WorkConfiguration
-import com.neko.crashlog.CrashHandler
 
 class SagerNet : Application(),
     WorkConfiguration.Provider {
@@ -55,7 +54,7 @@ class SagerNet : Application(),
     override fun onCreate() {
         super.onCreate()
 
-        Thread.setDefaultUncaughtExceptionHandler(CrashHandler(this))
+        Thread.setDefaultUncaughtExceptionHandler(CrashHandler)
 
         if (isMainProcess || isBgProcess) {
             externalAssets.mkdirs()

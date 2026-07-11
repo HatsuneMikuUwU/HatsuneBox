@@ -19,16 +19,10 @@ abstract class ThemedActivity : AppCompatActivity {
     constructor() : super()
     constructor(contentLayoutId: Int) : super(contentLayoutId)
 
-    var themeResId = 0
     var uiMode = 0
-    open val isDialog = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (!isDialog) {
-            Theme.apply(this)
-        } else {
-            Theme.applyDialog(this)
-        }
+        Theme.apply(this)
         Theme.applyNightTheme()
 
         super.onCreate(savedInstanceState)
@@ -48,12 +42,6 @@ abstract class ThemedActivity : AppCompatActivity {
                 insets
             }
         }
-    }
-
-    override fun setTheme(resId: Int) {
-        super.setTheme(resId)
-
-        themeResId = resId
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

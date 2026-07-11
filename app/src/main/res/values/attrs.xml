@@ -10,4 +10,8 @@
     <attr name="fabColorBackground" format="color" />
     <attr name="selectedColorPrimary" format="color" />
     <attr name="whiteOrTextPrimary" format="color" />
+
+    <!-- From MikuRay theme system -->
+    <attr name="colorBg" format="color" />
+    <attr name="colorCard" format="color" />
 </resources>

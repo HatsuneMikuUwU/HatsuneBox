@@ -428,7 +428,6 @@
     <string name="please_update_force">您的 APP (%s) 版本过旧，已于 %s 停止工作，请立即升级。</string>
     <string name="connection_test_delete_unavailable">清理不可用配置</string>
     <string name="packet_encoding">包编码</string>
-    <string name="action_switch">切换</string>
     <string name="acquire_wake_lock">获取唤醒锁</string>
     <string name="release_wake_lock">释放唤醒锁</string>
     <string name="acquire_wake_lock_summary">保持 CPU 开启</string>
