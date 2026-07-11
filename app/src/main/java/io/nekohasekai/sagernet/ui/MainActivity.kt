@@ -14,6 +14,9 @@ import androidx.activity.addCallback
 import androidx.annotation.IdRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.preference.PreferenceDataStore
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
@@ -84,6 +87,15 @@ class MainActivity : ThemedActivity(),
         binding.cardBottomStatus.setOnClickListener { if (DataStore.serviceState.connected) testConnection() }
 
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.cardBottomStatus) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            val bottomInset = maxOf(systemBars.bottom, displayCutout.bottom)
+            view.updatePadding(bottom = bottomInset)
+            insets
+        }
+
         changeState(BaseService.State.Idle)
         connection.connect(this, this)
         DataStore.configurationStore.registerChangeListener(this)
@@ -381,12 +393,12 @@ class MainActivity : ThemedActivity(),
     }
 
     private fun updateSpeed(txRate: Long, rxRate: Long) {
-        binding.tx.text = "▲  ${
+        binding.tx.text = "↑  ${
             getString(
                 R.string.speed, android.text.format.Formatter.formatFileSize(this, txRate)
             )
         }"
-        binding.rx.text = "▼  ${
+        binding.rx.text = "↓  ${
             getString(
                 R.string.speed, android.text.format.Formatter.formatFileSize(this, rxRate)
             )
