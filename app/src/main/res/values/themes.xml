@@ -15,7 +15,6 @@
         <item name="android:listDivider">@null</item>
         <item name="android:colorEdgeEffect">@null</item>
         <item name="elevation">0.0dip</item>
-        <item name="android:homeAsUpIndicator">@drawable/uwu_back_arrow</item>
     
         <item name="colorMaterial100">?attr/colorPrimaryContainer</item>
         <item name="colorMaterial300">?attr/colorSecondaryContainer</item>
