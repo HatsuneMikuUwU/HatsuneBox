@@ -5,9 +5,11 @@ package io.nekohasekai.sagernet.ktx
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Resources
@@ -59,6 +61,15 @@ import kotlin.coroutines.resumeWithException
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
+
+// Material widgets (BottomAppBar, FloatingActionButton, etc.) wrap their Context in a
+// ContextThemeWrapper via MaterialThemeOverlay, so `context as Activity` inside them can
+// throw ClassCastException. Unwrap through ContextWrapper.baseContext to find the real Activity.
+tailrec fun Context.findActivity(): Activity = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> throw IllegalStateException("Context is not an Activity: $this")
+}
 
 fun String?.blankAsNull(): String? = if (isNullOrBlank()) null else this
 
