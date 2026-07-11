@@ -7,7 +7,7 @@
 
     <Button
         android:id="@+id/reset_settings"
-        style="@style/Widget.AppCompat.Button.Colored"
+        style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/reset_settings"
@@ -40,7 +40,7 @@
 
     <Button
         android:id="@+id/action_export"
-        style="@style/Widget.AppCompat.Button.Colored"
+        style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/action_export"
@@ -48,7 +48,7 @@
 
     <Button
         android:id="@+id/action_share"
-        style="@style/Widget.AppCompat.Button.Colored"
+        style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/share"
@@ -63,7 +63,7 @@
 
     <Button
         android:id="@+id/action_import_file"
-        style="@style/Widget.AppCompat.Button.Colored"
+        style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
