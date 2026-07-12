@@ -8,28 +8,25 @@
 
     <include layout="@layout/layout_appbar_collapsing" />
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp"
+        android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <ScrollView
-            android:id="@+id/scroolview"
+        <TextView
+            android:id="@+id/textview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:ems="10"
-                android:focusable="true"
-                android:gravity="start|top"
-                android:textIsSelectable="true"
-                tools:ignore="LabelFor" />
-        </ScrollView>
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:ems="10"
+            android:focusable="true"
+            android:gravity="start|top"
+            android:textIsSelectable="true"
+            tools:ignore="LabelFor" />
+            
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

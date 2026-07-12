@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_configuration"
-            android:icon="@drawable/ic_action_description"
-            android:checked="true"
-            android:title="@string/menu_configuration" />
-
+    <group>
         <item
             android:id="@+id/nav_group"
             android:icon="@drawable/ic_baseline_view_list_24"
@@ -25,8 +19,7 @@
     </group>
 
     <group
-        android:id="@+id/misc"
-        android:checkableBehavior="single">
+        android:id="@+id/misc">
         <item
             android:id="@+id/nav_logcat"
             android:icon="@drawable/ic_baseline_bug_report_24"
@@ -42,8 +35,7 @@
     </group>
 
     <group
-        android:id="@+id/about"
-        android:checkableBehavior="single">
+        android:id="@+id/about">
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_baseline_info_24"

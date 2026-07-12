@@ -307,10 +307,7 @@ class MainActivity : ThemedActivity(),
         binding.drawerLayout.closeDrawers()
         if (item.isChecked) return true
         when (item.itemId) {
-            R.id.nav_configuration -> {
-                // already home, nothing to navigate to
-            }
-
+        	
             R.id.nav_group -> startActivity(Intent(this, GroupActivity::class.java))
             R.id.nav_route -> startActivity(Intent(this, RouteActivity::class.java))
             R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
