@@ -60,20 +60,26 @@
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/appProxyModeDisable"
+                                style="@style/Widget.Material3.Chip.Filter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:checkable="true"
                                 android:text="@string/off" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/appProxyModeOn"
+                                style="@style/Widget.Material3.Chip.Filter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:checkable="true"
                                 android:text="@string/route_proxy" />
 
                             <com.google.android.material.chip.Chip
                                 android:id="@+id/appProxyModeBypass"
+                                style="@style/Widget.Material3.Chip.Filter"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:checkable="true"
                                 android:checked="true"
                                 android:text="@string/bypass_apps" />
 
