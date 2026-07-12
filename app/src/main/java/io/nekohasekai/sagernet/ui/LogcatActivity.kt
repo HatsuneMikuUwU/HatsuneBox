@@ -84,7 +84,7 @@ class LogcatActivity : ThemedActivity() {
         binding.textview.clearFocus()
         // 等 textview 完成最终 layout 再滚动到底部
         binding.textview.doOnLayout {
-            binding.scroolview.scrollTo(0, binding.textview.height)
+            binding.scrollview.scrollTo(0, binding.textview.height)
         }
     }
 
