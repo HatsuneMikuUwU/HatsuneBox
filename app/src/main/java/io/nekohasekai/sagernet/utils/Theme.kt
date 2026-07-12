@@ -9,8 +9,6 @@ import io.nekohasekai.sagernet.ktx.app
 
 object Theme {
 
-    // Miku UI theme (from MikuRay). Only the 16 hues MikuRay ships are available;
-    // the old PINK_SSR / LIGHT_BLUE / DEEP_ORANGE / GREY / BLACK swatches no longer exist.
     const val RED = 1
     const val PINK = 2
     const val PURPLE = 3

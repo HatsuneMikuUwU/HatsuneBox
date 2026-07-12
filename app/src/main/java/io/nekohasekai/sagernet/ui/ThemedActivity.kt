@@ -16,18 +16,22 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.snackbar.Snackbar
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.utils.Theme
+import io.nekohasekai.sagernet.utils.ThemeStateManager
 
 abstract class ThemedActivity : AppCompatActivity {
     constructor() : super()
     constructor(contentLayoutId: Int) : super(contentLayoutId)
 
     var uiMode = 0
+    private lateinit var themeStateManager: ThemeStateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Theme.apply(this)
         Theme.applyNightTheme()
 
         super.onCreate(savedInstanceState)
+        
+        themeStateManager = ThemeStateManager(this)
 
         uiMode = resources.configuration.uiMode
 
@@ -36,14 +40,15 @@ abstract class ThemedActivity : AppCompatActivity {
                 val top = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
                 findViewById<AppBarLayout>(R.id.appbar)?.apply {
                     updatePadding(top = top)
-//                Logs.w("appbar $top")
                 }
-//            findViewById<NavigationView>(R.id.nav_view)?.apply {
-//                updatePadding(top = top)
-//            }
                 insets
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        themeStateManager.checkThemeChangedAndRecreate()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -55,11 +60,6 @@ abstract class ThemedActivity : AppCompatActivity {
         }
     }
 
-    /**
-     * Sets up a [layout_appbar_collapsing]-style toolbar for a drawer-destination sub-activity:
-     * a collapsing large toolbar with an up (back) navigation icon that finishes the activity.
-     * Replaces the old drawer-hamburger ToolbarFragment pattern.
-     */
     fun setupCollapsingToolbar(@StringRes titleRes: Int, homeAsUp: Boolean = true) {
         setupCollapsingToolbar(getString(titleRes), homeAsUp)
     }
@@ -72,6 +72,7 @@ abstract class ThemedActivity : AppCompatActivity {
     }
 
     fun snackbar(@StringRes resId: Int): Snackbar = snackbar("").setText(resId)
+    
     fun snackbar(text: CharSequence): Snackbar = snackbarInternal(text).apply {
         view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).apply {
             maxLines = 10
@@ -79,5 +80,4 @@ abstract class ThemedActivity : AppCompatActivity {
     }
 
     internal open fun snackbarInternal(text: CharSequence): Snackbar = throw NotImplementedError()
-
 }
