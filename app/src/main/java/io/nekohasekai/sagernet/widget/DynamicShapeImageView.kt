@@ -16,6 +16,11 @@ import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.ktx.getColorAttr
 
+/**
+ * Ported from MikuRay. Renders a solid-color icon badge clipped to the user's
+ * chosen SVG shape (defaults to the soft "cookie" blob), used for the icon
+ * boxes in the main menu bottom sheet and other card lists.
+ */
 class DynamicShapeImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

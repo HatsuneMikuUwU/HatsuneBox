@@ -12,6 +12,11 @@
             android:title="@string/theme"
             app:icon="@drawable/ic_baseline_color_lens_24"
             app:key="appTheme" />
+        <Preference
+            app:icon="@drawable/ic_palette_24"
+            app:key="navigateUiSettings"
+            app:summary="@string/pref_navigate_ui_settings_summary"
+            app:title="@string/pref_navigate_ui_settings" />
         <moe.matsuri.nb4a.ui.SimpleMenuPreference
             app:defaultValue="0"
             app:entries="@array/night_mode"

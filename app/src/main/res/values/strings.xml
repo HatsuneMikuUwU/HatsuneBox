@@ -47,6 +47,31 @@
     <string name="uwu_random_text_10">Writing lyrics for me?</string>
     <string name="app_settings">App Settings</string>
     <string name="tools_and_info">Tools &amp; Info</string>
+
+    <!-- Ported from MikuRay: UI settings screen -->
+    <string name="title_ui_settings">UI Settings</string>
+    <string name="pref_navigate_ui_settings">UI Settings</string>
+    <string name="pref_navigate_ui_settings_summary">Menu icon shape, profile identity, sheet banner</string>
+    <string name="title_ui_appearance">Appearance</string>
+    <string name="title_pref_icon_shape">Icon shape</string>
+    <string name="summary_pref_icon_shape">Shape used for icon badges throughout the app</string>
+    <string name="title_sheet_banner">Main menu banner</string>
+    <string name="particles_disable_title">Disable particle animation</string>
+    <string name="particles_disable_summary">Turns off the floating dots on the menu banner</string>
+    <string name="sheet_banner_custom_title">Custom banner image</string>
+    <string name="sheet_banner_custom_summary">Pick an image (or GIF) to replace the default banner</string>
+    <string name="sheet_banner_delete_title">Reset to default banner</string>
+    <string name="sheet_banner_updated">Banner updated</string>
+    <string name="sheet_banner_deleted">Banner reset to default</string>
+    <string name="title_profile">Profile</string>
+    <string name="profile_name_custom_title">Display name</string>
+    <string name="profile_name_custom_summary">Shown in the main menu banner greeting</string>
+    <string name="banner_profile_custom_title">Avatar</string>
+    <string name="banner_profile_custom_summary">Pick a picture to use as your avatar</string>
+    <string name="custom_banner_profile_set">Avatar updated</string>
+    <string name="title_profile_banner_shape">Avatar shape</string>
+    <string name="delete_custom_banner_profile">Reset avatar</string>
+    <string name="custom_banner_profile_deleted">Avatar reset to default</string>
     <!-- externel -->
     <string name="action_copy">Copy</string>
     <string name="action_open">Open</string>

@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.RemoteException
 import android.view.KeyEvent
+import android.view.View
 import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -125,6 +126,20 @@ class MainActivity : ThemedActivity(),
     /** Shows the main menu bottom sheet that replaced the old side navigation drawer. */
     fun showMainMenu() {
         MainMenuBottomSheet().show(supportFragmentManager, MainMenuBottomSheet.TAG)
+    }
+
+    /**
+     * Live-toggles the dashboard entry's visibility if the main menu bottom
+     * sheet happens to be open right now (e.g. user flips "Enable Clash API"
+     * in Settings while the sheet is showing). If it isn't open, this is a
+     * no-op — the sheet reads [DataStore.enableClashAPI] fresh every time
+     * it's opened anyway.
+     */
+    fun refreshNavMenu(clashApi: Boolean) {
+        val sheet =
+            supportFragmentManager.findFragmentByTag(MainMenuBottomSheet.TAG) as? MainMenuBottomSheet
+        sheet?.view?.findViewById<View>(R.id.menu_traffic)?.visibility =
+            if (clashApi) View.VISIBLE else View.GONE
     }
 
     override fun onNewIntent(intent: Intent) {

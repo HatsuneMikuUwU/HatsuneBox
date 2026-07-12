@@ -544,4 +544,37 @@
         <item>@string/uwu_random_text_10</item>
     </string-array>
 
+    <!-- Ported from MikuRay: icon / profile banner shape picker -->
+    <string-array name="icon_shape_entries" translatable="false">
+        <item>Cookie</item>
+        <item>Clover</item>
+        <item>Circle</item>
+        <item>Diamond</item>
+        <item>Pentagon</item>
+        <item>Hexagon</item>
+        <item>Octagon</item>
+        <item>Rounded Square</item>
+        <item>Squircle</item>
+        <item>Heart</item>
+        <item>Hive</item>
+        <item>Pill</item>
+        <item>Scallop</item>
+    </string-array>
+
+    <string-array name="icon_shape_values" translatable="false">
+        <item>uwu_shape_cookie</item>
+        <item>uwu_shape_clover</item>
+        <item>uwu_shape_circle</item>
+        <item>uwu_shape_diamond</item>
+        <item>uwu_shape_pentagon</item>
+        <item>uwu_shape_hexagon</item>
+        <item>uwu_shape_octagon</item>
+        <item>uwu_shape_rounded_square</item>
+        <item>uwu_shape_squircle</item>
+        <item>uwu_shape_heart</item>
+        <item>uwu_shape_hive</item>
+        <item>uwu_shape_pill</item>
+        <item>uwu_shape_scallop</item>
+    </string-array>
+
 </resources>

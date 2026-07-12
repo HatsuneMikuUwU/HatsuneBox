@@ -55,6 +55,11 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
             true
         }
 
+        findPreference<Preference>("navigateUiSettings")?.setOnPreferenceClickListener {
+            startActivity(Intent(requireContext(), io.nekohasekai.sagernet.ui.UiSettingsActivity::class.java))
+            true
+        }
+
         val nightTheme = findPreference<SimpleMenuPreference>(Key.NIGHT_THEME)!!
         nightTheme.setOnPreferenceChangeListener { _, newTheme ->
             Theme.currentNightMode = (newTheme as String).toInt()
@@ -151,7 +156,12 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
         val tunImplementation = findPreference<SimpleMenuPreference>(Key.TUN_IMPLEMENTATION)!!
         val resolveDestination = findPreference<SwitchPreference>(Key.RESOLVE_DESTINATION)!!
         val acquireWakeLock = findPreference<SwitchPreference>(Key.ACQUIRE_WAKE_LOCK)!!
-        
+        val enableClashAPI = findPreference<SwitchPreference>(Key.ENABLE_CLASH_API)!!
+        enableClashAPI.setOnPreferenceChangeListener { _, newValue ->
+            (activity as MainActivity?)?.refreshNavMenu(newValue as Boolean)
+            needReload()
+            true
+        }
 
         mixedPort.onPreferenceChangeListener = reloadListener
         appendHttpProxy.onPreferenceChangeListener = reloadListener

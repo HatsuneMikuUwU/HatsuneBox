@@ -215,6 +215,12 @@
             android:name="io.nekohasekai.sagernet.ui.SettingsActivity"
             android:configChanges="uiMode" />
         <activity
+            android:name="io.nekohasekai.sagernet.ui.UiSettingsActivity"
+            android:configChanges="uiMode" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:exported="false" />
+        <activity
             android:name="io.nekohasekai.sagernet.ui.TrafficActivity"
             android:configChanges="uiMode" />
         <activity
