@@ -167,6 +167,16 @@ object DataStore : OnPreferenceDataStoreChangeListener {
 
     var globalAllowInsecure by configurationStore.boolean(Key.GLOBAL_ALLOW_INSECURE) { false }
 
+    // ui: main menu bottom sheet / profile identity (ported from MikuRay)
+
+    var customProfileName by configurationStore.string(Key.CUSTOM_PROFILE_NAME)
+    var iconShape by configurationStore.string(Key.ICON_SHAPE) { "uwu_shape_cookie" }
+    var profileBannerShape by configurationStore.string(Key.PROFILE_BANNER_SHAPE) { "uwu_shape_cookie" }
+    var profileBannerUri by configurationStore.string(Key.PROFILE_BANNER_URI)
+    var customSheetBannerUri by configurationStore.string(Key.CUSTOM_SHEET_BANNER_URI)
+    var disableParticlesSheet by configurationStore.boolean(Key.DISABLE_PARTICLES_SHEET) { false }
+    var categoryStyle by configurationStore.string(Key.CATEGORY_STYLE) { "gradient" }
+
     // old cache, DO NOT ADD
 
     var dirty by profileCacheStore.boolean(Key.PROFILE_DIRTY)

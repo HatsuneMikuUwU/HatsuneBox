@@ -8,7 +8,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.RemoteException
 import android.view.KeyEvent
-import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -16,7 +15,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.preference.PreferenceDataStore
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import io.nekohasekai.sagernet.BuildConfig
 import io.nekohasekai.sagernet.GroupType
@@ -48,22 +46,20 @@ import io.nekohasekai.sagernet.ktx.onMainDispatcher
 import io.nekohasekai.sagernet.ktx.parseProxies
 import io.nekohasekai.sagernet.ktx.readableMessage
 import io.nekohasekai.sagernet.ktx.runOnDefaultDispatcher
+import io.nekohasekai.sagernet.ui.bottomsheet.MainMenuBottomSheet
 import moe.matsuri.nb4a.utils.Util
 
 class MainActivity : ThemedActivity(),
     SagerConnection.Callback,
     OnPreferenceDataStoreChangeListener,
-    NavigationView.OnNavigationItemSelectedListener {
+    MainMenuBottomSheet.OnOptionClickListener {
 
     lateinit var binding: LayoutMainBinding
-    lateinit var navigation: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = LayoutMainBinding.inflate(layoutInflater)
-        navigation = binding.navView
-        navigation.setNavigationItemSelectedListener(this)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -105,8 +101,6 @@ class MainActivity : ThemedActivity(),
             onNewIntent(intent)
         }
 
-        refreshNavMenu(DataStore.enableClashAPI)
-
         // sdk 33 notification
         if (Build.VERSION.SDK_INT >= 33) {
             val checkPermission =
@@ -128,10 +122,9 @@ class MainActivity : ThemedActivity(),
         }
     }
 
-    fun refreshNavMenu(clashApi: Boolean) {
-        if (::navigation.isInitialized) {
-            navigation.menu.findItem(R.id.nav_traffic)?.isVisible = clashApi
-        }
+    /** Shows the main menu bottom sheet that replaced the old side navigation drawer. */
+    fun showMainMenu() {
+        MainMenuBottomSheet().show(supportFragmentManager, MainMenuBottomSheet.TAG)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -303,22 +296,16 @@ class MainActivity : ThemedActivity(),
             .show()
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        binding.drawerLayout.closeDrawers()
-        if (item.isChecked) return true
-        when (item.itemId) {
-        	
-            R.id.nav_group -> startActivity(Intent(this, GroupActivity::class.java))
-            R.id.nav_route -> startActivity(Intent(this, RouteActivity::class.java))
-            R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
-            R.id.nav_traffic -> startActivity(Intent(this, TrafficActivity::class.java))
-            R.id.nav_tools -> startActivity(Intent(this, ToolsActivity::class.java))
-            R.id.nav_logcat -> startActivity(Intent(this, LogcatActivity::class.java))
-            R.id.nav_about -> startActivity(Intent(this, AboutActivity::class.java))
-
-            else -> return false
+    override fun onMenuOptionClicked(viewId: Int) {
+        when (viewId) {
+            R.id.menu_group -> startActivity(Intent(this, GroupActivity::class.java))
+            R.id.menu_route -> startActivity(Intent(this, RouteActivity::class.java))
+            R.id.menu_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+            R.id.menu_traffic -> startActivity(Intent(this, TrafficActivity::class.java))
+            R.id.menu_tools -> startActivity(Intent(this, ToolsActivity::class.java))
+            R.id.menu_logcat -> startActivity(Intent(this, LogcatActivity::class.java))
+            R.id.menu_about -> startActivity(Intent(this, AboutActivity::class.java))
         }
-        return true
     }
 
     private fun changeState(
@@ -481,11 +468,6 @@ class MainActivity : ThemedActivity(),
         super.onStart()
     }
 
-    override fun onResume() {
-        super.onResume()
-        refreshNavMenu(DataStore.enableClashAPI)
-    }
-
     override fun onStop() {
         connection.updateConnectionId(SagerConnection.CONNECTION_ID_MAIN_ACTIVITY_BACKGROUND)
         super.onStop()
@@ -502,20 +484,21 @@ class MainActivity : ThemedActivity(),
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (super.onKeyDown(keyCode, event)) return true
-                binding.drawerLayout.open()
-                navigation.requestFocus()
+                showMainMenu()
+                return true
             }
 
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (binding.drawerLayout.isOpen) {
-                    binding.drawerLayout.close()
+                val sheet =
+                    supportFragmentManager.findFragmentByTag(MainMenuBottomSheet.TAG) as? MainMenuBottomSheet
+                if (sheet != null) {
+                    sheet.dismiss()
                     return true
                 }
             }
         }
 
         if (super.onKeyDown(keyCode, event)) return true
-        if (binding.drawerLayout.isOpen) return false
 
         val fragment =
             supportFragmentManager.findFragmentById(R.id.fragment_holder) as? ConfigurationFragment

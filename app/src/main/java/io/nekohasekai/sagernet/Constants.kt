@@ -150,6 +150,15 @@ object Key {
 
     const val APP_TLS_VERSION = "appTLSVersion"
     const val ENABLE_CLASH_API = "enableClashAPI"
+
+    // Ported from MikuRay: main menu bottom sheet / profile identity
+    const val CUSTOM_PROFILE_NAME = "customProfileName"
+    const val ICON_SHAPE = "iconShape"
+    const val PROFILE_BANNER_SHAPE = "profileBannerShape"
+    const val PROFILE_BANNER_URI = "profileBannerUri"
+    const val CUSTOM_SHEET_BANNER_URI = "customSheetBannerUri"
+    const val DISABLE_PARTICLES_SHEET = "disableParticlesSheet"
+    const val CATEGORY_STYLE = "categoryStyle"
 }
 
 object TunImplementation {
@@ -183,4 +192,9 @@ object Action {
 
     // const val SWITCH_WAKE_LOCK = "io.nekohasekai.sagernet.SWITCH_WAKELOCK"
     const val RESET_UPSTREAM_CONNECTIONS = "moe.nb4a.RESET_UPSTREAM_CONNECTIONS"
+
+    // Ported from MikuRay: live UI style change broadcasts
+    const val ICON_SHAPE_CHANGED = "io.nekohasekai.sagernet.ICON_SHAPE_CHANGED"
+    const val PROFILE_BANNER_CHANGED = "io.nekohasekai.sagernet.PROFILE_BANNER_CHANGED"
+    const val CATEGORY_STYLE_CHANGED = "io.nekohasekai.sagernet.CATEGORY_STYLE_CHANGED"
 }

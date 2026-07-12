@@ -60,6 +60,9 @@ dependencies {
     implementation("com.google.android.material:material:1.14.0")
     implementation("com.google.code.gson:gson:2.9.0")
 
+    // Ported from MikuRay: image loading for ProfileBannerImageView
+    implementation("com.github.bumptech.glide:glide:5.0.7")
+
     implementation("com.github.jenly1314:zxing-lite:2.1.1")
     implementation("com.blacksquircle.ui:editorkit:2.6.0")
     implementation("com.blacksquircle.ui:language-base:2.6.0")

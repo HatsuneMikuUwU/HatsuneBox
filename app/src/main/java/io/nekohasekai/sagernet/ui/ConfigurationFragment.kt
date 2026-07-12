@@ -180,7 +180,7 @@ class ConfigurationFragment @JvmOverloads constructor(
         if (!select) {
             toolbar.setNavigationIcon(R.drawable.ic_navigation_menu)
             toolbar.setNavigationOnClickListener {
-                (requireActivity() as MainActivity).binding.drawerLayout.openDrawer(androidx.core.view.GravityCompat.START)
+                (requireActivity() as MainActivity).showMainMenu()
             }
             toolbar.inflateMenu(R.menu.add_profile_menu)
             toolbar.setOnMenuItemClickListener(this)

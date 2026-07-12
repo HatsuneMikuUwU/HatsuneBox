@@ -22,6 +22,31 @@
     <string name="tile_title">Switcher</string>
     <string name="menu_traffic">Traffic</string>
     <string name="menu_dashboard">sing-box Dashboard</string>
+    <!-- main menu bottom sheet -->
+    <string name="title_main_menu">Menu</string>
+    <string name="desc_menu_group">Manage your servers and subscriptions</string>
+    <string name="desc_menu_route">Routing and rule configuration</string>
+    <string name="desc_menu_settings">App preferences and behavior</string>
+    <string name="desc_menu_log">View and export debug logs</string>
+    <string name="desc_menu_dashboard">Live traffic and connections</string>
+    <string name="desc_menu_tools">Ping test, network utilities</string>
+    <string name="desc_menu_about">Version, source and licenses</string>
+
+    <!-- Ported from MikuRay: profile banner header -->
+    <string name="uwu_profile_banner_title">master</string>
+    <string name="uwu_profile_banner_title_custom">Hi, %1$s</string>
+    <string name="uwu_random_text_1">Beautiful day for a song!</string>
+    <string name="uwu_random_text_2">Have a great day, Master!</string>
+    <string name="uwu_random_text_3">"Let\'s do our best! 39!"</string>
+    <string name="uwu_random_text_4">Looking for a leek?</string>
+    <string name="uwu_random_text_5">"Focus! Ready, go!"</string>
+    <string name="uwu_random_text_6">Miku-Miku ni shite ageru!</string>
+    <string name="uwu_random_text_7">Welcome back, Master!</string>
+    <string name="uwu_random_text_8">Let the music in..!</string>
+    <string name="uwu_random_text_9">Reach the highest note!</string>
+    <string name="uwu_random_text_10">Writing lyrics for me?</string>
+    <string name="app_settings">App Settings</string>
+    <string name="tools_and_info">Tools &amp; Info</string>
     <!-- externel -->
     <string name="action_copy">Copy</string>
     <string name="action_open">Open</string>
