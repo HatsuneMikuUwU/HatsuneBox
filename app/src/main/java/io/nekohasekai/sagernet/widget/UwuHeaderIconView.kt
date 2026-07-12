@@ -15,12 +15,6 @@ import io.nekohasekai.sagernet.Action
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.ktx.getColorAttr
 
-/**
- * Ported from MikuRay's section header icon. Upstream also supports
- * character-art variants (miku/teto/neru); those drawable assets are
- * MikuRay-specific and are not part of this port, so this always renders the
- * gradient badge style.
- */
 class UwuHeaderIconView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

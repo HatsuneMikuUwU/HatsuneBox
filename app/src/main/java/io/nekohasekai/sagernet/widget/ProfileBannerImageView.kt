@@ -17,11 +17,6 @@ import io.nekohasekai.sagernet.Action
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.database.DataStore
 
-/**
- * Ported from MikuRay. Shows the user's profile avatar (or a default
- * silhouette), clipped to their chosen SVG shape, loaded through Glide so a
- * custom picture picked from the gallery is cached and reused.
- */
 class ProfileBannerImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
