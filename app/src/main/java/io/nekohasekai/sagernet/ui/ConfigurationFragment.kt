@@ -132,7 +132,7 @@ class ConfigurationFragment @JvmOverloads constructor(
     lateinit var tabLayout: TabLayout
     lateinit var groupPager: ViewPager2
 
-    val alwaysShowAddress by lazy { DataStore.alwaysShowAddress }
+    val alwaysShowAddress get() = DataStore.alwaysShowAddress
 
     fun getCurrentGroupFragment(): GroupFragment? {
         return try {
@@ -1108,6 +1108,10 @@ class ConfigurationFragment @JvmOverloads constructor(
                 }
             } else if (!::configurationListView.isInitialized) {
                 onViewCreated(requireView(), null)
+            } else {
+                // Re-bind visible rows so settings like "Always Show Address"
+                // take effect immediately without needing an app restart.
+                adapter?.notifyDataSetChanged()
             }
             checkOrderMenu()
             configurationListView.requestFocus()
