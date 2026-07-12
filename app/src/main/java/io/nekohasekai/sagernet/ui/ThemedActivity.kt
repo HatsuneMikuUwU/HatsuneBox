@@ -11,6 +11,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.snackbar.Snackbar
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.utils.Theme
@@ -51,6 +53,22 @@ abstract class ThemedActivity : AppCompatActivity {
             uiMode = newConfig.uiMode
             ActivityCompat.recreate(this)
         }
+    }
+
+    /**
+     * Sets up a [layout_appbar_collapsing]-style toolbar for a drawer-destination sub-activity:
+     * a collapsing large toolbar with an up (back) navigation icon that finishes the activity.
+     * Replaces the old drawer-hamburger ToolbarFragment pattern.
+     */
+    fun setupCollapsingToolbar(@StringRes titleRes: Int, homeAsUp: Boolean = true) {
+        setupCollapsingToolbar(getString(titleRes), homeAsUp)
+    }
+
+    fun setupCollapsingToolbar(title: CharSequence, homeAsUp: Boolean = true) {
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(homeAsUp)
+        findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)?.title = title
     }
 
     fun snackbar(@StringRes resId: Int): Snackbar = snackbar("").setText(resId)

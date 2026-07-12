@@ -3,18 +3,18 @@ package io.nekohasekai.sagernet.ui
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
+import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.*
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import io.nekohasekai.sagernet.GroupType
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.SagerNet
@@ -32,32 +32,31 @@ import moe.matsuri.nb4a.utils.toBytesString
 import java.lang.NumberFormatException
 import java.util.*
 
-class GroupFragment : ToolbarFragment(R.layout.layout_group),
-    Toolbar.OnMenuItemClickListener {
+class GroupActivity : ThemedActivity() {
 
-    lateinit var activity: MainActivity
+    lateinit var coordinator: androidx.coordinatorlayout.widget.CoordinatorLayout
     lateinit var groupListView: RecyclerView
     lateinit var layoutManager: LinearLayoutManager
     lateinit var groupAdapter: GroupAdapter
     lateinit var undoManager: UndoSnackbarManager<ProxyGroup>
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        activity = requireActivity() as MainActivity
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        ViewCompat.setOnApplyWindowInsetsListener(view, ListListener)
-        toolbar.setTitle(R.string.menu_group)
-        toolbar.inflateMenu(R.menu.add_group_menu)
-        toolbar.setOnMenuItemClickListener(this)
+        setContentView(R.layout.layout_group)
+        setupCollapsingToolbar(R.string.menu_group)
 
-        groupListView = view.findViewById(R.id.group_list)
+        coordinator = findViewById(R.id.main_content)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.group_list), ListListener)
+
+        groupListView = findViewById(R.id.group_list)
         layoutManager = FixedLinearLayoutManager(groupListView)
         groupListView.layoutManager = layoutManager
         groupAdapter = GroupAdapter()
         GroupManager.addListener(groupAdapter)
         groupListView.adapter = groupAdapter
 
-        undoManager = UndoSnackbarManager(activity, groupAdapter)
+        undoManager = UndoSnackbarManager(this, groupAdapter)
 
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.START
@@ -107,14 +106,25 @@ class GroupFragment : ToolbarFragment(R.layout.layout_group),
 
     }
 
-    override fun onMenuItemClick(item: MenuItem): Boolean {
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.add_group_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_new_group -> {
-                startActivity(Intent(context, GroupSettingsActivity::class.java))
+                startActivity(Intent(this, GroupSettingsActivity::class.java))
+                return true
             }
 
             R.id.action_update_all -> {
-                MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.confirm)
+                MaterialAlertDialogBuilder(this).setTitle(R.string.confirm)
                     .setMessage(R.string.update_all_subscription)
                     .setPositiveButton(R.string.yes) { _, _ ->
                         SagerDatabase.groupDao.allGroups()
@@ -125,9 +135,14 @@ class GroupFragment : ToolbarFragment(R.layout.layout_group),
                     }
                     .setNegativeButton(R.string.no, null)
                     .show()
+                return true
             }
         }
-        return true
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun snackbarInternal(text: CharSequence): Snackbar {
+        return Snackbar.make(coordinator, text, Snackbar.LENGTH_LONG)
     }
 
     private lateinit var selectedGroup: ProxyGroup
@@ -139,7 +154,7 @@ class GroupFragment : ToolbarFragment(R.layout.layout_group),
                     val profiles = SagerDatabase.proxyDao.getByGroup(selectedGroup.id)
                     val links = profiles.joinToString("\n") { it.toStdLink(compact = true) }
                     try {
-                        (requireActivity() as MainActivity).contentResolver.openOutputStream(
+                        contentResolver.openOutputStream(
                             data
                         )!!.bufferedWriter().use {
                             it.write(links)
@@ -331,7 +346,7 @@ class GroupFragment : ToolbarFragment(R.layout.layout_group),
 
             fun export(link: String) {
                 val success = SagerNet.trySetPrimaryClip(link)
-                activity.snackbar(if (success) R.string.action_export_msg else R.string.action_export_err)
+                snackbar(if (success) R.string.action_export_msg else R.string.action_export_err)
                     .show()
             }
 
@@ -339,7 +354,7 @@ class GroupFragment : ToolbarFragment(R.layout.layout_group),
                 R.id.action_universal_qr -> {
                     QRCodeDialog(
                         proxyGroup.toUniversalLink(), proxyGroup.displayName()
-                    ).showAllowingStateLoss(parentFragmentManager)
+                    ).showAllowingStateLoss(supportFragmentManager)
                 }
 
                 R.id.action_universal_clipboard -> {
@@ -362,7 +377,7 @@ class GroupFragment : ToolbarFragment(R.layout.layout_group),
                 }
 
                 R.id.action_clear -> {
-                    MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.confirm)
+                    MaterialAlertDialogBuilder(this@GroupActivity).setTitle(R.string.confirm)
                         .setMessage(R.string.clear_profiles_message)
                         .setPositiveButton(R.string.yes) { _, _ ->
                             runOnDefaultDispatcher {
@@ -400,7 +415,7 @@ class GroupFragment : ToolbarFragment(R.layout.layout_group),
             optionsButton.setOnClickListener {
                 selectedGroup = proxyGroup
 
-                val popup = PopupMenu(requireContext(), it)
+                val popup = PopupMenu(this@GroupActivity, it)
                 popup.menuInflater.inflate(R.menu.group_action_menu, popup.menu)
 
                 if (proxyGroup.type != GroupType.SUBSCRIPTION) {

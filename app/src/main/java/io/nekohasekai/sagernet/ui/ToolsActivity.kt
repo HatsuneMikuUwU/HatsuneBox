@@ -1,24 +1,28 @@
 package io.nekohasekai.sagernet.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.databinding.LayoutToolsBinding
 
-class ToolsFragment : ToolbarFragment(R.layout.layout_tools) {
+class ToolsActivity : ThemedActivity() {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        toolbar.setTitle(R.string.menu_tools)
+    lateinit var binding: LayoutToolsBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = LayoutToolsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setupCollapsingToolbar(R.string.menu_tools)
 
         val tools = mutableListOf<NamedFragment>()
         tools.add(NetworkFragment())
         tools.add(BackupFragment())
 
-        val binding = LayoutToolsBinding.bind(view)
         binding.toolsPager.adapter = ToolsAdapter(tools)
 
         TabLayoutMediator(binding.toolsTab, binding.toolsPager) { tab, position ->
@@ -28,6 +32,14 @@ class ToolsFragment : ToolbarFragment(R.layout.layout_tools) {
             }
         }.attach()
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
+    override fun snackbarInternal(text: CharSequence) =
+        Snackbar.make(binding.root, text, Snackbar.LENGTH_LONG)
 
     inner class ToolsAdapter(val tools: List<Fragment>) : FragmentStateAdapter(this) {
 

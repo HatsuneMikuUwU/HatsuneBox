@@ -226,8 +226,8 @@ fun View.crossFadeFrom(other: View) {
 }
 
 
-fun Fragment.snackbar(textId: Int) = (requireActivity() as MainActivity).snackbar(textId)
-fun Fragment.snackbar(text: CharSequence) = (requireActivity() as MainActivity).snackbar(text)
+fun Fragment.snackbar(textId: Int) = (requireActivity() as ThemedActivity).snackbar(textId)
+fun Fragment.snackbar(text: CharSequence) = (requireActivity() as ThemedActivity).snackbar(text)
 
 fun ThemedActivity.startFilesForResult(
     launcher: ActivityResultLauncher<String>, input: String
@@ -252,6 +252,10 @@ fun Fragment.startFilesForResult(
 }
 
 fun Fragment.needReload() {
+    (requireActivity() as ThemedActivity).needReload()
+}
+
+fun ThemedActivity.needReload() {
     if (DataStore.serviceState.started) {
         snackbar(getString(R.string.need_reload)).setAction(R.string.apply) {
             SagerNet.reloadService()
@@ -260,8 +264,12 @@ fun Fragment.needReload() {
 }
 
 fun Fragment.needRestart() {
+    (requireActivity() as ThemedActivity).needRestart()
+}
+
+fun ThemedActivity.needRestart() {
     snackbar(R.string.need_restart).setAction(R.string.apply) {
-        triggerFullRestart(requireContext())
+        triggerFullRestart(this)
     }.show()
 }
 

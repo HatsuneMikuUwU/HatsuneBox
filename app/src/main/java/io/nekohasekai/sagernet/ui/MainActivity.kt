@@ -1,7 +1,6 @@
 package io.nekohasekai.sagernet.ui
 
 import android.Manifest.permission.POST_NOTIFICATIONS
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -11,7 +10,6 @@ import android.os.RemoteException
 import android.view.KeyEvent
 import android.view.MenuItem
 import androidx.activity.addCallback
-import androidx.annotation.IdRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -68,14 +66,12 @@ class MainActivity : ThemedActivity(),
         navigation.setNavigationItemSelectedListener(this)
 
         if (savedInstanceState == null) {
-            displayFragmentWithId(R.id.nav_configuration)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_holder, ConfigurationFragment())
+                .commitAllowingStateLoss()
         }
         onBackPressedDispatcher.addCallback {
-            if (supportFragmentManager.findFragmentById(R.id.fragment_holder) is ConfigurationFragment) {
-                moveTaskToBack(true)
-            } else {
-                displayFragmentWithId(R.id.nav_configuration)
-            }
+            moveTaskToBack(true)
         }
 
         binding.fab.setOnClickListener {
@@ -196,7 +192,7 @@ class MainActivity : ThemedActivity(),
 
         onMainDispatcher {
 
-            displayFragmentWithId(R.id.nav_group)
+            startActivity(Intent(this@MainActivity, GroupActivity::class.java))
 
             MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.subscription_import)
                 .setMessage(getString(R.string.subscription_import_message, name))
@@ -247,8 +243,6 @@ class MainActivity : ThemedActivity(),
         ProfileManager.createProfile(targetId, profile)
 
         onMainDispatcher {
-            displayFragmentWithId(R.id.nav_configuration)
-
             snackbar(resources.getQuantityString(R.plurals.added, 1, 1)).show()
         }
     }
@@ -310,43 +304,23 @@ class MainActivity : ThemedActivity(),
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        if (item.isChecked) binding.drawerLayout.closeDrawers() else {
-            return displayFragmentWithId(item.itemId)
-        }
-        return true
-    }
-
-
-    @SuppressLint("CommitTransaction")
-    fun displayFragment(fragment: ToolbarFragment) {
-        if (fragment is ConfigurationFragment) {
-            binding.cardBottomStatus.visibility = android.view.View.VISIBLE
-        } else {
-            binding.cardBottomStatus.visibility = android.view.View.GONE
-        }
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_holder, fragment)
-            .commitAllowingStateLoss()
         binding.drawerLayout.closeDrawers()
-    }
-
-    fun displayFragmentWithId(@IdRes id: Int): Boolean {
-        when (id) {
+        if (item.isChecked) return true
+        when (item.itemId) {
             R.id.nav_configuration -> {
-                displayFragment(ConfigurationFragment())
+                // already home, nothing to navigate to
             }
 
-            R.id.nav_group -> displayFragment(GroupFragment())
-            R.id.nav_route -> displayFragment(RouteFragment())
-            R.id.nav_settings -> displayFragment(SettingsFragment())
-            R.id.nav_traffic -> displayFragment(WebviewFragment())
-            R.id.nav_tools -> displayFragment(ToolsFragment())
-            R.id.nav_logcat -> displayFragment(LogcatFragment())
-            R.id.nav_about -> displayFragment(AboutFragment())
+            R.id.nav_group -> startActivity(Intent(this, GroupActivity::class.java))
+            R.id.nav_route -> startActivity(Intent(this, RouteActivity::class.java))
+            R.id.nav_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+            R.id.nav_traffic -> startActivity(Intent(this, TrafficActivity::class.java))
+            R.id.nav_tools -> startActivity(Intent(this, ToolsActivity::class.java))
+            R.id.nav_logcat -> startActivity(Intent(this, LogcatActivity::class.java))
+            R.id.nav_about -> startActivity(Intent(this, AboutActivity::class.java))
 
             else -> return false
         }
-        navigation.menu.findItem(id).isChecked = true
         return true
     }
 
@@ -510,6 +484,11 @@ class MainActivity : ThemedActivity(),
         super.onStart()
     }
 
+    override fun onResume() {
+        super.onResume()
+        refreshNavMenu(DataStore.enableClashAPI)
+    }
+
     override fun onStop() {
         connection.updateConnectionId(SagerConnection.CONNECTION_ID_MAIN_ACTIVITY_BACKGROUND)
         super.onStop()
@@ -542,7 +521,7 @@ class MainActivity : ThemedActivity(),
         if (binding.drawerLayout.isOpen) return false
 
         val fragment =
-            supportFragmentManager.findFragmentById(R.id.fragment_holder) as? ToolbarFragment
+            supportFragmentManager.findFragmentById(R.id.fragment_holder) as? ConfigurationFragment
         return fragment != null && fragment.onKeyDown(keyCode, event)
     }
 

@@ -2,14 +2,14 @@ package io.nekohasekai.sagernet.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.database.ProfileManager
@@ -21,29 +21,28 @@ import io.nekohasekai.sagernet.ktx.*
 import io.nekohasekai.sagernet.widget.ListListener
 import io.nekohasekai.sagernet.widget.UndoSnackbarManager
 
-class RouteFragment : ToolbarFragment(R.layout.layout_route), Toolbar.OnMenuItemClickListener {
+class RouteActivity : ThemedActivity() {
 
-    lateinit var activity: MainActivity
+    lateinit var coordinator: androidx.coordinatorlayout.widget.CoordinatorLayout
     lateinit var ruleListView: RecyclerView
     lateinit var ruleAdapter: RuleAdapter
     lateinit var undoManager: UndoSnackbarManager<RuleEntity>
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        activity = requireActivity() as MainActivity
+        setContentView(R.layout.layout_route)
+        setupCollapsingToolbar(R.string.menu_route)
 
-        ViewCompat.setOnApplyWindowInsetsListener(view, ListListener)
-        toolbar.setTitle(R.string.menu_route)
-        toolbar.inflateMenu(R.menu.add_route_menu)
-        toolbar.setOnMenuItemClickListener(this)
+        coordinator = findViewById(R.id.main_content)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.route_list), ListListener)
 
-        ruleListView = view.findViewById(R.id.route_list)
+        ruleListView = findViewById(R.id.route_list)
         ruleListView.layoutManager = FixedLinearLayoutManager(ruleListView)
         ruleAdapter = RuleAdapter()
         ProfileManager.addListener(ruleAdapter)
         ruleListView.adapter = ruleAdapter
-        undoManager = UndoSnackbarManager(activity, ruleAdapter)
+        undoManager = UndoSnackbarManager(this, ruleAdapter)
 
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.START) {
 
@@ -93,6 +92,11 @@ class RouteFragment : ToolbarFragment(R.layout.layout_route), Toolbar.OnMenuItem
         }).attachToRecyclerView(ruleListView)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
     override fun onDestroy() {
         if (::ruleAdapter.isInitialized) {
             ProfileManager.removeListener(ruleAdapter)
@@ -100,13 +104,19 @@ class RouteFragment : ToolbarFragment(R.layout.layout_route), Toolbar.OnMenuItem
         super.onDestroy()
     }
 
-    override fun onMenuItemClick(item: MenuItem): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.add_route_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_new_route -> {
-                startActivity(Intent(context, RouteSettingsActivity::class.java))
+                startActivity(Intent(this, RouteSettingsActivity::class.java))
+                return true
             }
             R.id.action_reset_route -> {
-                MaterialAlertDialogBuilder(activity).setTitle(R.string.confirm)
+                MaterialAlertDialogBuilder(this).setTitle(R.string.confirm)
                     .setMessage(R.string.clear_profiles_message)
                     .setPositiveButton(R.string.yes) { _, _ ->
                         runOnDefaultDispatcher {
@@ -117,12 +127,18 @@ class RouteFragment : ToolbarFragment(R.layout.layout_route), Toolbar.OnMenuItem
                     }
                     .setNegativeButton(R.string.no, null)
                     .show()
+                return true
             }
             R.id.action_manage_assets -> {
-                startActivity(Intent(requireContext(), AssetsActivity::class.java))
+                startActivity(Intent(this, AssetsActivity::class.java))
+                return true
             }
         }
-        return true
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun snackbarInternal(text: CharSequence): Snackbar {
+        return Snackbar.make(coordinator, text, Snackbar.LENGTH_LONG)
     }
 
     inner class RuleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ProfileManager.RuleListener, UndoSnackbarManager.Interface<RuleEntity> {

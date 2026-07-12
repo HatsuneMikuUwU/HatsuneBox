@@ -117,7 +117,7 @@ import java.util.zip.ZipInputStream
 
 class ConfigurationFragment @JvmOverloads constructor(
     val select: Boolean = false, val selectedItem: ProxyEntity? = null, val titleRes: Int = 0
-) : ToolbarFragment(R.layout.layout_group_list),
+) : Fragment(R.layout.layout_group_list),
     PopupMenu.OnMenuItemClickListener,
     Toolbar.OnMenuItemClickListener,
     SearchView.OnQueryTextListener,
@@ -127,6 +127,7 @@ class ConfigurationFragment @JvmOverloads constructor(
         fun returnProfile(profileId: Long)
     }
 
+    lateinit var toolbar: Toolbar
     lateinit var adapter: GroupPagerAdapter
     lateinit var tabLayout: TabLayout
     lateinit var groupPager: ViewPager2
@@ -175,7 +176,12 @@ class ConfigurationFragment @JvmOverloads constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        toolbar = view.findViewById(R.id.toolbar)
         if (!select) {
+            toolbar.setNavigationIcon(R.drawable.ic_navigation_menu)
+            toolbar.setNavigationOnClickListener {
+                (requireActivity() as MainActivity).binding.drawerLayout.openDrawer(androidx.core.view.GravityCompat.START)
+            }
             toolbar.inflateMenu(R.menu.add_profile_menu)
             toolbar.setOnMenuItemClickListener(this)
         } else {
@@ -272,12 +278,12 @@ class ConfigurationFragment @JvmOverloads constructor(
         super.onDestroy()
     }
 
-    override fun onKeyDown(ketCode: Int, event: KeyEvent): Boolean {
+    fun onKeyDown(ketCode: Int, event: KeyEvent): Boolean {
         val fragment = getCurrentGroupFragment()
         fragment?.configurationListView?.apply {
             if (!hasFocus()) requestFocus()
         }
-        return super.onKeyDown(ketCode, event)
+        return false
     }
 
     private val importFile =
@@ -1110,7 +1116,7 @@ class ConfigurationFragment @JvmOverloads constructor(
         fun checkOrderMenu() {
             if (select) return
 
-            val pf = requireParentFragment() as? ToolbarFragment ?: return
+            val pf = requireParentFragment() as? ConfigurationFragment ?: return
             val menu = pf.toolbar.menu
             val origin = menu.findItem(R.id.action_order_origin)
             val byName = menu.findItem(R.id.action_order_by_name)

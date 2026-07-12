@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.ToolsFragment">
+    tools:context=".ui.LogcatActivity">
 
-    <include
-        layout="@layout/layout_appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <include layout="@layout/layout_appbar_collapsing" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp">
+        android:padding="8dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ScrollView
             android:id="@+id/scroolview"
@@ -34,5 +32,4 @@
         </ScrollView>
     </LinearLayout>
 
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

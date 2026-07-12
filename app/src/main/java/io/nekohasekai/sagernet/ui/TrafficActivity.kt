@@ -3,11 +3,10 @@ package io.nekohasekai.sagernet.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.InputType
+import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.webkit.*
 import android.widget.EditText
-import androidx.appcompat.widget.Toolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.nekohasekai.sagernet.BuildConfig
 import io.nekohasekai.sagernet.R
@@ -15,22 +14,17 @@ import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.databinding.LayoutWebviewBinding
 import moe.matsuri.nb4a.utils.WebViewUtil
 
-// Fragment必须有一个无参public的构造函数，否则在数据恢复的时候，会报crash
-
-class WebviewFragment : ToolbarFragment(R.layout.layout_webview), Toolbar.OnMenuItemClickListener {
+class TrafficActivity : ThemedActivity() {
 
     lateinit var mWebView: WebView
 
     @SuppressLint("SetJavaScriptEnabled")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        // layout
-        toolbar.setTitle(R.string.menu_dashboard)
-        toolbar.inflateMenu(R.menu.yacd_menu)
-        toolbar.setOnMenuItemClickListener(this)
-
-        val binding = LayoutWebviewBinding.bind(view)
+        val binding = LayoutWebviewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setupCollapsingToolbar(R.string.menu_dashboard)
 
         // webview
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
@@ -51,15 +45,25 @@ class WebviewFragment : ToolbarFragment(R.layout.layout_webview), Toolbar.OnMenu
         mWebView.loadUrl(DataStore.yacdURL)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.yacd_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     @SuppressLint("CheckResult")
-    override fun onMenuItemClick(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_set_url -> {
-                val view = EditText(context).apply {
+                val view = EditText(this).apply {
                     inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
                     setText(DataStore.yacdURL)
                 }
-                MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.set_panel_url)
+                MaterialAlertDialogBuilder(this).setTitle(R.string.set_panel_url)
                     .setView(view)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         DataStore.yacdURL = view.text.toString()
@@ -67,13 +71,23 @@ class WebviewFragment : ToolbarFragment(R.layout.layout_webview), Toolbar.OnMenu
                     }
                     .setNegativeButton(android.R.string.cancel, null)
                     .show()
+                return true
             }
+
             R.id.close -> {
-                mWebView.onPause()
-                mWebView.removeAllViews()
-                mWebView.destroy()
+                finish()
+                return true
             }
         }
-        return true
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        if (::mWebView.isInitialized) {
+            mWebView.onPause()
+            mWebView.removeAllViews()
+            mWebView.destroy()
+        }
+        super.onDestroy()
     }
 }

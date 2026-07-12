@@ -36,27 +36,33 @@ import io.nekohasekai.sagernet.database.DataStore
 import moe.matsuri.nb4a.utils.Util
 import org.json.JSONObject
 
-class AboutFragment : ToolbarFragment(R.layout.layout_about) {
+class AboutActivity : ThemedActivity() {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        val binding = LayoutAboutBinding.bind(view)
+        val binding = LayoutAboutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setupCollapsingToolbar(R.string.menu_about)
 
-        ViewCompat.setOnApplyWindowInsetsListener(view, ListListener)
-        toolbar.setTitle(R.string.menu_about)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root, ListListener)
 
-        parentFragmentManager.beginTransaction()
+        supportFragmentManager.beginTransaction()
             .replace(R.id.about_fragment_holder, AboutContent())
             .commitAllowingStateLoss()
 
         runOnDefaultDispatcher {
-            val license = view.context.assets.open("LICENSE").bufferedReader().readText()
+            val license = assets.open("LICENSE").bufferedReader().readText()
             onMainDispatcher {
                 binding.license.text = license
                 Linkify.addLinks(binding.license, Linkify.EMAIL_ADDRESSES or Linkify.WEB_URLS)
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
     class AboutContent : MaterialAboutFragment() {

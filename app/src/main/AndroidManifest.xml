@@ -206,6 +206,27 @@
             android:name="io.nekohasekai.sagernet.ui.AssetsActivity"
             android:configChanges="uiMode" />
         <activity
+            android:name="io.nekohasekai.sagernet.ui.GroupActivity"
+            android:configChanges="uiMode" />
+        <activity
+            android:name="io.nekohasekai.sagernet.ui.RouteActivity"
+            android:configChanges="uiMode" />
+        <activity
+            android:name="io.nekohasekai.sagernet.ui.SettingsActivity"
+            android:configChanges="uiMode" />
+        <activity
+            android:name="io.nekohasekai.sagernet.ui.TrafficActivity"
+            android:configChanges="uiMode" />
+        <activity
+            android:name="io.nekohasekai.sagernet.ui.ToolsActivity"
+            android:configChanges="uiMode" />
+        <activity
+            android:name="io.nekohasekai.sagernet.ui.LogcatActivity"
+            android:configChanges="uiMode" />
+        <activity
+            android:name="io.nekohasekai.sagernet.ui.AboutActivity"
+            android:configChanges="uiMode" />
+        <activity
             android:name="io.nekohasekai.sagernet.ui.AppListActivity"
             android:configChanges="uiMode" />
         <activity

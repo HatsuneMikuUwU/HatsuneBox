@@ -7,12 +7,11 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.style.ForegroundColorSpan
+import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnLayout
+import com.google.android.material.snackbar.Snackbar
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.databinding.LayoutLogcatBinding
 import io.nekohasekai.sagernet.ktx.*
@@ -20,20 +19,17 @@ import io.nekohasekai.sagernet.widget.ListListener
 import libcore.Libcore
 import moe.matsuri.nb4a.utils.SendLog
 
-class LogcatFragment : ToolbarFragment(R.layout.layout_logcat),
-    Toolbar.OnMenuItemClickListener {
+class LogcatActivity : ThemedActivity() {
 
     lateinit var binding: LayoutLogcatBinding
 
     @SuppressLint("RestrictedApi", "WrongConstant")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        toolbar.setTitle(R.string.menu_log)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        toolbar.inflateMenu(R.menu.logcat_menu)
-        toolbar.setOnMenuItemClickListener(this)
-
-        binding = LayoutLogcatBinding.bind(view)
+        binding = LayoutLogcatBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setupCollapsingToolbar(R.string.menu_log)
 
         if (Build.VERSION.SDK_INT >= 23) {
             binding.textview.breakStrategy = 0 // simple
@@ -42,6 +38,16 @@ class LogcatFragment : ToolbarFragment(R.layout.layout_logcat),
         ViewCompat.setOnApplyWindowInsetsListener(binding.root, ListListener)
 
         reloadSession()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.logcat_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     private fun getColorForLine(line: String): ForegroundColorSpan {
@@ -82,7 +88,7 @@ class LogcatFragment : ToolbarFragment(R.layout.layout_logcat),
         }
     }
 
-    override fun onMenuItemClick(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_clear_logcat -> {
                 runOnDefaultDispatcher {
@@ -99,21 +105,25 @@ class LogcatFragment : ToolbarFragment(R.layout.layout_logcat),
                         binding.textview.text = ""
                     }
                 }
-
+                return true
             }
 
             R.id.action_send_logcat -> {
-                val context = requireContext()
                 runOnDefaultDispatcher {
-                    SendLog.sendLog(context, "NB4A")
+                    SendLog.sendLog(this@LogcatActivity, "NB4A")
                 }
+                return true
             }
 
             R.id.action_refresh -> {
                 reloadSession()
+                return true
             }
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
+
+    override fun snackbarInternal(text: CharSequence) =
+        Snackbar.make(binding.root, text, Snackbar.LENGTH_LONG)
 
 }
