@@ -77,6 +77,16 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
         val directDns = findPreference<EditTextPreference>(Key.DIRECT_DNS)!!
         val enableDnsRouting = findPreference<SwitchPreference>(Key.ENABLE_DNS_ROUTING)!!
         val enableFakeDns = findPreference<SwitchPreference>(Key.ENABLE_FAKEDNS)!!
+        val domainStrategyForRemote =
+            findPreference<SimpleMenuPreference>("domain_strategy_for_remote")!!
+        val domainStrategyForDirect =
+            findPreference<SimpleMenuPreference>("domain_strategy_for_direct")!!
+        val domainStrategyForServer =
+            findPreference<SimpleMenuPreference>("domain_strategy_for_server")!!
+
+        val rulesProvider = findPreference<SimpleMenuPreference>(Key.RULES_PROVIDER)!!
+        val globalAllowInsecure = findPreference<SwitchPreference>(Key.GLOBAL_ALLOW_INSECURE)!!
+        val appTLSVersion = findPreference<SimpleMenuPreference>(Key.APP_TLS_VERSION)!!
 
         val logLevel = findPreference<LongClickListPreference>(Key.LOG_LEVEL)!!
         val mtu = findPreference<MTUPreference>(Key.MTU)!!
@@ -112,7 +122,7 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
 
         mixedPort.setOnBindEditTextListener(EditTextPreferenceModifiers.Port)
 
-        val metedNetwork = findPreference<Preference>(Key.METERED_NETWORK)!!
+        val metedNetwork = findPreference<SwitchPreference>(Key.METERED_NETWORK)!!
         if (Build.VERSION.SDK_INT < 28) {
             metedNetwork.remove()
         }
@@ -168,6 +178,15 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
         tunImplementation.onPreferenceChangeListener = reloadListener
         acquireWakeLock.onPreferenceChangeListener = reloadListener
         globalCustomConfig.onPreferenceChangeListener = reloadListener
+
+        domainStrategyForRemote.onPreferenceChangeListener = reloadListener
+        domainStrategyForDirect.onPreferenceChangeListener = reloadListener
+        domainStrategyForServer.onPreferenceChangeListener = reloadListener
+        rulesProvider.onPreferenceChangeListener = reloadListener
+        globalAllowInsecure.onPreferenceChangeListener = reloadListener
+        appTLSVersion.onPreferenceChangeListener = reloadListener
+        metedNetwork.onPreferenceChangeListener = reloadListener
+        profileTrafficStatistics.onPreferenceChangeListener = reloadListener
     }
 
     override fun onResume() {
