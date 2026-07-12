@@ -27,7 +27,7 @@ class DynamicShapeImageView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : ShaderImageView(context, attrs, defStyleAttr) {
 
-    private var currentShapeKey: String = DEFAULT_SHAPE
+    private var currentShapeKey: String? = DEFAULT_SHAPE
 
     private var customBgColor: Int? = null
 
@@ -119,7 +119,7 @@ class DynamicShapeImageView @JvmOverloads constructor(
         }
     }
 
-    private fun resolveShapeId(): Int = shapeIdFor(currentShapeKey)
+    private fun resolveShapeId(): Int = shapeIdFor(currentShapeKey ?: DEFAULT_SHAPE)
 
     companion object {
         const val DEFAULT_SHAPE = "uwu_shape_cookie"
