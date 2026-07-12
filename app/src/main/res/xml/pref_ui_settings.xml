@@ -15,11 +15,11 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/title_sheet_banner">
+    <PreferenceCategory app:title="@string/sheet_banner_category">
 
         <SwitchPreference
             app:defaultValue="false"
-            app:icon="@drawable/ic_palette_24"
+            app:icon="@drawable/ic_sparkles_24dp"
             app:key="disableParticlesSheet"
             app:summary="@string/particles_disable_summary"
             app:title="@string/particles_disable_title" />
@@ -33,16 +33,17 @@
         <Preference
             app:icon="@drawable/baseline_delete_sweep_24"
             app:key="action_delete_sheet_banner"
+            app:summary="@string/sheet_banner_delete_summary"
             app:title="@string/sheet_banner_delete_title" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/title_profile">
+    <PreferenceCategory app:title="@string/banner_profile_category">
 
         <EditTextPreference
+            app:dialogTitle="@string/profile_name_custom_dialog"
             app:icon="@drawable/ic_image_edit"
             app:key="customProfileName"
-            app:summary="@string/profile_name_custom_summary"
             app:title="@string/profile_name_custom_title" />
 
         <Preference
@@ -63,6 +64,7 @@
         <Preference
             app:icon="@drawable/ic_action_delete"
             app:key="action_delete_profile_banner"
+            app:summary="@string/delete_custom_banner_profile_summary"
             app:title="@string/delete_custom_banner_profile" />
 
     </PreferenceCategory>

@@ -15,8 +15,8 @@
         <Preference
             app:icon="@drawable/ic_palette_24"
             app:key="navigateUiSettings"
-            app:summary="@string/pref_navigate_ui_settings_summary"
-            app:title="@string/pref_navigate_ui_settings" />
+            app:summary="@string/summary_navigate_ui_settings"
+            app:title="@string/title_ui_settings" />
         <moe.matsuri.nb4a.ui.SimpleMenuPreference
             app:defaultValue="0"
             app:entries="@array/night_mode"

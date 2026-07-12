@@ -41,6 +41,7 @@ import io.nekohasekai.sagernet.GroupType
 import io.nekohasekai.sagernet.Key
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.SagerNet
+import io.nekohasekai.sagernet.ui.bottomsheet.AddConfigBottomSheet
 import io.nekohasekai.sagernet.aidl.TrafficData
 import io.nekohasekai.sagernet.bg.BaseService
 import io.nekohasekai.sagernet.bg.proto.UrlTest
@@ -121,7 +122,8 @@ class ConfigurationFragment @JvmOverloads constructor(
     PopupMenu.OnMenuItemClickListener,
     Toolbar.OnMenuItemClickListener,
     SearchView.OnQueryTextListener,
-    OnPreferenceDataStoreChangeListener {
+    OnPreferenceDataStoreChangeListener,
+    AddConfigBottomSheet.OnAddConfigClickListener {
 
     interface SelectCallback {
         fun returnProfile(profileId: Long)
@@ -351,104 +353,8 @@ class ConfigurationFragment @JvmOverloads constructor(
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_scan_qr_code -> {
-                startActivity(Intent(context, ScannerActivity::class.java))
-            }
-
-            R.id.action_import_clipboard -> {
-                val text = SagerNet.getClipboardText()
-                if (text.isBlank()) {
-                    snackbar(getString(R.string.clipboard_empty)).show()
-                } else runOnDefaultDispatcher {
-                    try {
-                        val proxies = RawUpdater.parseRaw(text)
-                        if (proxies.isNullOrEmpty()) onMainDispatcher {
-                            snackbar(getString(R.string.no_proxies_found_in_clipboard)).show()
-                        } else import(proxies)
-                    } catch (e: SubscriptionFoundException) {
-                        (requireActivity() as MainActivity).importSubscription(e.link.toUri())
-                    } catch (e: Exception) {
-                        Logs.w(e)
-
-                        onMainDispatcher {
-                            snackbar(e.readableMessage).show()
-                        }
-                    }
-                }
-            }
-
-            R.id.action_import_file -> {
-                startFilesForResult(importFile, "*/*")
-            }
-
-            R.id.action_new_socks -> {
-                startActivity(Intent(requireActivity(), SocksSettingsActivity::class.java))
-            }
-
-            R.id.action_new_http -> {
-                startActivity(Intent(requireActivity(), HttpSettingsActivity::class.java))
-            }
-
-            R.id.action_new_ss -> {
-                startActivity(Intent(requireActivity(), ShadowsocksSettingsActivity::class.java))
-            }
-
-            R.id.action_new_vmess -> {
-                startActivity(Intent(requireActivity(), VMessSettingsActivity::class.java))
-            }
-
-            R.id.action_new_vless -> {
-                startActivity(Intent(requireActivity(), VMessSettingsActivity::class.java).apply {
-                    putExtra("vless", true)
-                })
-            }
-
-            R.id.action_new_trojan -> {
-                startActivity(Intent(requireActivity(), TrojanSettingsActivity::class.java))
-            }
-
-            R.id.action_new_trojan_go -> {
-                startActivity(Intent(requireActivity(), TrojanGoSettingsActivity::class.java))
-            }
-
-            R.id.action_new_mieru -> {
-                startActivity(Intent(requireActivity(), MieruSettingsActivity::class.java))
-            }
-
-            R.id.action_new_naive -> {
-                startActivity(Intent(requireActivity(), NaiveSettingsActivity::class.java))
-            }
-
-            R.id.action_new_hysteria -> {
-                startActivity(Intent(requireActivity(), HysteriaSettingsActivity::class.java))
-            }
-
-            R.id.action_new_tuic -> {
-                startActivity(Intent(requireActivity(), TuicSettingsActivity::class.java))
-            }
-
-            R.id.action_new_ssh -> {
-                startActivity(Intent(requireActivity(), SSHSettingsActivity::class.java))
-            }
-
-            R.id.action_new_wg -> {
-                startActivity(Intent(requireActivity(), WireGuardSettingsActivity::class.java))
-            }
-
-            R.id.action_new_shadowtls -> {
-                startActivity(Intent(requireActivity(), ShadowTLSSettingsActivity::class.java))
-            }
-
-            R.id.action_new_anytls -> {
-                startActivity(Intent(requireActivity(), AnyTLSSettingsActivity::class.java))
-            }
-
-            R.id.action_new_config -> {
-                startActivity(Intent(requireActivity(), ConfigSettingActivity::class.java))
-            }
-
-            R.id.action_new_chain -> {
-                startActivity(Intent(requireActivity(), ChainSettingsActivity::class.java))
+            R.id.action_add -> {
+                AddConfigBottomSheet().show(childFragmentManager, AddConfigBottomSheet.TAG)
             }
 
             R.id.action_update_subscription -> {
@@ -598,6 +504,110 @@ class ConfigurationFragment @JvmOverloads constructor(
             }
         }
         return true
+    }
+
+    override fun onAddConfigOptionClicked(viewId: Int) {
+        when (viewId) {
+            R.id.import_qrcode -> {
+                startActivity(Intent(context, ScannerActivity::class.java))
+            }
+
+            R.id.import_clipboard -> {
+                val text = SagerNet.getClipboardText()
+                if (text.isBlank()) {
+                    snackbar(getString(R.string.clipboard_empty)).show()
+                } else runOnDefaultDispatcher {
+                    try {
+                        val proxies = RawUpdater.parseRaw(text)
+                        if (proxies.isNullOrEmpty()) onMainDispatcher {
+                            snackbar(getString(R.string.no_proxies_found_in_clipboard)).show()
+                        } else import(proxies)
+                    } catch (e: SubscriptionFoundException) {
+                        (requireActivity() as MainActivity).importSubscription(e.link.toUri())
+                    } catch (e: Exception) {
+                        Logs.w(e)
+
+                        onMainDispatcher {
+                            snackbar(e.readableMessage).show()
+                        }
+                    }
+                }
+            }
+
+            R.id.import_local -> {
+                startFilesForResult(importFile, "*/*")
+            }
+
+            R.id.import_manually_socks -> {
+                startActivity(Intent(requireActivity(), SocksSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_http -> {
+                startActivity(Intent(requireActivity(), HttpSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_ss -> {
+                startActivity(Intent(requireActivity(), ShadowsocksSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_vmess -> {
+                startActivity(Intent(requireActivity(), VMessSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_vless -> {
+                startActivity(Intent(requireActivity(), VMessSettingsActivity::class.java).apply {
+                    putExtra("vless", true)
+                })
+            }
+
+            R.id.import_manually_trojan -> {
+                startActivity(Intent(requireActivity(), TrojanSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_trojan_go -> {
+                startActivity(Intent(requireActivity(), TrojanGoSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_mieru -> {
+                startActivity(Intent(requireActivity(), MieruSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_naive -> {
+                startActivity(Intent(requireActivity(), NaiveSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_hysteria -> {
+                startActivity(Intent(requireActivity(), HysteriaSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_tuic -> {
+                startActivity(Intent(requireActivity(), TuicSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_ssh -> {
+                startActivity(Intent(requireActivity(), SSHSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_wg -> {
+                startActivity(Intent(requireActivity(), WireGuardSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_shadowtls -> {
+                startActivity(Intent(requireActivity(), ShadowTLSSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_anytls -> {
+                startActivity(Intent(requireActivity(), AnyTLSSettingsActivity::class.java))
+            }
+
+            R.id.import_manually_config -> {
+                startActivity(Intent(requireActivity(), ConfigSettingActivity::class.java))
+            }
+
+            R.id.import_manually_chain -> {
+                startActivity(Intent(requireActivity(), ChainSettingsActivity::class.java))
+            }
+        }
     }
 
     inner class TestDialog {
