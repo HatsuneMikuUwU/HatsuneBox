@@ -319,7 +319,11 @@ class MainActivity : ThemedActivity(),
 
     @SuppressLint("CommitTransaction")
     fun displayFragment(fragment: ToolbarFragment) {
-        
+        if (fragment is ConfigurationFragment) {
+            binding.cardBottomStatus.visibility = android.view.View.VISIBLE
+        } else {
+            binding.cardBottomStatus.visibility = android.view.View.GONE
+        }
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_holder, fragment)
             .commitAllowingStateLoss()
@@ -437,7 +441,7 @@ class MainActivity : ThemedActivity(),
     override fun snackbarInternal(text: CharSequence): Snackbar {
         return Snackbar.make(binding.coordinator, text, Snackbar.LENGTH_LONG).apply {
             if (binding.fab.isShown) {
-                anchorView = binding.fab
+                anchorView = binding.cardBottomStatus
             }
             // TODO
         }
