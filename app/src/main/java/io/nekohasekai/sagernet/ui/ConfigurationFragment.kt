@@ -703,7 +703,6 @@ class ConfigurationFragment @JvmOverloads constructor(
                 if (status >= 1) return@runOnMainDispatcher
                 if (!isAdded) return@runOnMainDispatcher
 
-
                 var profileStatusText: String? = null
                 var profileStatusColor = 0
 
@@ -1762,12 +1761,12 @@ class ConfigurationFragment @JvmOverloads constructor(
 
         headerImage.setLayerType(View.LAYER_TYPE_NONE, null)
 
-        val paddingTopWithBanner = (16 * resources.displayMetrics.density).toInt()
+        val paddingTopWithBanner = dp2px(16)
         val paddingTopNoBanner = 0
 
         fun applyBannerHeight() {
             val heightDp = DataStore.homeBannerHeight.coerceIn(150, 300)
-            val heightPx = requireContext().dp2px(heightDp)
+            val heightPx = dp2px(heightDp)
             val lp = bannerHome.layoutParams
             lp.height = heightPx
             bannerHome.layoutParams = lp
@@ -1788,7 +1787,7 @@ class ConfigurationFragment @JvmOverloads constructor(
         fun applyHeaderTopRowPadding() {
             val showBanner = DataStore.showHomeBanner
             val paddingDp = if (showBanner) DataStore.headerTopRowPadding.coerceIn(0, 100) else 0
-            val paddingPx = requireContext().dp2px(paddingDp)
+            val paddingPx = dp2px(paddingDp)
             headerTopRow.setPadding(
                 headerTopRow.paddingLeft,
                 paddingPx,
