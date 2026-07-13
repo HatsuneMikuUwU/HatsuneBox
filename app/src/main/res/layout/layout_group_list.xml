@@ -56,32 +56,30 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_home"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        app:insetTop="0dp"
-                        app:insetBottom="0dp"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp"
-                        app:backgroundTint="?attr/colorSurface"
-                        app:cornerRadius="16dp"
-                        app:icon="@drawable/ic_navigation_menu"
+                        android:minWidth="55dp"
+                        android:minHeight="55dp"
+                        app:backgroundTint="?colorCard"
+                        app:icon="@drawable/ic_btn_home_color"
+                        app:iconGravity="textStart"
                         app:iconPadding="0dp"
-                        app:iconTint="?attr/colorOnSurface" />
+                        app:iconTint="@null"
+                        style="@style/Widget.Material3Expressive.Button.IconButton.Filled" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_more_menu"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        app:insetTop="0dp"
-                        app:insetBottom="0dp"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp"
-                        app:backgroundTint="?attr/colorSurface"
-                        app:cornerRadius="16dp"
-                        app:icon="@drawable/ic_baseline_more_vert_24"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="55dp"
+                        android:minHeight="55dp"
+                        app:backgroundTint="?colorCard"
+                        app:icon="@drawable/ic_btn_more_menu_color"
+                        app:iconGravity="textStart"
                         app:iconPadding="0dp"
-                        app:iconTint="?attr/colorOnSurface" />
+                        app:iconTint="@null"
+                        style="@style/Widget.Material3Expressive.Button.IconButton.Filled" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -101,7 +99,7 @@
                         android:marqueeRepeatLimit="marquee_forever"
                         android:singleLine="true"
                         android:textAppearance="?textAppearanceBodySmall"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="?colorOnSurfaceVariant"
                         android:textStyle="bold" />
 
                     <io.nekohasekai.sagernet.widget.marquee.UserNameTextView
@@ -114,7 +112,7 @@
                         android:marqueeRepeatLimit="marquee_forever"
                         android:singleLine="true"
                         android:textAppearance="?textAppearanceTitleMedium"
-                        android:textColor="?attr/colorOnSurface"
+                        android:textColor="?colorOnSurface"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -122,7 +120,7 @@
                     android:id="@+id/iv_profile"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    app:siBorderColor="?attr/colorPrimary"
+                    app:siBorderColor="?colorPrimary"
                     app:siBorderWidth="3dp" />
             </LinearLayout>
 
@@ -137,25 +135,24 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_add_config"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    app:backgroundTint="?attr/colorSurface"
-                    app:cornerRadius="16dp"
-                    app:icon="@drawable/ic_action_note_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="55dp"
+                    android:minHeight="55dp"
+                    android:layout_marginEnd="4dp"
+                    app:backgroundTint="?colorCard"
+                    app:icon="@drawable/ic_btn_add_config_color"
+                    app:iconGravity="textStart"
                     app:iconPadding="0dp"
-                    app:iconTint="?attr/colorOnSurface" />
+                    app:iconTint="@null"
+                    style="@style/Widget.Material3Expressive.Button.IconButton.Filled" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="?attr/colorSurface"
-                    app:cardCornerRadius="24dp"
+                    app:cardBackgroundColor="?colorCard"
+                    app:cardCornerRadius="28dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="0dp">
 
@@ -172,7 +169,7 @@
                             android:layout_height="22dp"
                             android:layout_marginEnd="6dp"
                             android:src="@drawable/ic_baseline_manage_search_24"
-                            android:tint="?attr/colorOnSurfaceVariant" />
+                            android:tint="?colorOnSurfaceVariant" />
 
                         <androidx.appcompat.widget.SearchView
                             android:id="@+id/search_view_inline"
@@ -209,8 +206,8 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="?attr/colorSurface"
-            app:cardCornerRadius="24dp"
+            app:cardBackgroundColor="?colorCard"
+            app:cardCornerRadius="28dp"
             app:cardElevation="0dp"
             app:contentPadding="5dp"
             app:strokeWidth="0dp">
@@ -221,7 +218,7 @@
                 android:clipChildren="true"
                 android:clipToOutline="true"
                 app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="20dp"
+                app:cardCornerRadius="23dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 
@@ -232,7 +229,7 @@
                     android:background="@android:color/transparent"
                     app:tabIndicator="@drawable/uwu_tabs_rounded_indicator"
                     app:tabIndicatorAnimationMode="elastic"
-                    app:tabIndicatorColor="?attr/colorPrimary"
+                    app:tabIndicatorColor="?colorPrimary"
                     app:tabIndicatorFullWidth="true"
                     app:tabIndicatorHeight="40dp"
                     app:tabMinWidth="0dp"
@@ -240,8 +237,10 @@
                     app:tabPaddingEnd="0dp"
                     app:tabPaddingStart="0dp"
                     app:tabRippleColor="@android:color/transparent"
-                    app:tabSelectedTextColor="?attr/colorSurface"
-                    app:tabTextColor="?attr/colorOnSurfaceVariant" />
+                    app:tabSelectedTextAppearance="?textAppearanceTitleSmall"
+                    app:tabSelectedTextColor="?colorSurface"
+                    app:tabTextAppearance="?textAppearanceTitleSmall"
+                    app:tabTextColor="?colorOnSurfaceVariant" />
             </com.google.android.material.card.MaterialCardView>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
