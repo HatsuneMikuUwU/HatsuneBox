@@ -28,9 +28,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.size
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceDataStore
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -197,6 +200,13 @@ class ConfigurationFragment @JvmOverloads constructor(
         val layoutTabWrapper = view.findViewById<View>(R.id.layout_tab_wrapper)
         inlineSearchView = view.findViewById<SearchView>(R.id.search_view_inline)
 
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val headerContent = v.findViewById<View>(R.id.header_content)
+            headerContent?.updatePadding(top = systemBars.top)
+            insets
+        }
+
         if (!select) {
             headerSection.isVisible = true
             layoutTabWrapper.isVisible = true
@@ -250,7 +260,7 @@ class ConfigurationFragment @JvmOverloads constructor(
             if (adapter.groupList.size > position) {
                 tab.text = adapter.groupList[position].displayName()
             }
-            tab.view.setOnLongClickListener { // clear toast
+            tab.view.setOnLongClickListener { 
                 true
             }
         }.attach()
@@ -284,7 +294,6 @@ class ConfigurationFragment @JvmOverloads constructor(
 
     override fun onPreferenceDataStoreChanged(store: PreferenceDataStore, key: String) {
         runOnMainDispatcher {
-            // editingGroup
             if (key == Key.PROFILE_GROUP) {
                 val targetId = DataStore.editingGroup
                 if (targetId > 0 && targetId != DataStore.selectedGroup) {
@@ -340,7 +349,6 @@ class ConfigurationFragment @JvmOverloads constructor(
                             }
                     val proxies = mutableListOf<AbstractBean>()
                     if (fileName != null && fileName.endsWith(".zip")) {
-                        // try parse wireguard zip
                         val zip =
                             ZipInputStream(requireContext().contentResolver.openInputStream(file)!!)
                         while (true) {
@@ -672,7 +680,7 @@ class ConfigurationFragment @JvmOverloads constructor(
         lateinit var cancel: () -> Unit
         lateinit var minimize: () -> Unit
 
-        val dialogStatus = AtomicInteger(0) // 1: hidden 2: cancelled
+        val dialogStatus = AtomicInteger(0) 
         var notification: ConnectionTestNotification? = null
 
         val results: MutableSet<ProxyEntity> = ConcurrentHashMap.newKeySet()
@@ -695,7 +703,6 @@ class ConfigurationFragment @JvmOverloads constructor(
                 if (status >= 1) return@runOnMainDispatcher
                 if (!isAdded) return@runOnMainDispatcher
 
-                // refresh dialog
 
                 var profileStatusText: String? = null
                 var profileStatusColor = 0
@@ -803,7 +810,6 @@ class ConfigurationFragment @JvmOverloads constructor(
                         }
                         try {
                             if (icmpPing) {
-                                // removed
                             } else {
                                 val socket =
                                     SagerNet.underlyingNetwork?.socketFactory?.createSocket()
@@ -909,7 +915,7 @@ class ConfigurationFragment @JvmOverloads constructor(
             val profiles = ConcurrentLinkedQueue(profilesList)
             repeat(DataStore.connectionTestConcurrent) {
                 testJobs.add(launch(Dispatchers.IO) {
-                    val urlTest = UrlTest() // note: this is NOT in bg process
+                    val urlTest = UrlTest() 
                     while (isActive) {
                         val profile = profiles.poll() ?: break
                         profile.status = 0
@@ -1167,8 +1173,6 @@ class ConfigurationFragment @JvmOverloads constructor(
             } else if (!::configurationListView.isInitialized) {
                 onViewCreated(requireView(), null)
             } else {
-                // Re-bind visible rows so settings like "Always Show Address"
-                // take effect immediately without needing an app restart.
                 adapter?.notifyDataSetChanged()
             }
             configurationListView.requestFocus()
@@ -1285,7 +1289,7 @@ class ConfigurationFragment @JvmOverloads constructor(
             override fun onBindViewHolder(holder: ConfigurationHolder, position: Int) {
                 try {
                     holder.bind(getItemAt(position))
-                } catch (ignored: NullPointerException) { // when group deleted
+                } catch (ignored: NullPointerException) { 
                 }
             }
 
@@ -1384,7 +1388,6 @@ class ConfigurationFragment @JvmOverloads constructor(
                     }
                     configurationList[profile.id] = profile
                     notifyItemChanged(index)
-                    //
                     val oldProfile = configurationList[profile.id]
                     if (noTraffic && oldProfile != null) {
                         runOnDefaultDispatcher {
@@ -1554,7 +1557,6 @@ class ConfigurationFragment @JvmOverloads constructor(
                 var rx = proxyEntity.rx
                 var tx = proxyEntity.tx
                 if (trafficData != null) {
-                    // use new data
                     tx = trafficData.tx
                     rx = trafficData.rx
                 }
@@ -1760,70 +1762,92 @@ class ConfigurationFragment @JvmOverloads constructor(
 
         headerImage.setLayerType(View.LAYER_TYPE_NONE, null)
 
+        val paddingTopWithBanner = (16 * resources.displayMetrics.density).toInt()
+        val paddingTopNoBanner = 0
+
         fun applyBannerHeight() {
-            val heightPx = requireContext().dp2px(DataStore.homeBannerHeight.coerceIn(150, 300))
+            val heightDp = DataStore.homeBannerHeight.coerceIn(150, 300)
+            val heightPx = requireContext().dp2px(heightDp)
             val lp = bannerHome.layoutParams
             lp.height = heightPx
             bannerHome.layoutParams = lp
+            headerImage.scaleType = ImageView.ScaleType.CENTER_CROP
         }
 
-        fun applyBannerVisibility() {
-            val show = DataStore.showHomeBanner
+        fun applyBannerVisibility(show: Boolean) {
             bannerHome.isVisible = show
-            applyHeaderTopRowPadding()
+            val topPad = if (show) paddingTopWithBanner else paddingTopNoBanner
+            headerTopRow.setPadding(
+                headerTopRow.paddingLeft,
+                topPad,
+                headerTopRow.paddingRight,
+                headerTopRow.paddingBottom
+            )
         }
 
         fun applyHeaderTopRowPadding() {
-            val paddingDp = if (DataStore.showHomeBanner) DataStore.headerTopRowPadding.coerceIn(0, 100) else 0
+            val showBanner = DataStore.showHomeBanner
+            val paddingDp = if (showBanner) DataStore.headerTopRowPadding.coerceIn(0, 100) else 0
+            val paddingPx = requireContext().dp2px(paddingDp)
             headerTopRow.setPadding(
                 headerTopRow.paddingLeft,
-                requireContext().dp2px(paddingDp),
+                paddingPx,
                 headerTopRow.paddingRight,
-                headerTopRow.paddingBottom,
+                headerTopRow.paddingBottom
             )
         }
 
         fun loadBannerImage() {
+            if (!isAdded) return
+
             val uriString = DataStore.customHomeBannerUri
             val targetTag = uriString.ifEmpty { tagHomeBannerDefault }
+            
             if (headerImage.tag == targetTag) return
+            
             if (uriString.isNotEmpty()) {
-                val request = Glide.with(this)
-                if (uriString.lowercase().endsWith(".gif")) {
-                    request.asGif()
+                val isGif = uriString.lowercase().endsWith(".gif")
+                if (isGif) {
+                    Glide.with(this@ConfigurationFragment)
+                        .asGif()
                         .load(Uri.parse(uriString))
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
                         .error(R.drawable.uwu_banner_home)
                         .into(headerImage)
                 } else {
-                    request.load(Uri.parse(uriString))
+                    Glide.with(this@ConfigurationFragment)
+                        .load(Uri.parse(uriString))
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
                         .error(R.drawable.uwu_banner_home)
                         .into(headerImage)
                 }
             } else {
-                Glide.with(this).clear(headerImage)
+                Glide.with(this@ConfigurationFragment).clear(headerImage)
                 headerImage.setImageResource(R.drawable.uwu_banner_home)
             }
             headerImage.tag = targetTag
         }
 
+        val show = DataStore.showHomeBanner
+        applyBannerVisibility(show)
         applyBannerHeight()
-        applyBannerVisibility()
+        applyHeaderTopRowPadding()
         loadBannerImage()
 
         homeBannerReceiver?.let {
             try {
                 context?.unregisterReceiver(it)
-            } catch (_: Exception) {
-            }
+            } catch (_: Exception) {}
         }
+        
         homeBannerReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 when (intent?.action) {
                     Action.HOME_BANNER_CHANGED -> {
+                        val showNow = DataStore.showHomeBanner
+                        applyBannerVisibility(showNow)
                         applyBannerHeight()
-                        applyBannerVisibility()
+                        applyHeaderTopRowPadding()
                         loadBannerImage()
                     }
                     Action.HEADER_TOP_ROW_PADDING_CHANGED -> {
@@ -1832,10 +1856,11 @@ class ConfigurationFragment @JvmOverloads constructor(
                 }
             }
         }
-        val filter = IntentFilter().apply {
-            addAction(Action.HOME_BANNER_CHANGED)
+        
+        val filter = IntentFilter(Action.HOME_BANNER_CHANGED).apply {
             addAction(Action.HEADER_TOP_ROW_PADDING_CHANGED)
         }
+        
         homeBannerReceiver?.let { receiver ->
             ContextCompat.registerReceiver(
                 requireContext(),
