@@ -6,22 +6,32 @@ import io.nekohasekai.sagernet.database.DataStore
 
 class ThemeStateManager(private val activity: Activity) {
 
-    private var currentAppTheme: Int = 0
+    private data class ThemeState(
+        val appTheme: Int,
+        val showHomeBanner: Boolean,
+        val homeBannerHeight: Int,
+        val headerTopRowPadding: Int,
+        val customHomeBannerUri: String
+    )
 
-    init {
-        loadState()
-    }
+    private var currentState: ThemeState = fetchCurrentState()
 
-    private fun loadState() {
-        currentAppTheme = DataStore.appTheme
+    private fun fetchCurrentState(): ThemeState {
+        return ThemeState(
+            appTheme = DataStore.appTheme,
+            showHomeBanner = DataStore.showHomeBanner,
+            homeBannerHeight = DataStore.homeBannerHeight,
+            headerTopRowPadding = DataStore.headerTopRowPadding,
+            customHomeBannerUri = DataStore.customHomeBannerUri
+        )
     }
 
     fun checkThemeChangedAndRecreate() {
-        val newAppTheme = DataStore.appTheme
-
-        if (currentAppTheme != newAppTheme) {
-            activity.setTheme(Theme.getTheme(newAppTheme))
-            loadState()
+        val newState = fetchCurrentState()
+        
+        if (currentState != newState) {
+            activity.setTheme(Theme.getTheme(newState.appTheme))
+            currentState = newState
             ActivityCompat.recreate(activity)
         }
     }
