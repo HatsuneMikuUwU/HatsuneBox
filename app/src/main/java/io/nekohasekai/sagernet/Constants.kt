@@ -151,12 +151,18 @@ object Key {
     const val APP_TLS_VERSION = "appTLSVersion"
     const val ENABLE_CLASH_API = "enableClashAPI"
 
-    // Ported from MikuRay: main menu bottom sheet / profile identity
+    // Ported from MikuRay: main menu bottom sheet / profile identity / home banner
     const val CUSTOM_PROFILE_NAME = "customProfileName"
     const val ICON_SHAPE = "iconShape"
     const val PROFILE_BANNER_SHAPE = "profileBannerShape"
     const val PROFILE_BANNER_URI = "profileBannerUri"
+    const val CUSTOM_HOME_BANNER_URI = "customHomeBannerUri"
     const val CUSTOM_SHEET_BANNER_URI = "customSheetBannerUri"
+    const val SHOW_HOME_BANNER = "pref_show_home_banner"
+    const val HOME_BANNER_HEIGHT = "pref_home_banner_height"
+    const val HEADER_TOP_ROW_PADDING = "pref_header_top_row_padding"
+    const val ACTION_CHANGE_HOME_BANNER_IMAGE = "action_change_home_banner_image"
+    const val ACTION_DELETE_HOME_BANNER_IMAGE = "action_delete_home_banner_image"
     const val DISABLE_PARTICLES_SHEET = "disableParticlesSheet"
     const val CATEGORY_STYLE = "categoryStyle"
 }
@@ -196,5 +202,7 @@ object Action {
     // Ported from MikuRay: live UI style change broadcasts
     const val ICON_SHAPE_CHANGED = "io.nekohasekai.sagernet.ICON_SHAPE_CHANGED"
     const val PROFILE_BANNER_CHANGED = "io.nekohasekai.sagernet.PROFILE_BANNER_CHANGED"
+    const val HOME_BANNER_CHANGED = "io.nekohasekai.sagernet.HOME_BANNER_CHANGED"
+    const val HEADER_TOP_ROW_PADDING_CHANGED = "io.nekohasekai.sagernet.HEADER_TOP_ROW_PADDING_CHANGED"
     const val CATEGORY_STYLE_CHANGED = "io.nekohasekai.sagernet.CATEGORY_STYLE_CHANGED"
 }

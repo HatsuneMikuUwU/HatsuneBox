@@ -15,6 +15,43 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/home_banner_category">
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:icon="@drawable/ic_baseline_home_24"
+            app:key="pref_show_home_banner"
+            app:summary="@string/home_banner_show_summary"
+            app:title="@string/home_banner_show_title" />
+
+        <io.nekohasekai.sagernet.ui.dialog.BannerHeightSliderDialog
+            app:icon="@drawable/ic_baseline_photo_size_select_large_24"
+            app:key="pref_home_banner_height"
+            app:title="@string/pref_home_banner_height_title"
+            app:dependency="pref_show_home_banner" />
+
+        <io.nekohasekai.sagernet.ui.dialog.HeaderTopRowPaddingDialog
+            app:icon="@drawable/ic_baseline_vertical_align_top_24"
+            app:key="pref_header_top_row_padding"
+            app:title="@string/pref_header_top_row_padding_title"
+            app:dependency="pref_show_home_banner" />
+
+        <Preference
+            app:icon="@drawable/ic_image_photo"
+            app:key="action_change_home_banner_image"
+            app:summary="@string/home_banner_custom_summary"
+            app:title="@string/home_banner_custom_title"
+            app:dependency="pref_show_home_banner" />
+
+        <Preference
+            app:icon="@drawable/baseline_delete_sweep_24"
+            app:key="action_delete_home_banner_image"
+            app:summary="@string/home_banner_delete_summary"
+            app:title="@string/home_banner_delete_title"
+            app:dependency="pref_show_home_banner" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/sheet_banner_category">
 
         <SwitchPreference

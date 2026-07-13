@@ -1,11 +1,15 @@
 package io.nekohasekai.sagernet.ui
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.os.SystemClock
 import android.provider.OpenableColumns
+import android.net.Uri
 import android.text.SpannableStringBuilder
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.format.Formatter
@@ -22,6 +26,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -33,9 +38,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import io.nekohasekai.sagernet.Action
 import io.nekohasekai.sagernet.GroupOrder
 import io.nekohasekai.sagernet.GroupType
 import io.nekohasekai.sagernet.Key
@@ -136,6 +144,10 @@ class ConfigurationFragment @JvmOverloads constructor(
     lateinit var tabLayout: TabLayout
     lateinit var groupPager: ViewPager2
 
+    private var inlineSearchView: SearchView? = null
+    private var homeBannerReceiver: BroadcastReceiver? = null
+    private val tagHomeBannerDefault = "DEFAULT_HOME_BANNER"
+
     val alwaysShowAddress get() = DataStore.alwaysShowAddress
 
     fun getCurrentGroupFragment(): GroupFragment? {
@@ -181,30 +193,47 @@ class ConfigurationFragment @JvmOverloads constructor(
         super.onViewCreated(view, savedInstanceState)
 
         toolbar = view.findViewById(R.id.toolbar)
+        val headerSection = view.findViewById<View>(R.id.header_section)
+        val layoutTabWrapper = view.findViewById<View>(R.id.layout_tab_wrapper)
+        inlineSearchView = view.findViewById<SearchView>(R.id.search_view_inline)
+
         if (!select) {
-            toolbar.setNavigationIcon(R.drawable.ic_navigation_menu)
-            toolbar.setNavigationOnClickListener {
+            headerSection.isVisible = true
+            layoutTabWrapper.isVisible = true
+            toolbar.isGone = true
+
+            view.findViewById<View>(R.id.btn_home)?.setOnClickListener {
                 (requireActivity() as MainActivity).showMainMenu()
             }
-            toolbar.inflateMenu(R.menu.add_profile_menu)
-            toolbar.setOnMenuItemClickListener(this)
+            view.findViewById<View>(R.id.btn_add_config)?.setOnClickListener {
+                AddConfigBottomSheet().show(childFragmentManager, AddConfigBottomSheet.TAG)
+            }
+            view.findViewById<View>(R.id.btn_more_menu)?.setOnClickListener {
+                MoreMenuBottomSheet.newInstance(DataStore.currentGroupId())
+                    .show(childFragmentManager, MoreMenuBottomSheet.TAG)
+            }
+
+            inlineSearchView?.apply {
+                setOnQueryTextListener(this@ConfigurationFragment)
+                maxWidth = Int.MAX_VALUE
+                setOnCloseListener {
+                    getCurrentGroupFragment()?.adapter?.filter("")
+                    false
+                }
+                setOnQueryTextFocusChangeListener { _, hasFocus ->
+                    if (!hasFocus) clearFocus()
+                }
+            }
+
+            setupHomeBannerUi(view)
         } else {
+            headerSection.isGone = true
+            layoutTabWrapper.isVisible = true
+            toolbar.isVisible = true
             toolbar.setTitle(titleRes)
             toolbar.setNavigationIcon(R.drawable.ic_navigation_close)
             toolbar.setNavigationOnClickListener {
                 requireActivity().finish()
-            }
-        }
-
-        val searchView = toolbar.findViewById<SearchView>(R.id.action_search)
-        if (searchView != null) {
-            searchView.setOnQueryTextListener(this)
-            searchView.maxWidth = Int.MAX_VALUE
-
-            searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    cancelSearch(searchView)
-                }
             }
         }
 
@@ -273,6 +302,14 @@ class ConfigurationFragment @JvmOverloads constructor(
 
     override fun onDestroy() {
         DataStore.profileCacheStore.unregisterChangeListener(this)
+        inlineSearchView = null
+        homeBannerReceiver?.let { receiver ->
+            try {
+                context?.unregisterReceiver(receiver)
+            } catch (_: Exception) {
+            }
+        }
+        homeBannerReceiver = null
 
         if (::adapter.isInitialized) {
             GroupManager.removeListener(adapter)
@@ -1715,6 +1752,99 @@ class ConfigurationFragment @JvmOverloads constructor(
                 }
             }
         }
+
+    private fun setupHomeBannerUi(root: View) {
+        val bannerHome = root.findViewById<View>(R.id.banner_home)
+        val headerImage = root.findViewById<ImageView>(R.id.header_image)
+        val headerTopRow = root.findViewById<LinearLayout>(R.id.header_top_row)
+
+        headerImage.setLayerType(View.LAYER_TYPE_NONE, null)
+
+        fun applyBannerHeight() {
+            val heightPx = requireContext().dp2px(DataStore.homeBannerHeight.coerceIn(150, 300))
+            val lp = bannerHome.layoutParams
+            lp.height = heightPx
+            bannerHome.layoutParams = lp
+        }
+
+        fun applyBannerVisibility() {
+            val show = DataStore.showHomeBanner
+            bannerHome.isVisible = show
+            applyHeaderTopRowPadding()
+        }
+
+        fun applyHeaderTopRowPadding() {
+            val paddingDp = if (DataStore.showHomeBanner) DataStore.headerTopRowPadding.coerceIn(0, 100) else 0
+            headerTopRow.setPadding(
+                headerTopRow.paddingLeft,
+                requireContext().dp2px(paddingDp),
+                headerTopRow.paddingRight,
+                headerTopRow.paddingBottom,
+            )
+        }
+
+        fun loadBannerImage() {
+            val uriString = DataStore.customHomeBannerUri
+            val targetTag = uriString.ifEmpty { tagHomeBannerDefault }
+            if (headerImage.tag == targetTag) return
+            if (uriString.isNotEmpty()) {
+                val request = Glide.with(this)
+                if (uriString.lowercase().endsWith(".gif")) {
+                    request.asGif()
+                        .load(Uri.parse(uriString))
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .error(R.drawable.uwu_banner_home)
+                        .into(headerImage)
+                } else {
+                    request.load(Uri.parse(uriString))
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .error(R.drawable.uwu_banner_home)
+                        .into(headerImage)
+                }
+            } else {
+                Glide.with(this).clear(headerImage)
+                headerImage.setImageResource(R.drawable.uwu_banner_home)
+            }
+            headerImage.tag = targetTag
+        }
+
+        applyBannerHeight()
+        applyBannerVisibility()
+        loadBannerImage()
+
+        homeBannerReceiver?.let {
+            try {
+                context?.unregisterReceiver(it)
+            } catch (_: Exception) {
+            }
+        }
+        homeBannerReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    Action.HOME_BANNER_CHANGED -> {
+                        applyBannerHeight()
+                        applyBannerVisibility()
+                        loadBannerImage()
+                    }
+                    Action.HEADER_TOP_ROW_PADDING_CHANGED -> {
+                        applyHeaderTopRowPadding()
+                    }
+                }
+            }
+        }
+        val filter = IntentFilter().apply {
+            addAction(Action.HOME_BANNER_CHANGED)
+            addAction(Action.HEADER_TOP_ROW_PADDING_CHANGED)
+        }
+        homeBannerReceiver?.let { receiver ->
+            ContextCompat.registerReceiver(
+                requireContext(),
+                receiver,
+                filter,
+                ContextCompat.RECEIVER_NOT_EXPORTED,
+            )
+        }
+    }
 
     private fun cancelSearch(searchView: SearchView) {
         searchView.onActionViewCollapsed()

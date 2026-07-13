@@ -73,6 +73,23 @@
     <string name="delete_custom_banner_profile_summary">Custom banner removed. Default profile banner will be used instead</string>
     <string name="custom_banner_profile_deleted">Avatar reset to default</string>
 
+    <string name="home_banner_category">Home Banner</string>
+    <string name="home_banner_show_title">Show home banner</string>
+    <string name="home_banner_show_summary">Display the banner image at the top of the home screen</string>
+    <string name="home_banner_custom_title">Change home banner</string>
+    <string name="home_banner_custom_summary">Set a custom image for the home header (optional)</string>
+    <string name="home_banner_delete_title">Remove custom home banner</string>
+    <string name="home_banner_delete_summary">Custom banner removed. Default home banner will be used instead</string>
+    <string name="home_banner_updated">Home banner updated</string>
+    <string name="home_banner_deleted">Home banner reset to default</string>
+    <string name="pref_home_banner_height_title">Banner height</string>
+    <string name="pref_home_banner_height_summary_value">%1$ddp</string>
+    <string name="pref_header_top_row_padding_title">Header top padding</string>
+    <string name="pref_header_top_row_padding_summary_value">%1$ddp</string>
+    <string name="title_home_search">Search</string>
+    <string name="hint_search_configurations">Search configurations</string>
+    <string name="reset">Reset</string>
+
     <!-- Ported from MikuRay: add-config bottom sheet -->
     <string name="import_configuration">Import Configuration</string>
     <string name="add_server_manually">Manual Setup</string>

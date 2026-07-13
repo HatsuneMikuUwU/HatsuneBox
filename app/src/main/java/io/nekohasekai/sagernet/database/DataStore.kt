@@ -173,7 +173,11 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var iconShape by configurationStore.string(Key.ICON_SHAPE) { "uwu_shape_cookie" }
     var profileBannerShape by configurationStore.string(Key.PROFILE_BANNER_SHAPE) { "uwu_shape_cookie" }
     var profileBannerUri by configurationStore.string(Key.PROFILE_BANNER_URI)
+    var customHomeBannerUri by configurationStore.string(Key.CUSTOM_HOME_BANNER_URI)
     var customSheetBannerUri by configurationStore.string(Key.CUSTOM_SHEET_BANNER_URI)
+    var showHomeBanner by configurationStore.boolean(Key.SHOW_HOME_BANNER) { true }
+    var homeBannerHeight by configurationStore.int(Key.HOME_BANNER_HEIGHT) { 170 }
+    var headerTopRowPadding by configurationStore.int(Key.HEADER_TOP_ROW_PADDING) { 16 }
     var disableParticlesSheet by configurationStore.boolean(Key.DISABLE_PARTICLES_SHEET) { false }
     var categoryStyle by configurationStore.string(Key.CATEGORY_STYLE) { "gradient" }
 

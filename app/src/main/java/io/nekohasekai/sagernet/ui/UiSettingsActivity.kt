@@ -27,8 +27,9 @@ import java.io.File
  * Scoped port of MikuRay's `UiSettingsActivity`. MikuRay's original screen
  * also covers weather chips, blur, custom fonts, home banners and more —
  * none of those subsystems exist in NekoBox, so this only exposes the
- * settings actually wired up by the ported main menu bottom sheet: icon
- * shape, the sheet banner, and profile identity.
+ * settings actually wired up by the ported main menu bottom sheet and home
+ * screen header: icon shape, the home banner, the sheet banner, and profile
+ * identity.
  */
 class UiSettingsActivity : ThemedActivity() {
 
@@ -55,6 +56,17 @@ class UiSettingsActivity : ThemedActivity() {
 
     class UiSettingsFragment : PreferenceFragmentCompat() {
 
+        private val pickHomeBanner =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                if (uri != null) {
+                    if (isGif(uri)) {
+                        saveHomeBannerDirect(uri)
+                    } else {
+                        startCropHomeBanner(uri)
+                    }
+                }
+            }
+
         private val pickSheetBanner =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
@@ -69,6 +81,16 @@ class UiSettingsActivity : ThemedActivity() {
         private val pickProfileBanner =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) startCropProfileBanner(uri)
+            }
+
+        private val cropHomeBanner =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                    val croppedUri = UCrop.getOutput(result.data!!) ?: return@registerForActivityResult
+                    saveHomeBanner(croppedUri, "jpg")
+                } else if (result.resultCode == UCrop.RESULT_ERROR) {
+                    result.data?.let { UCrop.getError(it) }?.printStackTrace()
+                }
             }
 
         private val cropSheetBanner =
@@ -105,6 +127,24 @@ class UiSettingsActivity : ThemedActivity() {
                 true
             }
 
+            findPreference<Preference>("pref_show_home_banner")?.setOnPreferenceChangeListener { _, newValue ->
+                DataStore.showHomeBanner = newValue as Boolean
+                requireContext().sendBroadcast(Intent(Action.HOME_BANNER_CHANGED))
+                true
+            }
+
+            findPreference<Preference>("action_change_home_banner_image")?.setOnPreferenceClickListener {
+                pickHomeBanner.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo),
+                )
+                true
+            }
+
+            findPreference<Preference>("action_delete_home_banner_image")?.setOnPreferenceClickListener {
+                deleteHomeBanner()
+                true
+            }
+
             findPreference<Preference>("action_pick_sheet_banner")?.setOnPreferenceClickListener {
                 pickSheetBanner.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo),
@@ -131,6 +171,30 @@ class UiSettingsActivity : ThemedActivity() {
         }
 
         // --- crop launch helpers ---
+
+        private fun startCropHomeBanner(sourceUri: Uri) {
+            val destFile = File(requireContext().cacheDir, "cropped_home_banner_temp.jpg")
+            val displayMetrics = resources.displayMetrics
+            val screenWidthPx = displayMetrics.widthPixels.toFloat()
+            val targetHeightPx = displayMetrics.density * DataStore.homeBannerHeight.coerceIn(150, 300)
+
+            val uCrop = UCrop.of(sourceUri, Uri.fromFile(destFile))
+                .withAspectRatio(screenWidthPx, targetHeightPx)
+                .withMaxResultSize(1920, 1080)
+
+            try {
+                uCrop.withOptions(UCrop.Options().apply {
+                    setDimmedLayerColor(Color.parseColor("#CC000000"))
+                    setCircleDimmedLayer(false)
+                    setShowCropGrid(true)
+                    setFreeStyleCropEnabled(false)
+                })
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            cropHomeBanner.launch(uCrop.getIntent(requireContext()))
+        }
 
         private fun startCropSheetBanner(sourceUri: Uri) {
             val destFile = File(requireContext().cacheDir, "cropped_sheet_banner_temp.jpg")
@@ -178,6 +242,43 @@ class UiSettingsActivity : ThemedActivity() {
         }
 
         // --- save/delete ---
+
+        private fun saveHomeBannerDirect(sourceUri: Uri) {
+            lifecycleScope.launch {
+                try {
+                    deleteOldFile(DataStore.customHomeBannerUri)
+                    val savedUri = saveBannerFile(sourceUri, "home_banner_", "gif")
+                    DataStore.customHomeBannerUri = savedUri.toString()
+                    requireContext().sendBroadcast(Intent(Action.HOME_BANNER_CHANGED))
+                    (activity as? UiSettingsActivity)?.snackbar(getString(R.string.home_banner_updated))?.show()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        private fun saveHomeBanner(croppedUri: Uri, ext: String) {
+            lifecycleScope.launch {
+                try {
+                    deleteOldFile(DataStore.customHomeBannerUri)
+                    val savedUri = saveBannerFile(croppedUri, "home_banner_", ext)
+                    DataStore.customHomeBannerUri = savedUri.toString()
+                    requireContext().sendBroadcast(Intent(Action.HOME_BANNER_CHANGED))
+                    (activity as? UiSettingsActivity)?.snackbar(getString(R.string.home_banner_updated))?.show()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        private fun deleteHomeBanner() {
+            lifecycleScope.launch {
+                deleteOldFile(DataStore.customHomeBannerUri)
+                DataStore.customHomeBannerUri = ""
+                requireContext().sendBroadcast(Intent(Action.HOME_BANNER_CHANGED))
+                (activity as? UiSettingsActivity)?.snackbar(getString(R.string.home_banner_deleted))?.show()
+            }
+        }
 
         private fun saveSheetBannerDirect(sourceUri: Uri) {
             lifecycleScope.launch {
