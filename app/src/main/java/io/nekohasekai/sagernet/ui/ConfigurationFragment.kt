@@ -25,7 +25,6 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
@@ -132,7 +131,6 @@ class ConfigurationFragment @JvmOverloads constructor(
     val select: Boolean = false, val selectedItem: ProxyEntity? = null, val titleRes: Int = 0
 ) : Fragment(R.layout.layout_group_list),
     PopupMenu.OnMenuItemClickListener,
-    Toolbar.OnMenuItemClickListener,
     SearchView.OnQueryTextListener,
     OnPreferenceDataStoreChangeListener,
     AddConfigBottomSheet.OnAddConfigClickListener,
@@ -142,7 +140,6 @@ class ConfigurationFragment @JvmOverloads constructor(
         fun returnProfile(profileId: Long)
     }
 
-    lateinit var toolbar: Toolbar
     lateinit var adapter: GroupPagerAdapter
     lateinit var tabLayout: TabLayout
     lateinit var groupPager: ViewPager2
@@ -195,8 +192,8 @@ class ConfigurationFragment @JvmOverloads constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        toolbar = view.findViewById(R.id.toolbar)
-        val headerSection = view.findViewById<View>(R.id.header_section)
+        val appBar = view.findViewById<View>(R.id.app_bar)
+        val bannerHome = view.findViewById<View>(R.id.banner_home)
         val layoutTabWrapper = view.findViewById<View>(R.id.layout_tab_wrapper)
         inlineSearchView = view.findViewById<SearchView>(R.id.search_view_inline)
 
@@ -208,9 +205,9 @@ class ConfigurationFragment @JvmOverloads constructor(
         }
 
         if (!select) {
-            headerSection.isVisible = true
+            appBar?.isVisible = true
+            bannerHome?.isVisible = true
             layoutTabWrapper.isVisible = true
-            toolbar.isGone = true
 
             view.findViewById<View>(R.id.btn_home)?.setOnClickListener {
                 (requireActivity() as MainActivity).showMainMenu()
@@ -237,14 +234,9 @@ class ConfigurationFragment @JvmOverloads constructor(
 
             setupHomeBannerUi(view)
         } else {
-            headerSection.isGone = true
+            appBar?.isGone = true
+            bannerHome?.isGone = true
             layoutTabWrapper.isVisible = true
-            toolbar.isVisible = true
-            toolbar.setTitle(titleRes)
-            toolbar.setNavigationIcon(R.drawable.ic_navigation_close)
-            toolbar.setNavigationOnClickListener {
-                requireActivity().finish()
-            }
         }
 
         groupPager = view.findViewById(R.id.group_pager)
@@ -265,7 +257,7 @@ class ConfigurationFragment @JvmOverloads constructor(
             }
         }.attach()
 
-        toolbar.setOnClickListener {
+        appBar?.setOnClickListener {
             val fragment = getCurrentGroupFragment()
 
             if (fragment != null) {
@@ -281,12 +273,10 @@ class ConfigurationFragment @JvmOverloads constructor(
                         fragment.configurationListView.scrollTo(selectedProfileIndex, true)
                         return@setOnClickListener
                     }
-
                 }
 
                 fragment.configurationListView.scrollTo(0)
             }
-
         }
 
         DataStore.profileCacheStore.registerChangeListener(this)
@@ -396,20 +386,6 @@ class ConfigurationFragment @JvmOverloads constructor(
             ).show()
         }
 
-    }
-
-    override fun onMenuItemClick(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_add -> {
-                AddConfigBottomSheet().show(childFragmentManager, AddConfigBottomSheet.TAG)
-            }
-
-            R.id.action_misc -> {
-                MoreMenuBottomSheet.newInstance(DataStore.currentGroupId())
-                    .show(childFragmentManager, MoreMenuBottomSheet.TAG)
-            }
-        }
-        return true
     }
 
     override fun onMoreOptionClicked(viewId: Int) {
@@ -1015,7 +991,7 @@ class ConfigurationFragment @JvmOverloads constructor(
                         if (set) groupPager.setCurrentItem(selectedGroupIndex, false)
                         val hideTab = groupList.size < 2
                         tabLayout.isGone = hideTab
-                        toolbar.elevation = if (hideTab) 0F else dp2px(4).toFloat()
+                        view?.findViewById<View>(R.id.app_bar)?.elevation = if (hideTab) 0F else dp2px(4).toFloat()
                         if (!select) {
                             groupPager.registerOnPageChangeCallback(updateSelectedCallback)
                         }
