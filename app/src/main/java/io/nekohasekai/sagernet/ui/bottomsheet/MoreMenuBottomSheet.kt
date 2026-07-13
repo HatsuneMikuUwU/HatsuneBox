@@ -95,19 +95,19 @@ class MoreMenuBottomSheet : BaseBottomSheetFragment() {
 
         setupExpandable(
             rootContainer,
-            view.findViewById(R.id.quick_actions_expand_header),
-            view.findViewById(R.id.quick_actions_expand_content),
+            view.findViewById<View>(R.id.quick_actions_expand_header),
+            view.findViewById<View>(R.id.quick_actions_expand_content),
             view.findViewById<MaterialCardView>(R.id.quick_actions_expand_header)
-                ?.findViewById(R.id.row_quick_actions_expand_header)
-                ?.findViewById(R.id.row_arrow),
+                ?.findViewById<View>(R.id.row_quick_actions_expand_header)
+                ?.findViewById<ImageView>(R.id.row_arrow),
         )
         setupExpandable(
             rootContainer,
-            view.findViewById(R.id.management_expand_header),
-            view.findViewById(R.id.management_expand_content),
+            view.findViewById<View>(R.id.management_expand_header),
+            view.findViewById<View>(R.id.management_expand_content),
             view.findViewById<MaterialCardView>(R.id.management_expand_header)
-                ?.findViewById(R.id.row_management_expand_header)
-                ?.findViewById(R.id.row_arrow),
+                ?.findViewById<View>(R.id.row_management_expand_header)
+                ?.findViewById<ImageView>(R.id.row_arrow),
         )
 
         val checkOrigin = view.findViewById<CheckedTextView>(R.id.action_order_origin)
