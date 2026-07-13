@@ -11,12 +11,6 @@
             android:id="@+id/fragment_holder"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-            
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/uwu_bg_fade_bottom" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_bottom_status"
