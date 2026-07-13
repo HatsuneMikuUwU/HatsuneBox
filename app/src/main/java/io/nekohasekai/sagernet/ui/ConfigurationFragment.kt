@@ -130,7 +130,6 @@ import java.util.zip.ZipInputStream
 class ConfigurationFragment @JvmOverloads constructor(
     val select: Boolean = false, val selectedItem: ProxyEntity? = null, val titleRes: Int = 0
 ) : Fragment(R.layout.layout_group_list),
-    PopupMenu.OnMenuItemClickListener,
     SearchView.OnQueryTextListener,
     OnPreferenceDataStoreChangeListener,
     AddConfigBottomSheet.OnAddConfigClickListener,

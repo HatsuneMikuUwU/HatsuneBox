@@ -8,10 +8,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.database.DataStore
 
-/**
- * Ported from MikuRay. Shows the user's custom display name (falling back to
- * a generic default) in the profile banner header of the main menu sheet.
- */
 class UserNameTextView : AppCompatTextView {
 
     private var mAggregatedVisible: Boolean = false

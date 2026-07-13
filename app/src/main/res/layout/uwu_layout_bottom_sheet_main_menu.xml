@@ -144,7 +144,7 @@
                                             android:textColor="@android:color/white"
                                             android:textSize="14sp"
                                             android:textStyle="bold"
-                                            uwu_runnable="true" />
+                                            uwu_runnable="false" />
 
                                     </LinearLayout>
 

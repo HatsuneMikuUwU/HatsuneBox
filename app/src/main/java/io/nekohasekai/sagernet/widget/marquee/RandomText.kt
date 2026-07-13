@@ -8,10 +8,6 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 
-/**
- * Ported verbatim from MikuRay. Cycles through the `uwu_random_text` string
- * array every 3 seconds; used under the profile name in the banner header.
- */
 class RandomText(context: Context, attrs: AttributeSet?) :
     AppCompatTextView(context, attrs), Runnable {
 

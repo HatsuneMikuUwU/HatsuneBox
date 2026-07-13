@@ -93,7 +93,7 @@
                     android:gravity="end|center_vertical"
                     android:orientation="vertical">
 
-                    <io.nekohasekai.sagernet.widget.marquee.RandomText
+                    <io.nekohasekai.sagernet.widget.marquee.Greetings
                         android:id="@+id/tv_greeting_sub"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
