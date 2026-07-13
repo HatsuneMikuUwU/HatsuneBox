@@ -50,9 +50,9 @@ class AddConfigBottomSheet : BaseBottomSheetFragment() {
         view.findViewById<View>(R.id.particles_view)?.isVisible = !DataStore.disableParticlesSheet
         loadBanner(view)
 
-        bindRow(view, R.id.import_qrcode, R.id.row_import_qrcode, R.drawable.ic_action_qr, R.string.add_profile_methods_scan_qr_code, getString(R.string.desc_import_qrcode))
-        bindRow(view, R.id.import_clipboard, R.id.row_import_clipboard, R.drawable.ic_action_clipboard, R.string.action_import, getString(R.string.desc_import_clipboard))
-        bindRow(view, R.id.import_local, R.id.row_import_local, R.drawable.ic_action_file, R.string.action_import_file, getString(R.string.desc_import_local))
+        bindRow(view, R.id.import_qrcode, R.id.row_import_qrcode, R.drawable.ic_action_qr, R.string.add_profile_methods_scan_qr_code)
+        bindRow(view, R.id.import_clipboard, R.id.row_import_clipboard, R.drawable.ic_action_clipboard, R.string.action_import)
+        bindRow(view, R.id.import_local, R.id.row_import_local, R.drawable.ic_action_file, R.string.action_import_file)
 
         bindManualBadge(view, R.id.import_manually_socks, R.id.badge_import_manually_socks, R.string.action_socks)
         bindManualBadge(view, R.id.import_manually_http, R.id.badge_import_manually_http, R.string.action_http)
@@ -96,16 +96,11 @@ class AddConfigBottomSheet : BaseBottomSheetFragment() {
         rowId: Int,
         iconRes: Int,
         titleRes: Int,
-        desc: String,
     ) {
         val card = root.findViewById<MaterialCardView>(cardId) ?: return
         val row = card.findViewById<View>(rowId) ?: return
         row.findViewById<ImageView>(R.id.row_icon)?.setImageResource(iconRes)
         row.findViewById<TextView>(R.id.row_title)?.setText(titleRes)
-        row.findViewById<TextView>(R.id.row_desc)?.apply {
-            text = desc
-            visibility = View.VISIBLE
-        }
     }
 
     private fun bindManualBadge(root: View, cardId: Int, badgeId: Int, protocolNameRes: Int) {

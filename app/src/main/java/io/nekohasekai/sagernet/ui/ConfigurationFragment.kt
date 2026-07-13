@@ -42,6 +42,7 @@ import io.nekohasekai.sagernet.Key
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.SagerNet
 import io.nekohasekai.sagernet.ui.bottomsheet.AddConfigBottomSheet
+import io.nekohasekai.sagernet.ui.bottomsheet.MoreMenuBottomSheet
 import io.nekohasekai.sagernet.aidl.TrafficData
 import io.nekohasekai.sagernet.bg.BaseService
 import io.nekohasekai.sagernet.bg.proto.UrlTest
@@ -123,7 +124,8 @@ class ConfigurationFragment @JvmOverloads constructor(
     Toolbar.OnMenuItemClickListener,
     SearchView.OnQueryTextListener,
     OnPreferenceDataStoreChangeListener,
-    AddConfigBottomSheet.OnAddConfigClickListener {
+    AddConfigBottomSheet.OnAddConfigClickListener,
+    MoreMenuBottomSheet.OnMoreOptionClickListener {
 
     interface SelectCallback {
         fun returnProfile(profileId: Long)
@@ -357,6 +359,16 @@ class ConfigurationFragment @JvmOverloads constructor(
                 AddConfigBottomSheet().show(childFragmentManager, AddConfigBottomSheet.TAG)
             }
 
+            R.id.action_misc -> {
+                MoreMenuBottomSheet.newInstance(DataStore.currentGroupId())
+                    .show(childFragmentManager, MoreMenuBottomSheet.TAG)
+            }
+        }
+        return true
+    }
+
+    override fun onMoreOptionClicked(viewId: Int) {
+        when (viewId) {
             R.id.action_update_subscription -> {
                 val group = DataStore.currentGroup()
                 if (group.type != GroupType.SUBSCRIPTION) {
@@ -503,7 +515,6 @@ class ConfigurationFragment @JvmOverloads constructor(
                 urlTest()
             }
         }
-        return true
     }
 
     override fun onAddConfigOptionClicked(viewId: Int) {
@@ -1123,55 +1134,7 @@ class ConfigurationFragment @JvmOverloads constructor(
                 // take effect immediately without needing an app restart.
                 adapter?.notifyDataSetChanged()
             }
-            checkOrderMenu()
             configurationListView.requestFocus()
-        }
-
-        fun checkOrderMenu() {
-            if (select) return
-
-            val pf = requireParentFragment() as? ConfigurationFragment ?: return
-            val menu = pf.toolbar.menu
-            val origin = menu.findItem(R.id.action_order_origin)
-            val byName = menu.findItem(R.id.action_order_by_name)
-            val byDelay = menu.findItem(R.id.action_order_by_delay)
-            when (proxyGroup.order) {
-                GroupOrder.ORIGIN -> {
-                    origin.isChecked = true
-                }
-
-                GroupOrder.BY_NAME -> {
-                    byName.isChecked = true
-                }
-
-                GroupOrder.BY_DELAY -> {
-                    byDelay.isChecked = true
-                }
-            }
-
-            fun updateTo(order: Int) {
-                if (proxyGroup.order == order) return
-                runOnDefaultDispatcher {
-                    proxyGroup.order = order
-                    GroupManager.updateGroup(proxyGroup)
-                }
-            }
-
-            origin.setOnMenuItemClickListener {
-                it.isChecked = true
-                updateTo(GroupOrder.ORIGIN)
-                true
-            }
-            byName.setOnMenuItemClickListener {
-                it.isChecked = true
-                updateTo(GroupOrder.BY_NAME)
-                true
-            }
-            byDelay.setOnMenuItemClickListener {
-                it.isChecked = true
-                updateTo(GroupOrder.BY_DELAY)
-                true
-            }
         }
 
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

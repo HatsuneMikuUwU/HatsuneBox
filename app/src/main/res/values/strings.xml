@@ -76,11 +76,13 @@
     <!-- Ported from MikuRay: add-config bottom sheet -->
     <string name="import_configuration">Import Configuration</string>
     <string name="add_server_manually">Manual Setup</string>
-    <string name="desc_import_qrcode">Scan a QR code with your camera</string>
-    <string name="desc_import_clipboard">Paste a link or subscription from clipboard</string>
-    <string name="desc_import_local">Import a config file from storage</string>
     <string name="desc_import_manually">Add a %1$s server manually</string>
     <string name="action_vless" translatable="false">VLESS</string>
+
+    <!-- Ported from MikuRay: more menu bottom sheet -->
+    <string name="title_more_menu">More Menu</string>
+    <string name="quick_actions_and_testing">Quick Actions &amp; Testing</string>
+    <string name="management">Management</string>
     <!-- externel -->
     <string name="action_copy">Copy</string>
     <string name="action_open">Open</string>
