@@ -12,6 +12,10 @@
         style="@style/Widget.Material3.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:elevation="0dp"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"
+        android:layout_marginHorizontal="8.0dip"
         android:touchscreenBlocksFocus="false"
         app:title="@string/app_name" />
 
