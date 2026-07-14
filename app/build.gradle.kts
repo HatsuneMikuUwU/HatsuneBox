@@ -60,10 +60,7 @@ dependencies {
     implementation("com.google.android.material:material:1.14.0")
     implementation("com.google.code.gson:gson:2.9.0")
 
-    // Ported from MikuRay: image loading for ProfileBannerImageView
     implementation("com.github.bumptech.glide:glide:5.0.7")
-
-    // Ported from MikuRay: crop step for banner/avatar pickers in UiSettingsActivity
     implementation("com.github.yalantis:ucrop:2.2.11")
 
     implementation("com.github.jenly1314:zxing-lite:2.1.1")
