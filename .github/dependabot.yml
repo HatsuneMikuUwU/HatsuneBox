@@ -9,13 +9,3 @@ updates:
     directory: "/app"
     schedule:
       interval: "daily"
-
-  - package-ecosystem: "gradle"
-    directory: "/gradle"
-    schedule:
-      interval: "daily"
-      
-  - package-ecosystem: "gradle"
-    directory: "/buildSrc"
-    schedule:
-      interval: "daily"
