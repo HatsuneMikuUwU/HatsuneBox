@@ -255,6 +255,7 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var groupType by profileCacheStore.stringToInt(Key.GROUP_TYPE)
     var groupOrder by profileCacheStore.stringToInt(Key.GROUP_ORDER)
     var groupIsSelector by profileCacheStore.boolean(Key.GROUP_IS_SELECTOR)
+    var groupIcon by profileCacheStore.string(Key.GROUP_ICON)
 
     var subscriptionLink by profileCacheStore.string(Key.SUBSCRIPTION_LINK)
     var subscriptionForceResolve by profileCacheStore.boolean(Key.SUBSCRIPTION_FORCE_RESOLVE)

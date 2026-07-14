@@ -212,13 +212,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="12dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 app:cardBackgroundColor="?colorCard"
                 app:cardCornerRadius="28dp"
                 app:cardElevation="0dp"
@@ -256,6 +257,20 @@
                         app:tabTextColor="?colorOnSurfaceVariant" />
                 </com.google.android.material.card.MaterialCardView>
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="55dp"
+                android:minHeight="55dp"
+                android:layout_marginStart="4dp"
+                app:backgroundTint="?colorPrimary"
+                app:icon="@drawable/ic_add_circle_fill_24px"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconTint="?colorOnPrimary"
+                style="@style/Widget.Material3Expressive.Button.IconButton.Filled" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

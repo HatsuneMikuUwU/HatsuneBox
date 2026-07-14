@@ -29,6 +29,12 @@
         app:key="groupIsSelector"
         app:title="@string/use_selector" />
 
+    <moe.matsuri.nb4a.ui.IconPickerPreference
+        app:defaultValue="none"
+        app:icon="@drawable/ic_palette_24"
+        app:key="groupIcon"
+        app:title="@string/group_tab_icon" />
+
     <io.nekohasekai.sagernet.widget.OutboundPreference
         app:icon="@drawable/ic_hardware_router"
         app:key="groupFrontProxy"

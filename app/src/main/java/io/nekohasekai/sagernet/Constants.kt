@@ -135,6 +135,7 @@ object Key {
     const val GROUP_IS_SELECTOR = "groupIsSelector"
     const val GROUP_FRONT_PROXY = "groupFrontProxy"
     const val GROUP_LANDING_PROXY = "groupLandingProxy"
+    const val GROUP_ICON = "groupIcon"
 
     const val GROUP_SUBSCRIPTION = "groupSubscription"
     const val SUBSCRIPTION_LINK = "subscriptionLink"

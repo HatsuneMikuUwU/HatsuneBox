@@ -46,6 +46,7 @@ class GroupSettingsActivity(
         DataStore.groupType = type
         DataStore.groupOrder = order
         DataStore.groupIsSelector = isSelector
+        DataStore.groupIcon = icon ?: "none"
 
         DataStore.frontProxy = frontProxy
         DataStore.landingProxy = landingProxy
@@ -67,6 +68,7 @@ class GroupSettingsActivity(
         type = DataStore.groupType
         order = DataStore.groupOrder
         isSelector = DataStore.groupIsSelector
+        icon = DataStore.groupIcon.takeIf { !it.isNullOrBlank() && it != "none" }
 
         frontProxy = if (DataStore.frontProxyTmp == 3) DataStore.frontProxy else -1
         landingProxy = if (DataStore.landingProxyTmp == 3) DataStore.landingProxy else -1
@@ -194,6 +196,7 @@ class GroupSettingsActivity(
 
     companion object {
         const val EXTRA_GROUP_ID = "id"
+        const val EXTRA_IS_SUBSCRIPTION = "isSubscription"
     }
 
     @SuppressLint("CommitTransaction")
@@ -212,6 +215,9 @@ class GroupSettingsActivity(
             runOnDefaultDispatcher {
                 if (editingId == 0L) {
                     ProxyGroup().init()
+                    if (intent.getBooleanExtra(EXTRA_IS_SUBSCRIPTION, false)) {
+                        DataStore.groupType = GroupType.SUBSCRIPTION
+                    }
                 } else {
                     val entity = SagerDatabase.groupDao.getById(editingId)
                     if (entity == null) {

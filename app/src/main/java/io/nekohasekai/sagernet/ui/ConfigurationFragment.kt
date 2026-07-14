@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.SystemClock
@@ -143,6 +144,18 @@ class ConfigurationFragment @JvmOverloads constructor(
     lateinit var tabLayout: TabLayout
     lateinit var groupPager: ViewPager2
 
+    private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabSelected(tab: TabLayout.Tab) {
+            applyTabSelectedStyle(tab, true)
+        }
+
+        override fun onTabUnselected(tab: TabLayout.Tab) {
+            applyTabSelectedStyle(tab, false)
+        }
+
+        override fun onTabReselected(tab: TabLayout.Tab) = Unit
+    }
+
     private var inlineSearchView: SearchView? = null
     private var homeBannerReceiver: BroadcastReceiver? = null
     private val tagHomeBannerDefault = "DEFAULT_HOME_BANNER"
@@ -218,6 +231,11 @@ class ConfigurationFragment @JvmOverloads constructor(
                 MoreMenuBottomSheet.newInstance(DataStore.currentGroupId())
                     .show(childFragmentManager, MoreMenuBottomSheet.TAG)
             }
+            view.findViewById<View>(R.id.btn_add_sub)?.setOnClickListener {
+                startActivity(Intent(requireContext(), GroupSettingsActivity::class.java).apply {
+                    putExtra(GroupSettingsActivity.EXTRA_IS_SUBSCRIPTION, true)
+                })
+            }
 
             inlineSearchView?.apply {
                 setOnQueryTextListener(this@ConfigurationFragment)
@@ -236,6 +254,7 @@ class ConfigurationFragment @JvmOverloads constructor(
             appBar?.isGone = true
             bannerHome?.isGone = true
             layoutTabWrapper.isVisible = true
+            view.findViewById<View>(R.id.btn_add_sub)?.isGone = true
         }
 
         groupPager = view.findViewById(R.id.group_pager)
@@ -249,12 +268,26 @@ class ConfigurationFragment @JvmOverloads constructor(
 
         TabLayoutMediator(tabLayout, groupPager) { tab, position ->
             if (adapter.groupList.size > position) {
-                tab.text = adapter.groupList[position].displayName()
+                val group = adapter.groupList[position]
+                val tabView = LayoutInflater.from(requireContext())
+                    .inflate(R.layout.item_tab_group, tabLayout, false)
+                tab.customView = tabView
+                bindTabView(tab, group)
             }
             tab.view.setOnLongClickListener { 
                 true
             }
         }.attach()
+
+        tabLayout.removeOnTabSelectedListener(tabSelectedListener)
+        tabLayout.addOnTabSelectedListener(tabSelectedListener)
+
+        tabLayout.post {
+            for (i in 0 until tabLayout.tabCount) {
+                val tab = tabLayout.getTabAt(i) ?: continue
+                applyTabSelectedStyle(tab, i == tabLayout.selectedTabPosition)
+            }
+        }
 
         appBar?.setOnClickListener {
             val fragment = getCurrentGroupFragment()
@@ -295,6 +328,82 @@ class ConfigurationFragment @JvmOverloads constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun setTabIcon(iconView: ImageView?, iconName: String?) {
+        iconView ?: return
+        if (iconName.isNullOrBlank()) {
+            iconView.visibility = View.GONE
+            return
+        }
+        val resId = resources.getIdentifier(iconName, "drawable", requireContext().packageName)
+        if (resId == 0) {
+            iconView.visibility = View.GONE
+            return
+        }
+        iconView.setImageResource(resId)
+        iconView.visibility = View.VISIBLE
+    }
+
+    private fun setBadgeVisibility(badge: TextView, count: Int) {
+        if (count > 0) {
+            badge.text = if (count > 99) "99+" else count.toString()
+            badge.visibility = View.VISIBLE
+        } else {
+            badge.visibility = View.GONE
+        }
+        badge.post { badge.requestLayout() }
+    }
+
+    /** Populates a tab's custom view (icon, label, badge) for the given group. */
+    private fun bindTabView(tab: TabLayout.Tab, group: ProxyGroup) {
+        val view = tab.customView ?: return
+        val icon = view.findViewById<ImageView>(R.id.tab_icon)
+        val label = view.findViewById<TextView>(R.id.tab_label) ?: return
+        val badge = view.findViewById<TextView>(R.id.tab_badge) ?: return
+
+        label.text = group.displayName()
+        setTabIcon(icon, group.icon)
+        setBadgeVisibility(badge, SagerDatabase.proxyDao.countByGroup(group.id).toInt())
+        applyTabSelectedStyle(tab, tab.position == tabLayout.selectedTabPosition)
+    }
+
+    private fun applyTabSelectedStyle(tab: TabLayout.Tab?, selected: Boolean) {
+        val view = tab?.customView ?: return
+        val icon = view.findViewById<ImageView>(R.id.tab_icon)
+        val label = view.findViewById<TextView>(R.id.tab_label) ?: return
+        val badge = view.findViewById<TextView>(R.id.tab_badge) ?: return
+
+        val tintColor = if (selected) {
+            requireContext().getColorAttr(R.attr.colorOnPrimary)
+        } else {
+            requireContext().getColorAttr(R.attr.colorOnSurfaceVariant)
+        }
+        label.setTextColor(tintColor)
+        icon.imageTintList = ColorStateList.valueOf(tintColor)
+
+        if (selected) {
+            badge.setTextColor(requireContext().getColorAttr(R.attr.colorPrimary))
+            badge.backgroundTintList = ColorStateList.valueOf(
+                requireContext().getColorAttr(R.attr.colorOnPrimary)
+            )
+        } else {
+            badge.setTextColor(requireContext().getColorAttr(R.attr.colorOnPrimary))
+            badge.backgroundTintList = ColorStateList.valueOf(
+                requireContext().getColorAttr(R.attr.colorPrimary)
+            )
+        }
+    }
+
+    /** Refreshes every tab's server-count badge, e.g. after profiles are added/removed. */
+    fun refreshTabBadges() {
+        if (!this::tabLayout.isInitialized) return
+        for (i in adapter.groupList.indices) {
+            val tab = tabLayout.getTabAt(i) ?: continue
+            val badge = tab.customView?.findViewById<TextView>(R.id.tab_badge) ?: continue
+            val count = SagerDatabase.proxyDao.countByGroup(adapter.groupList[i].id).toInt()
+            setBadgeVisibility(badge, count)
         }
     }
 
@@ -988,9 +1097,8 @@ class ConfigurationFragment @JvmOverloads constructor(
                         groupList = newGroupList
                         notifyDataSetChanged()
                         if (set) groupPager.setCurrentItem(selectedGroupIndex, false)
-                        val hideTab = groupList.size < 2
-                        tabLayout.isGone = hideTab
-                        view?.findViewById<View>(R.id.app_bar)?.elevation = if (hideTab) 0F else dp2px(4).toFloat()
+                        tabLayout.isGone = false
+                        view?.findViewById<View>(R.id.app_bar)?.elevation = dp2px(4).toFloat()
                         if (!select) {
                             groupPager.registerOnPageChangeCallback(updateSelectedCallback)
                         }
@@ -1051,9 +1159,11 @@ class ConfigurationFragment @JvmOverloads constructor(
         override suspend fun groupUpdated(group: ProxyGroup) {
             val index = groupList.indexOfFirst { it.id == group.id }
             if (index == -1) return
+            groupList[index] = group
 
             tabLayout.post {
-                tabLayout.getTabAt(index)?.text = group.displayName()
+                val tab = tabLayout.getTabAt(index) ?: return@post
+                bindTabView(tab, group)
             }
         }
 
@@ -1063,6 +1173,8 @@ class ConfigurationFragment @JvmOverloads constructor(
             if (groupList.find { it.id == profile.groupId } == null) {
                 DataStore.selectedGroup = profile.groupId
                 reload()
+            } else {
+                tabLayout.post { refreshTabBadges() }
             }
         }
 
@@ -1074,6 +1186,8 @@ class ConfigurationFragment @JvmOverloads constructor(
             val group = groupList.find { it.id == groupId } ?: return
             if (group.ungrouped && SagerDatabase.proxyDao.countByGroup(groupId) == 0L) {
                 reload()
+            } else {
+                tabLayout.post { refreshTabBadges() }
             }
         }
     }
