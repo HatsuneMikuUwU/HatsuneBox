@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:paddingBottom="60dp"
+    android:paddingBottom="140dp"
     android:paddingTop="62dp"
     android:scrollbarSize="0dp"
     app:fastScrollAutoHide="true"
