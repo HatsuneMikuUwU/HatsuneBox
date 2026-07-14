@@ -215,9 +215,9 @@ class RouteSettingsActivity(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(findViewById(R.id.toolbar))
+        
+        setupCollapsingToolbar(R.string.cag_route)
         supportActionBar?.apply {
-            setTitle(R.string.cag_route)
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_navigation_close)
         }
@@ -248,10 +248,7 @@ class RouteSettingsActivity(
                     DataStore.profileCacheStore.registerChangeListener(this@RouteSettingsActivity)
                 }
             }
-
-
         }
-
     }
 
     suspend fun saveAndExit() {

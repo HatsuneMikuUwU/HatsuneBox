@@ -24,9 +24,13 @@ class TrafficActivity : ThemedActivity() {
 
         val binding = LayoutWebviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupCollapsingToolbar(R.string.menu_dashboard)
+        
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.apply {
+            setTitle(R.string.menu_dashboard)
+            setDisplayHomeAsUpEnabled(true)
+        }
 
-        // webview
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
         mWebView = binding.webview
         mWebView.settings.domStorageEnabled = true
