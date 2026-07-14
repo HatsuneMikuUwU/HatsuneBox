@@ -24,6 +24,7 @@ abstract class AlertDialogFragment<Arg : Parcelable, Ret : Parcelable?> :
         private const val KEY_RET = "ret"
         private const val KEY_WHICH = "which"
 
+        @Suppress("UNCHECKED_CAST")
         fun <Ret : Parcelable> setResultListener(fragment: Fragment, requestKey: String,
                                                  listener: (Int, Ret?) -> Unit) {
             fragment.setFragmentResultListener(requestKey) { _, bundle ->
@@ -37,7 +38,10 @@ abstract class AlertDialogFragment<Arg : Parcelable, Ret : Parcelable?> :
     protected abstract fun AlertDialog.Builder.prepare(listener: DialogInterface.OnClickListener)
 
     private val resultKey get() = requireArguments().getString(KEY_RESULT)
+    
+    @Suppress("UNCHECKED_CAST")
     protected val arg by lazy { BundleCompat.getParcelable(requireArguments(), KEY_ARG, Parcelable::class.java) as Arg }
+    
     protected open fun ret(which: Int): Ret? = null
 
     private fun args() = arguments ?: Bundle().also { arguments = it }
