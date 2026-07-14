@@ -72,7 +72,39 @@ class IconPickerPreference
 
     private fun resolveIcon(name: String?): Int {
         if (name == null || name == NONE || name.isBlank()) return 0
-        return context.resources.getIdentifier(name, "drawable", context.packageName)
+        return when (name) {
+            "filter_all_solar" -> R.drawable.filter_all_solar
+            "filter_airplane_solar" -> R.drawable.filter_airplane_solar
+            "filter_book_solar" -> R.drawable.filter_book_solar
+            "filter_bots_solar" -> R.drawable.filter_bots_solar
+            "filter_cat_solar" -> R.drawable.filter_cat_solar
+            "filter_channel_solar" -> R.drawable.filter_channel_solar
+            "filter_crown_solar" -> R.drawable.filter_crown_solar
+            "filter_custom_solar" -> R.drawable.filter_custom_solar
+            "filter_favorite_solar" -> R.drawable.filter_favorite_solar
+            "filter_flower_solar" -> R.drawable.filter_flower_solar
+            "filter_game_solar" -> R.drawable.filter_game_solar
+            "filter_groups_solar" -> R.drawable.filter_groups_solar
+            "filter_home_solar" -> R.drawable.filter_home_solar
+            "filter_light_solar" -> R.drawable.filter_light_solar
+            "filter_like_solar" -> R.drawable.filter_like_solar
+            "filter_love_solar" -> R.drawable.filter_love_solar
+            "filter_mask_solar" -> R.drawable.filter_mask_solar
+            "filter_money_solar" -> R.drawable.filter_money_solar
+            "filter_note_solar" -> R.drawable.filter_note_solar
+            "filter_palette_solar" -> R.drawable.filter_palette_solar
+            "filter_party_solar" -> R.drawable.filter_party_solar
+            "filter_private_solar" -> R.drawable.filter_private_solar
+            "filter_setup_solar" -> R.drawable.filter_setup_solar
+            "filter_sport_solar" -> R.drawable.filter_sport_solar
+            "filter_study_solar" -> R.drawable.filter_study_solar
+            "filter_trade_solar" -> R.drawable.filter_trade_solar
+            "filter_travel_solar" -> R.drawable.filter_travel_solar
+            "filter_unmuted_solar" -> R.drawable.filter_unmuted_solar
+            "filter_unread_solar" -> R.drawable.filter_unread_solar
+            "filter_work_solar" -> R.drawable.filter_work_solar
+            else -> 0
+        }
     }
 
     private fun updateIconAndSummary() {
