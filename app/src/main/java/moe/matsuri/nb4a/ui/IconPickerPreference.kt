@@ -15,15 +15,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.ktx.getColorAttr
 
-/**
- * A Preference that, instead of a plain text dropdown, opens a dialog with a
- * visual grid of icons to pick from — same layout/behaviour as MikuRay's
- * `pref_group_all_tab_icon` (a "None" row plus a RecyclerView grid of icon
- * cards with a checkmark on the selected one). Like MikuRay, the
- * preference's own leading icon and summary update to reflect the current
- * selection. The persisted value is the drawable resource name, or "none"
- * for no icon.
- */
 class IconPickerPreference
 @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyle: Int = TypedArrayUtils.getAttr(
@@ -36,24 +27,39 @@ class IconPickerPreference
     companion object {
         const val NONE = "none"
 
-        // Fallback icon shown on the preference itself when no icon is selected.
-        const val DEFAULT_ICON_RES = R.drawable.ic_palette_24
+        const val DEFAULT_ICON_RES = R.drawable.filter_all_solar
 
-        // (drawable name, display label) — labels are short technical names, not localized,
-        // consistent with other picker-style preferences in this screen.
         val ICONS: List<Pair<String, String>> = listOf(
-            "ic_baseline_home_24" to "Home",
-            "ic_cloud" to "Cloud",
-            "ic_baseline_airplanemode_active_24" to "Airplane",
-            "ic_baseline_card_giftcard_24" to "Gift",
-            "ic_baseline_lock_24" to "Lock",
-            "ic_baseline_person_24" to "Person",
-            "ic_palette_24" to "Palette",
-            "ic_baseline_rule_folder_24" to "Folder",
-            "ic_dns" to "DNS",
-            "baseline_public_24" to "Public",
-            "ic_action_note_add" to "Note",
-            "ic_image_photo" to "Photo",
+            "filter_all_solar" to "All",
+            "filter_airplane_solar" to "Airplane",
+            "filter_book_solar" to "Book",
+            "filter_bots_solar" to "Bots",
+            "filter_cat_solar" to "Cat",
+            "filter_channel_solar" to "Channel",
+            "filter_crown_solar" to "Crown",
+            "filter_custom_solar" to "Custom",
+            "filter_favorite_solar" to "Favorite",
+            "filter_flower_solar" to "Flower",
+            "filter_game_solar" to "Game",
+            "filter_groups_solar" to "Groups",
+            "filter_home_solar" to "Home",
+            "filter_light_solar" to "Light",
+            "filter_like_solar" to "Like",
+            "filter_love_solar" to "Love",
+            "filter_mask_solar" to "Mask",
+            "filter_money_solar" to "Money",
+            "filter_note_solar" to "Note",
+            "filter_palette_solar" to "Palette",
+            "filter_party_solar" to "Party",
+            "filter_private_solar" to "Private",
+            "filter_setup_solar" to "Setup",
+            "filter_sport_solar" to "Sport",
+            "filter_study_solar" to "Study",
+            "filter_trade_solar" to "Trade",
+            "filter_travel_solar" to "Travel",
+            "filter_unmuted_solar" to "Unmuted",
+            "filter_unread_solar" to "Unread",
+            "filter_work_solar" to "Work"
         )
 
         fun labelFor(value: String?): String {
@@ -69,7 +75,6 @@ class IconPickerPreference
         return context.resources.getIdentifier(name, "drawable", context.packageName)
     }
 
-    /** Mirrors MikuRay's updateGroupAllTabIconSummary(): swap the leading icon + summary. */
     private fun updateIconAndSummary() {
         val current = getPersistedString(NONE)
         val resId = resolveIcon(current)
@@ -88,7 +93,10 @@ class IconPickerPreference
 
     override fun onBindViewHolder(holder: androidx.preference.PreferenceViewHolder) {
         super.onBindViewHolder(holder)
-        updateIconAndSummary()
+        
+        holder.itemView.post {
+            updateIconAndSummary()
+        }
     }
 
     override fun onClick() {
