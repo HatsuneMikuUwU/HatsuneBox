@@ -15,8 +15,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
+import com.google.zxing.Result
 import com.king.camera.scan.CameraScan
-import com.king.camera.scan.DefaultCameraScan
+import com.king.camera.scan.BaseCameraScan
 import com.king.zxing.analyze.QRCodeAnalyzer
 import com.king.zxing.util.CodeUtils
 import io.nekohasekai.sagernet.R
@@ -31,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class ScannerActivity : ThemedActivity() {
 
     lateinit var binding: LayoutScannerBinding
-    lateinit var cameraScan: CameraScan<String>
+    lateinit var cameraScan: CameraScan<Result>
 
     private val requestCameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -150,10 +151,13 @@ class ScannerActivity : ThemedActivity() {
     }
 
     fun initCameraScan() {
-        cameraScan = DefaultCameraScan(this, binding.previewView, binding.viewfinderView)
+        cameraScan = BaseCameraScan(this, binding.previewView)
         cameraScan.setAnalyzer(QRCodeAnalyzer())
-        cameraScan.setOnScanResultCallback { result ->
-            onScanResultCallback(result.result, false)
+        cameraScan.setOnScanResultCallback { analyzeResult ->
+            val text = analyzeResult.result?.text
+            if (text != null) {
+                onScanResultCallback(text, false)
+            }
             true
         }
     }
