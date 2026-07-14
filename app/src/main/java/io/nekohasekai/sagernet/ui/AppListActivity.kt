@@ -40,6 +40,7 @@ import io.nekohasekai.sagernet.widget.ListListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.coroutineContext
 
@@ -178,17 +179,17 @@ class AppListActivity : ThemedActivity() {
         loader?.cancel()
         loader = lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-            loading.crossFadeFrom(binding.list)
-            val adapter = binding.list.adapter as AppsAdapter
-            withContext(Dispatchers.IO) { adapter.reload() }
-            adapter.filter.filter(binding.search.text?.toString() ?: "")
-            if (apps.isEmpty()) {
-                binding.list.visibility = View.GONE
-                binding.appPlaceholder.root.crossFadeFrom(loading)
-            } else {
-                binding.list.crossFadeFrom(loading)
+                loading.crossFadeFrom(binding.list)
+                val adapter = binding.list.adapter as AppsAdapter
+                withContext(Dispatchers.IO) { adapter.reload() }
+                adapter.filter.filter(binding.search.text?.toString() ?: "")
+                if (apps.isEmpty()) {
+                    binding.list.visibility = View.GONE
+                    binding.appPlaceholder.root.crossFadeFrom(loading)
+                } else {
+                    binding.list.crossFadeFrom(loading)
+                }
             }
-        }
         }
     }
 
