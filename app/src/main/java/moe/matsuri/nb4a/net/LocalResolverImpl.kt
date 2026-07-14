@@ -17,7 +17,7 @@ import java.net.UnknownHostException
 
 object LocalResolverImpl : LocalDNSTransport {
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @get:RequiresApi(Build.VERSION_CODES.Q) // <-- Diperbaiki di sini (menambahkan @get:)
     private val dnsResolver: DnsResolver by lazy {
         SagerNet.application.getSystemService(DnsResolver::class.java)
     }
@@ -105,7 +105,7 @@ object LocalResolverImpl : LocalDNSTransport {
 
             val type = when {
                 network.endsWith("4") -> DnsResolver.TYPE_A
-                network.endsWith("6") -> DnsResolver.TYPE_AAAA
+                network.endsWith("6") -> DnsResolver.TYPEAAAA
                 else -> null
             }
             if (type != null) {
