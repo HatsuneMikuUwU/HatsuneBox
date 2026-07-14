@@ -24,6 +24,15 @@ fun Project.requireMetadata(): Properties {
     return metadata
 }
 
+fun Project.previewVersionName(): String {
+    val verName = requireMetadata().getProperty("VERSION_NAME")
+    val formatter = java.text.SimpleDateFormat("yyyyMMdd").apply {
+        timeZone = java.util.TimeZone.getTimeZone("Asia/Jakarta")
+    }
+    val buildDate = formatter.format(java.util.Date())
+    return "pre-$verName-$buildDate"
+}
+
 fun Project.requireLocalProperties(): Properties {
     if (!::localProperties.isInitialized) {
         localProperties = Properties()
@@ -41,11 +50,11 @@ fun Project.requireLocalProperties(): Properties {
 
 fun Project.setupCommon() {
     android.apply {
-        buildToolsVersion = "35.0.1"
-        compileSdk = 35
+        buildToolsVersion = "36.0.0"
+        compileSdk = 36
         defaultConfig {
             minSdk = 24
-            targetSdk = 35
+            targetSdk = 36
         }
         buildTypes {
             getByName("release") {
@@ -185,7 +194,7 @@ fun Project.setupApp() {
                 buildConfigField(
                     "String",
                     "PRE_VERSION_NAME",
-                    "\"${requireMetadata().getProperty("PRE_VERSION_NAME")}\""
+                    "\"${previewVersionName()}\""
                 )
             }
         }
@@ -197,7 +206,7 @@ fun Project.setupApp() {
                 outputFileName = if (isPreview) {
                     outputFileName.replace(
                         project.name,
-                        "HatsuneBox-" + requireMetadata().getProperty("PRE_VERSION_NAME")
+                        "HatsuneBox-" + previewVersionName()
                     ).replace("-preview", "")
                 } else {
                     outputFileName.replace(project.name, "HatsuneBox-$versionName")
