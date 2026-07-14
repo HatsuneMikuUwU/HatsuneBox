@@ -8,9 +8,11 @@
 
     <com.google.android.material.appbar.CollapsingToolbarLayout
         android:id="@+id/collapsing_toolbar"
+        android:background="?attr/colorBg"
         style="?attr/collapsingToolbarLayoutLargeStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
+        app:contentScrim="?attr/colorBg"
         app:collapsedTitleTextAppearance="?attr/textAppearanceTitleLargeEmphasized"
         app:expandedTitleMarginBottom="24dp"
         app:expandedTitleMarginEnd="24dp"
@@ -23,8 +25,10 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
+            android:theme="@style/AppThemeToolbarCircleNavigationButton"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:elevation="0dp"
             android:touchscreenBlocksFocus="false"
             app:layout_collapseMode="pin" />
 
