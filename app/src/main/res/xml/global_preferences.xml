@@ -11,7 +11,7 @@
             app:summary="@string/auto_connect_summary"
             app:title="@string/auto_connect" />
         <moe.matsuri.nb4a.ui.ColorPickerPreference
-            app:layout="@layout/uwu_mid"
+            app:layout="@layout/uwu_mid_switch"
             android:title="@string/theme"
             app:icon="@drawable/ic_baseline_color_lens_24"
             app:key="appTheme" />
