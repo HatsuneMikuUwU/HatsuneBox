@@ -10,26 +10,12 @@
             app:key="isAutoConnect"
             app:summary="@string/auto_connect_summary"
             app:title="@string/auto_connect" />
-        <moe.matsuri.nb4a.ui.ColorPickerPreference
-            app:layout="@layout/uwu_mid_switch"
-            android:title="@string/theme"
-            app:icon="@drawable/ic_baseline_color_lens_24"
-            app:key="appTheme" />
         <Preference
             app:layout="@layout/uwu_mid"
             app:icon="@drawable/ic_palette_24"
             app:key="navigateUiSettings"
             app:summary="@string/summary_navigate_ui_settings"
             app:title="@string/title_ui_settings" />
-        <ListPreference
-            app:layout="@layout/uwu_mid"
-            app:defaultValue="0"
-            app:entries="@array/night_mode"
-            app:entryValues="@array/int_array_4"
-            app:icon="@drawable/ic_baseline_wb_sunny_24"
-            app:key="nightTheme"
-            app:title="@string/night_mode"
-            app:useSimpleSummaryProvider="true" />
         <ListPreference
             app:layout="@layout/uwu_mid"
             app:defaultValue="vpn"

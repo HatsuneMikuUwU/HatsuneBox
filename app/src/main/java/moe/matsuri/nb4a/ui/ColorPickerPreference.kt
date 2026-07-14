@@ -35,6 +35,13 @@ class ColorPickerPreference
 
     var inited = false
 
+    override fun getSummary(): CharSequence? {
+        val value = getPersistedInt(DEFAULT_THEME)
+        val names = context.resources.getStringArray(R.array.theme_names)
+        val index = value - 1
+        return if (index in names.indices) names[index] else super.getSummary()
+    }
+
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
 
@@ -95,6 +102,7 @@ class ColorPickerPreference
                 val view = getNekoImageViewAtColor(color, 64, 0).apply {
                     setOnClickListener {
                         persistInt(themeId)
+                        notifyChanged()
                         dialog.dismiss()
                         callChangeListener(themeId)
                     }
@@ -114,5 +122,10 @@ class ColorPickerPreference
             })
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+    }
+
+    companion object {
+        // Keep in sync with io.nekohasekai.sagernet.utils.Theme.defaultTheme() (PINK)
+        private const val DEFAULT_THEME = 8
     }
 }

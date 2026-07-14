@@ -4,8 +4,24 @@
 
     <PreferenceCategory app:title="@string/title_ui_appearance">
 
+        <moe.matsuri.nb4a.ui.ColorPickerPreference
+            app:layout="@layout/uwu_top_switch"
+            android:title="@string/theme"
+            app:icon="@drawable/ic_baseline_color_lens_24"
+            app:key="appTheme" />
+
         <ListPreference
-            app:layout="@layout/uwu_sin"
+            app:layout="@layout/uwu_mid"
+            app:defaultValue="0"
+            app:entries="@array/night_mode"
+            app:entryValues="@array/int_array_4"
+            app:icon="@drawable/ic_baseline_wb_sunny_24"
+            app:key="nightTheme"
+            app:title="@string/night_mode"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:layout="@layout/uwu_bot"
             app:defaultValue="uwu_shape_cookie"
             app:entries="@array/icon_shape_entries"
             app:entryValues="@array/icon_shape_values"

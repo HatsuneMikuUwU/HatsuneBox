@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
@@ -14,23 +15,20 @@ import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import io.nekohasekai.sagernet.Action
+import io.nekohasekai.sagernet.Key
 import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.SagerNet
 import io.nekohasekai.sagernet.database.DataStore
+import io.nekohasekai.sagernet.ktx.app
+import io.nekohasekai.sagernet.utils.Theme
 import io.nekohasekai.sagernet.widget.ListListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.preference.ListPreference
+import moe.matsuri.nb4a.ui.ColorPickerPreference
 import java.io.File
 
-/**
- * Scoped port of MikuRay's `UiSettingsActivity`. MikuRay's original screen
- * also covers weather chips, blur, custom fonts, home banners and more —
- * none of those subsystems exist in NekoBox, so this only exposes the
- * settings actually wired up by the ported main menu bottom sheet and home
- * screen header: icon shape, the home banner, the sheet banner, and profile
- * identity.
- */
 class UiSettingsActivity : ThemedActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -117,6 +115,25 @@ class UiSettingsActivity : ThemedActivity() {
             preferenceManager.preferenceDataStore = DataStore.configurationStore
             addPreferencesFromResource(R.xml.pref_ui_settings)
 
+            findPreference<ColorPickerPreference>(Key.APP_THEME)?.setOnPreferenceChangeListener { _, newTheme ->
+                if (DataStore.serviceState.started) {
+                    SagerNet.reloadService()
+                }
+                val theme = Theme.getTheme(newTheme as Int)
+                app.setTheme(theme)
+                requireActivity().apply {
+                    setTheme(theme)
+                    ActivityCompat.recreate(this)
+                }
+                true
+            }
+
+            findPreference<ListPreference>(Key.NIGHT_THEME)?.setOnPreferenceChangeListener { _, newTheme ->
+                Theme.currentNightMode = (newTheme as String).toInt()
+                Theme.applyNightTheme()
+                true
+            }
+
             findPreference<ListPreference>("iconShape")?.setOnPreferenceChangeListener { _, _ ->
                 requireContext().sendBroadcast(Intent(Action.ICON_SHAPE_CHANGED))
                 true
@@ -169,8 +186,6 @@ class UiSettingsActivity : ThemedActivity() {
                 true
             }
         }
-
-        // --- crop launch helpers ---
 
         private fun startCropHomeBanner(sourceUri: Uri) {
             val destFile = File(requireContext().cacheDir, "cropped_home_banner_temp.jpg")
@@ -240,8 +255,6 @@ class UiSettingsActivity : ThemedActivity() {
 
             cropProfileBanner.launch(uCrop.getIntent(requireContext()))
         }
-
-        // --- save/delete ---
 
         private fun saveHomeBannerDirect(sourceUri: Uri) {
             lifecycleScope.launch {
@@ -343,10 +356,6 @@ class UiSettingsActivity : ThemedActivity() {
             return uri.path?.lowercase()?.endsWith(".gif") == true
         }
 
-        // Persistent banners live in filesDir/banners, not cacheDir: the system's
-        // "Clear Cache" wipes cacheDir but leaves filesDir untouched. The cropped
-        // temp file UCrop wrote to cacheDir is copied out then left for the OS to
-        // reclaim.
         private suspend fun saveBannerFile(
             sourceUri: Uri,
             fileNamePrefix: String,
