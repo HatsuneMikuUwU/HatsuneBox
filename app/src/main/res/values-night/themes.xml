@@ -11,6 +11,10 @@
         <item name="android:windowBackground">?colorBg</item>
         <item name="colorBg">?colorSurface</item>
         <item name="colorCard">?colorSurfaceContainerLow</item>       
+        <item name="preferenceTheme">@style/AppThemePreference</item>
+        <item name="bottomSheetDialogTheme">@style/AppThemeBottomSheetDialog</item>
+        <item name="materialAlertDialogTheme">@style/AppThemeAlertDialog</item>
+        <item name="alertDialogTheme">@style/AppThemeAlertDialog</item>
         <item name="android:scrollbarSize">0.0dip</item>
         <item name="android:listDivider">@null</item>
         <item name="android:colorEdgeEffect">@null</item>
