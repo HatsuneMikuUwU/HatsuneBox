@@ -1,0 +1,54 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        app:layout="@layout/uwu_sin"
+        app:icon="@drawable/ic_social_emoji_symbols"
+        app:key="profileName"
+        app:title="@string/profile_name"
+        app:useSimpleSummaryProvider="true" />
+
+    <PreferenceCategory app:title="@string/proxy_cat">
+        <ListPreference
+            app:layout="@layout/uwu_top"
+            app:defaultValue="2"
+            app:entries="@array/socks_versions"
+            app:entryValues="@array/int_array_3"
+            app:icon="@drawable/ic_baseline_nfc_24"
+            app:key="serverProtocol"
+            app:title="@string/app_version"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:layout="@layout/uwu_mid"
+            app:icon="@drawable/ic_hardware_router"
+            app:key="serverAddress"
+            app:title="@string/server_address"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:layout="@layout/uwu_mid"
+            app:icon="@drawable/ic_maps_directions_boat"
+            app:key="serverPort"
+            app:title="@string/server_port"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:layout="@layout/uwu_mid"
+            app:icon="@drawable/ic_baseline_person_24"
+            app:key="serverUsername"
+            app:title="@string/username_opt"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:layout="@layout/uwu_bot"
+            app:dialogLayout="@layout/layout_password_dialog"
+            app:icon="@drawable/ic_settings_password"
+            app:key="serverPassword"
+            app:title="@string/password_opt" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="sing-box server">
+        <SwitchPreferenceCompat
+            app:layout="@layout/uwu_sin_switch"
+            app:widgetLayout="@layout/uwu_widget_material_switch"
+            app:key="sUoT"
+            app:title="UDP over TCP" />
+    </PreferenceCategory>
+</PreferenceScreen>

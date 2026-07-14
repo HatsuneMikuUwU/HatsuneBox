@@ -1,0 +1,24 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        app:layout="@layout/uwu_top"
+        app:icon="@drawable/ic_social_emoji_symbols"
+        app:key="profileName"
+        app:title="@string/profile_name"
+        app:useSimpleSummaryProvider="true" />
+
+    <SwitchPreferenceCompat
+        app:layout="@layout/uwu_mid_switch"
+        app:widgetLayout="@layout/uwu_widget_material_switch"
+        app:icon="@drawable/ic_baseline_import_contacts_24"
+        app:key="isOutboundOnly"
+        app:title="@string/is_outbound_only" />
+
+    <moe.matsuri.nb4a.ui.EditConfigPreference
+        app:layout="@layout/uwu_bot"
+        app:icon="@drawable/ic_baseline_layers_24"
+        app:key="serverConfig"
+        app:title="@string/custom_config"
+        app:useSimpleSummaryProvider="true" />
+
+</PreferenceScreen>

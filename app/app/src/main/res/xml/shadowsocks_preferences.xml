@@ -1,0 +1,65 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        app:layout="@layout/uwu_sin"
+        app:icon="@drawable/ic_social_emoji_symbols"
+        app:key="name"
+        app:title="@string/profile_name"
+        app:useSimpleSummaryProvider="true" />
+
+    <PreferenceCategory app:title="@string/proxy_cat">
+        <EditTextPreference
+            app:layout="@layout/uwu_top"
+            app:icon="@drawable/ic_hardware_router"
+            app:key="serverAddress"
+            app:title="@string/server_address"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:layout="@layout/uwu_mid"
+            app:icon="@drawable/ic_maps_directions_boat"
+            app:key="serverPort"
+            app:title="@string/server_port"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            app:layout="@layout/uwu_mid"
+            app:entries="@array/ss_enc_method_value"
+            app:entryValues="@array/ss_enc_method_value"
+            app:icon="@drawable/ic_notification_enhanced_encryption"
+            app:key="method"
+            app:title="@string/enc_method"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:layout="@layout/uwu_bot"
+            app:dialogLayout="@layout/layout_password_dialog"
+            app:icon="@drawable/ic_settings_password"
+            app:key="password"
+            app:title="@string/password" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/plugin">
+        <ListPreference
+            app:layout="@layout/uwu_top"
+            app:defaultValue=""
+            app:entries="@array/box_shadowsocks_plugins"
+            app:entryValues="@array/box_shadowsocks_plugins"
+            app:icon="@drawable/baseline_construction_24"
+            app:key="pluginName"
+            app:title="@string/plugin"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:layout="@layout/uwu_bot"
+            app:icon="@drawable/ic_action_settings"
+            app:key="pluginConfig"
+            app:title="@string/plugin_configure"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="sing-box server">
+        <SwitchPreferenceCompat
+            app:layout="@layout/uwu_sin_switch"
+            app:widgetLayout="@layout/uwu_widget_material_switch"
+            app:key="sUoT"
+            app:title="UDP over TCP" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
