@@ -58,7 +58,7 @@ dependencies {
     implementation("androidx.work:work-multiprocess:2.8.1")
 
     implementation("com.google.android.material:material:1.14.0")
-    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("com.google.code.gson:gson:2.14.0")
 
     implementation("com.github.bumptech.glide:glide:5.0.7")
     implementation("com.github.yalantis:ucrop:2.2.11")
