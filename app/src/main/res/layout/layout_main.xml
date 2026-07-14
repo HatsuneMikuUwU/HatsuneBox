@@ -77,7 +77,7 @@
 
                     </LinearLayout>
                     
-                    <TextView
+                    <io.nekohasekai.sagernet.widget.marquee.AutoMarqueeTextView
                         android:id="@+id/status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
