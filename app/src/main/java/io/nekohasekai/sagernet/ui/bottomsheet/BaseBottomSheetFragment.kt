@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package io.nekohasekai.sagernet.ui.bottomsheet
 
 import android.content.res.ColorStateList

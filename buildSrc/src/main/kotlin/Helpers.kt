@@ -1,6 +1,4 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.android.build.gradle.AbstractAppExtension
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByName
@@ -8,7 +6,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import java.util.Base64
 import java.util.Properties
-import kotlin.system.exitProcess
 
 private val Project.android get() = extensions.getByName<ApplicationExtension>("android")
 
@@ -39,7 +36,6 @@ fun Project.requireLocalProperties(): Properties {
 
         val base64 = System.getenv("LOCAL_PROPERTIES")
         if (!base64.isNullOrBlank()) {
-
             localProperties.load(Base64.getDecoder().decode(base64).inputStream())
         } else if (project.rootProject.file("local.properties").exists()) {
             localProperties.load(rootProject.file("local.properties").inputStream())
@@ -52,6 +48,7 @@ fun Project.setupCommon() {
     android.apply {
         buildToolsVersion = "36.0.0"
         compileSdk = 37
+        ndkVersion = "27.3.13750724"
         defaultConfig {
             minSdk = 24
             targetSdk = 37
@@ -59,6 +56,16 @@ fun Project.setupCommon() {
         buildTypes {
             getByName("release") {
                 isMinifyEnabled = true
+                isShrinkResources = true
+                if (System.getenv("nkmr_minify") == "0") {
+                    isShrinkResources = false
+                    isMinifyEnabled = false
+                }
+            }
+            getByName("debug") {
+                applicationIdSuffix = "debug"
+                isDebuggable = true
+                isJniDebuggable = true
             }
         }
         compileOptions {
@@ -90,36 +97,10 @@ fun Project.setupCommon() {
                 )
             )
         }
-        (this as? AbstractAppExtension)?.apply {
-            buildTypes {
-                getByName("release") {
-                    isShrinkResources = true
-                    if (System.getenv("nkmr_minify") == "0") {
-                        isShrinkResources = false
-                        isMinifyEnabled = false
-                    }
-                }
-                getByName("debug") {
-                    applicationIdSuffix = "debug"
-                    debuggable(true)
-                    jniDebuggable(true)
-                }
-            }
-            applicationVariants.forEach { variant ->
-                variant.outputs.forEach {
-                    it as BaseVariantOutputImpl
-                    it.outputFileName = it.outputFileName.replace(
-                        "app", "${project.name}-" + variant.versionName
-                    ).replace("-release", "").replace("-oss", "")
-                }
-            }
-        }
     }
 
-    extensions.configure<KotlinAndroidProjectExtension>("kotlin") {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
+    (extensions.findByName("kotlin") as? KotlinAndroidProjectExtension)?.compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
@@ -167,8 +148,6 @@ fun Project.setupApp() {
     setupAppCommon()
 
     android.apply {
-        this as AbstractAppExtension
-
         buildTypes {
             getByName("release") {
                 proguardFiles(
@@ -202,31 +181,14 @@ fun Project.setupApp() {
             }
         }
 
-        applicationVariants.all {
-            outputs.all {
-                this as BaseVariantOutputImpl
-                val isPreview = outputFileName.contains("-preview")
-                outputFileName = if (isPreview) {
-                    outputFileName.replace(
-                        project.name,
-                        "HatsuneBox-" + previewVersionName()
-                    ).replace("-preview", "")
-                } else {
-                    outputFileName.replace(project.name, "HatsuneBox-$versionName")
-                        .replace("-release", "")
-                        .replace("-oss", "")
-                }
-            }
-        }
-
-        for (abi in listOf("Arm64", "Arm", "X64", "X86")) {
-            tasks.create("assemble" + abi + "FdroidRelease") {
+        listOf("Arm64", "Arm", "X64", "X86").forEach { abi ->
+            tasks.register("assemble${abi}FdroidRelease") {
                 dependsOn("assembleFdroidRelease")
             }
         }
 
         sourceSets.getByName("main").apply {
-            jniLibs.srcDir("executableSo")
+            jniLibs.directories.add("executableSo")
         }
     }
 }

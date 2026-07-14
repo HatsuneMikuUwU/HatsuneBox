@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
+
 package io.nekohasekai.sagernet.bg
 
 import android.os.Build

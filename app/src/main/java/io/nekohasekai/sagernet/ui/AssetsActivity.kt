@@ -337,6 +337,8 @@ class AssetsActivity : ThemedActivity() {
         return true
     }
 
+    @Deprecated("Use OnBackPressedDispatcher")
+    @Suppress("DEPRECATION")
     override fun onBackPressed() {
         finish()
     }

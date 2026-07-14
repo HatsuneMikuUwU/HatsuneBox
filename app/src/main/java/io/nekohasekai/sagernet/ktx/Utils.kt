@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
+
 @file:SuppressLint("SoonBlockedPrivateApi")
 
 package io.nekohasekai.sagernet.ktx

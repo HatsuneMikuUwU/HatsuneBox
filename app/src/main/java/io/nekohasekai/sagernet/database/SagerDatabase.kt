@@ -11,8 +11,7 @@ import io.nekohasekai.sagernet.SagerNet
 import io.nekohasekai.sagernet.fmt.KryoConverters
 import io.nekohasekai.sagernet.fmt.gson.GsonConverters
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import java.util.concurrent.Executors
 
 @Database(
     entities = [ProxyGroup::class, ProxyEntity::class, RuleEntity::class],
@@ -38,8 +37,8 @@ abstract class SagerDatabase : RoomDatabase() {
                 .setJournalMode(JournalMode.TRUNCATE)
                 .allowMainThreadQueries()
                 .enableMultiInstanceInvalidation()
-                .fallbackToDestructiveMigration()
-                .setQueryExecutor { GlobalScope.launch { it.run() } }
+                .fallbackToDestructiveMigration(true)
+                .setQueryExecutor(Executors.newSingleThreadExecutor())
                 .build()
         }
 

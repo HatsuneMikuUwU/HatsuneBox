@@ -133,12 +133,12 @@ object CrashHandler : Thread.UncaughtExceptionHandler {
             var key: String
             var value: String
             while (bufferedReader.readLine().also { line = it } != null) {
-                val matcher = propertiesPattern.matcher(line)
+                val currentLine = line ?: continue
+                val matcher = propertiesPattern.matcher(currentLine)
                 if (matcher.matches()) {
-                    key = matcher.group(1)
-                    value = matcher.group(2)
-                    if (key != null && value != null && !key.isEmpty() && !value.isEmpty()) systemProperties[key] =
-                        value
+                    key = matcher.group(1) ?: continue
+                    value = matcher.group(2) ?: continue
+                    if (key.isNotEmpty() && value.isNotEmpty()) systemProperties[key] = value
                 }
             }
             bufferedReader.close()

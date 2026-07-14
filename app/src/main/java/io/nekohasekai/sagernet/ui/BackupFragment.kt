@@ -29,6 +29,7 @@ import moe.matsuri.nb4a.utils.Util
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.*
 
 class BackupFragment : NamedFragment(R.layout.layout_backup) {
@@ -37,7 +38,7 @@ class BackupFragment : NamedFragment(R.layout.layout_backup) {
 
     var content = ""
     private val exportSettings =
-        registerForActivityResult(ActivityResultContracts.CreateDocument()) { data ->
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { data ->
             if (data != null) {
                 runOnDefaultDispatcher {
                     try {
@@ -84,7 +85,7 @@ class BackupFragment : NamedFragment(R.layout.layout_backup) {
                 )
                 onMainDispatcher {
                     startFilesForResult(
-                        exportSettings, "nekobox_backup_${Date().toLocaleString()}.json"
+                        exportSettings, backupFileName()
                     )
                 }
             }
@@ -99,7 +100,7 @@ class BackupFragment : NamedFragment(R.layout.layout_backup) {
                 )
                 app.cacheDir.mkdirs()
                 val cacheFile = File(
-                    app.cacheDir, "nekobox_backup_${Date().toLocaleString()}.json"
+                    app.cacheDir, backupFileName()
                 )
                 cacheFile.writeText(content)
                 onMainDispatcher {
@@ -123,6 +124,9 @@ class BackupFragment : NamedFragment(R.layout.layout_backup) {
             startFilesForResult(importFile, "*/*")
         }
     }
+
+
+    private fun backupFileName(): String = "nekobox_backup_${SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US).format(Date())}.json"
 
     fun Parcelable.toBase64Str(): String {
         val parcel = Parcel.obtain()

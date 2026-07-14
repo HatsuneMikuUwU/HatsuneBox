@@ -18,7 +18,9 @@ import androidx.core.util.contains
 import androidx.core.util.set
 import androidx.core.view.ViewCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -174,7 +176,8 @@ class AppListActivity : ThemedActivity() {
     @UiThread
     private fun loadApps() {
         loader?.cancel()
-        loader = lifecycleScope.launchWhenCreated {
+        loader = lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
             loading.crossFadeFrom(binding.list)
             val adapter = binding.list.adapter as AppsAdapter
             withContext(Dispatchers.IO) { adapter.reload() }
@@ -185,6 +188,7 @@ class AppListActivity : ThemedActivity() {
             } else {
                 binding.list.crossFadeFrom(loading)
             }
+        }
         }
     }
 

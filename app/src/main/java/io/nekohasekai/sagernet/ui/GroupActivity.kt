@@ -148,7 +148,7 @@ class GroupActivity : ThemedActivity() {
     private lateinit var selectedGroup: ProxyGroup
 
     private val exportProfiles =
-        registerForActivityResult(ActivityResultContracts.CreateDocument()) { data ->
+        registerForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { data ->
             if (data != null) {
                 runOnDefaultDispatcher {
                     val profiles = SagerDatabase.proxyDao.getByGroup(selectedGroup.id)

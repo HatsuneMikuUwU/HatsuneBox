@@ -86,12 +86,17 @@ object PluginManager {
             }
     }
 
-    fun ComponentInfo.loadString(key: String) = when (val value = metaData.get(key)) {
-        is String -> value
-        is Int -> SagerNet.application.packageManager.getResourcesForApplication(applicationInfo)
-            .getString(value)
-
-        null -> null
-        else -> error("meta-data $key has invalid type ${value.javaClass}")
+    @Suppress("DEPRECATION")
+    fun ComponentInfo.loadString(key: String): String? {
+        val metaData = metaData ?: return null
+        metaData.getString(key)?.let { return it }
+        if (!metaData.containsKey(key)) return null
+        val value = metaData[key]
+        return when (value) {
+            is Int -> SagerNet.application.packageManager.getResourcesForApplication(applicationInfo)
+                .getString(value)
+            null -> null
+            else -> error("meta-data $key has invalid type ${value.javaClass}")
+        }
     }
 }

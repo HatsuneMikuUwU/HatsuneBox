@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package io.nekohasekai.sagernet.bg
 
 import android.app.PendingIntent

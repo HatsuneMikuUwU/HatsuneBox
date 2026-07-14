@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class, kotlinx.coroutines.ObsoleteCoroutinesApi::class)
+
 package io.nekohasekai.sagernet.utils
 
 import android.annotation.TargetApi

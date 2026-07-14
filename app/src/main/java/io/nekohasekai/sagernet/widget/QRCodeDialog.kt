@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -32,9 +31,10 @@ class QRCodeDialog() : DialogFragment() {
     }
 
     constructor(url: String, displayName: String) : this() {
-        arguments = bundleOf(
-            Pair(KEY_URL, url), Pair(KEY_NAME, displayName)
-        )
+        arguments = Bundle().apply {
+            putString(KEY_URL, url)
+            putString(KEY_NAME, displayName)
+        }
     }
 
     /**

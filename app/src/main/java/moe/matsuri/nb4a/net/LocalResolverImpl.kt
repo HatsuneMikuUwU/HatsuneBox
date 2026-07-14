@@ -17,6 +17,11 @@ import java.net.UnknownHostException
 
 object LocalResolverImpl : LocalDNSTransport {
 
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private val dnsResolver: DnsResolver by lazy {
+        SagerNet.application.getSystemService(DnsResolver::class.java)
+    }
+
     // new local
 
     private const val RCODE_NXDOMAIN = 3
@@ -53,7 +58,7 @@ object LocalResolverImpl : LocalDNSTransport {
             }
         }
 
-        DnsResolver.getInstance().rawQuery(
+        dnsResolver.rawQuery(
             SagerNet.underlyingNetwork,
             message,
             DnsResolver.FLAG_NO_RETRY,
@@ -104,7 +109,7 @@ object LocalResolverImpl : LocalDNSTransport {
                 else -> null
             }
             if (type != null) {
-                DnsResolver.getInstance().query(
+                dnsResolver.query(
                     SagerNet.underlyingNetwork,
                     domain,
                     type,
@@ -114,7 +119,7 @@ object LocalResolverImpl : LocalDNSTransport {
                     callback
                 )
             } else {
-                DnsResolver.getInstance().query(
+                dnsResolver.query(
                     SagerNet.underlyingNetwork,
                     domain,
                     DnsResolver.FLAG_NO_RETRY,

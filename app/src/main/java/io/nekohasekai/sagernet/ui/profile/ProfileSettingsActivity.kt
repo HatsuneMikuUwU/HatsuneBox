@@ -174,6 +174,8 @@ abstract class ProfileSettingsActivity<T : AbstractBean>(
 
     override fun onOptionsItemSelected(item: MenuItem) = child.onOptionsItemSelected(item)
 
+    @Deprecated("Use OnBackPressedDispatcher")
+    @Suppress("DEPRECATION")
     override fun onBackPressed() {
         if (DataStore.dirty) UnsavedChangesDialogFragment().apply { key() }
             .show(supportFragmentManager, null) else super.onBackPressed()

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package moe.matsuri.nb4a
 
 import android.content.Context

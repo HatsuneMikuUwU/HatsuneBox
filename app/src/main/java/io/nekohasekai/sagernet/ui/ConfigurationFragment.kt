@@ -32,6 +32,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.os.BundleCompat
 import androidx.core.view.size
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
@@ -1219,7 +1220,7 @@ class ConfigurationFragment @JvmOverloads constructor(
         override fun onViewStateRestored(savedInstanceState: Bundle?) {
             super.onViewStateRestored(savedInstanceState)
 
-            savedInstanceState?.getParcelable<ProxyGroup>("proxyGroup")?.also {
+            savedInstanceState?.let { BundleCompat.getParcelable(it, "proxyGroup", ProxyGroup::class.java) }?.also {
                 proxyGroup = it
                 onViewCreated(requireView(), null)
             }
@@ -1820,7 +1821,7 @@ class ConfigurationFragment @JvmOverloads constructor(
     }
 
     private val exportConfig =
-        registerForActivityResult(ActivityResultContracts.CreateDocument()) { data ->
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { data ->
             if (data != null) {
                 runOnDefaultDispatcher {
                     try {

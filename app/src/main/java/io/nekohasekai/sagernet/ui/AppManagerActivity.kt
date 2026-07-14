@@ -20,7 +20,9 @@ import androidx.core.util.contains
 import androidx.core.util.set
 import androidx.core.view.ViewCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -180,7 +182,8 @@ class AppManagerActivity : ThemedActivity() {
     @UiThread
     private fun loadApps() {
         loader?.cancel()
-        loader = lifecycleScope.launchWhenCreated {
+        loader = lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
             loading.crossFadeFrom(binding.list)
             val adapter = binding.list.adapter as AppsAdapter
             withContext(Dispatchers.IO) { adapter.reload() }
@@ -191,6 +194,7 @@ class AppManagerActivity : ThemedActivity() {
             } else {
                 binding.list.crossFadeFrom(loading)
             }
+        }
         }
     }
 
@@ -220,8 +224,8 @@ class AppManagerActivity : ThemedActivity() {
         }
 
         binding.bypassGroup.check(if (DataStore.bypass) R.id.appProxyModeBypass else R.id.appProxyModeOn)
-        binding.bypassGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
+        binding.bypassGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            when (checkedIds.firstOrNull() ?: View.NO_ID) {
                 R.id.appProxyModeDisable -> {
                     DataStore.proxyApps = false
                     finish()

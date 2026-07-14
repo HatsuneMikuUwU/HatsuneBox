@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
+
 package io.nekohasekai.sagernet.bg.proto
 
 import android.os.SystemClock
