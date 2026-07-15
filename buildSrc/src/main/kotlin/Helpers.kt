@@ -108,9 +108,16 @@ fun Project.setupAppCommon() {
     setupCommon()
 
     val lp = requireLocalProperties()
-    val keystorePwd = lp.getProperty("KEYSTORE_PASS") ?: System.getenv("KEYSTORE_PASS")
-    val alias = lp.getProperty("ALIAS_NAME") ?: System.getenv("ALIAS_NAME")
-    val pwd = lp.getProperty("ALIAS_PASS") ?: System.getenv("ALIAS_PASS")
+    fun prop(name: String): String? {
+        return findProperty(name)?.toString()?.takeIf { it.isNotBlank() }
+            ?: lp.getProperty(name)?.takeIf { it.isNotBlank() }
+            ?: System.getenv(name)?.takeIf { it.isNotBlank() }
+    }
+
+    val keystorePath = prop("KEYSTORE_PATH")
+    val keystorePwd = prop("KEYSTORE_PASS")
+    val alias = prop("ALIAS_NAME")
+    val pwd = prop("ALIAS_PASS")
 
     android.apply {
         if (keystorePwd != null) {
@@ -130,7 +137,7 @@ fun Project.setupAppCommon() {
                     storePassword = keystorePwd
                     keyAlias = alias
                     keyPassword = pwd
-                    enableV1Signing = false
+                    enableV1Signing = true
                     enableV2Signing = true
                     enableV3Signing = true
                 }
