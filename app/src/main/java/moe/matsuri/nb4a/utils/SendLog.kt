@@ -16,8 +16,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 object SendLog {
-    // Create full log and send
-    fun sendLog(context: Context, title: String) {
+    // Build the full log file (report header + logcat + neko.log) without sending it anywhere
+    fun buildLogFile(context: Context, title: String): File {
         val logFile = File.createTempFile(
             "$title ",
             ".log",
@@ -44,6 +44,11 @@ object SendLog {
         logFile.appendText("\n")
         logFile.appendBytes(getNekoLog(0))
 
+        return logFile
+    }
+
+    // Open the share chooser for an already-built log file
+    fun shareLogFile(context: Context, logFile: File) {
         context.startActivity(
             Intent.createChooser(
                 Intent(Intent.ACTION_SEND).setType("text/x-log")
@@ -55,6 +60,11 @@ object SendLog {
                     ), context.getString(R.string.abc_shareactionprovider_share_with)
             )
         )
+    }
+
+    // Create full log and send (used by the manual "send log" action, e.g. from LogcatActivity)
+    fun sendLog(context: Context, title: String) {
+        shareLogFile(context, buildLogFile(context, title))
     }
 
     // Get log bytes from neko.log

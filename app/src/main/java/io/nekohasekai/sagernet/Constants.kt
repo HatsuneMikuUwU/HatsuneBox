@@ -166,6 +166,14 @@ object Key {
     const val ACTION_DELETE_HOME_BANNER_IMAGE = "action_delete_home_banner_image"
     const val DISABLE_PARTICLES_SHEET = "disableParticlesSheet"
     const val CATEGORY_STYLE = "categoryStyle"
+
+    // Ported from MikuRay: selected-profile indicator style / banner
+    const val INDICATOR_STYLE = "pref_indicator_style"
+    const val SELECTED_BANNER_STYLE_ENABLED = "pref_selected_banner_style_enabled"
+    const val SELECTED_BANNER_DIM = "pref_selected_banner_dim"
+    const val CUSTOM_SELECTED_BANNER_URI = "customSelectedBannerUri"
+    const val ACTION_CHANGE_SELECTED_BANNER_IMAGE = "action_change_selected_banner_image"
+    const val ACTION_DELETE_SELECTED_BANNER_IMAGE = "action_delete_selected_banner_image"
 }
 
 object TunImplementation {
@@ -206,4 +214,5 @@ object Action {
     const val HOME_BANNER_CHANGED = "io.nekohasekai.sagernet.HOME_BANNER_CHANGED"
     const val HEADER_TOP_ROW_PADDING_CHANGED = "io.nekohasekai.sagernet.HEADER_TOP_ROW_PADDING_CHANGED"
     const val CATEGORY_STYLE_CHANGED = "io.nekohasekai.sagernet.CATEGORY_STYLE_CHANGED"
+    const val SELECTED_STYLE_CHANGED = "io.nekohasekai.sagernet.SELECTED_STYLE_CHANGED"
 }

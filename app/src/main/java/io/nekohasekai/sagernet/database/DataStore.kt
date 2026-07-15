@@ -181,6 +181,12 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var disableParticlesSheet by configurationStore.boolean(Key.DISABLE_PARTICLES_SHEET) { false }
     var categoryStyle by configurationStore.string(Key.CATEGORY_STYLE) { "gradient" }
 
+    // ui: selected-profile indicator style / banner (ported from MikuRay)
+    var indicatorStyle by configurationStore.string(Key.INDICATOR_STYLE) { "STYLE_0" }
+    var selectedBannerStyleEnabled by configurationStore.boolean(Key.SELECTED_BANNER_STYLE_ENABLED) { false }
+    var selectedBannerDim by configurationStore.int(Key.SELECTED_BANNER_DIM) { 60 }
+    var customSelectedBannerUri by configurationStore.string(Key.CUSTOM_SELECTED_BANNER_URI)
+
     // old cache, DO NOT ADD
 
     var dirty by profileCacheStore.boolean(Key.PROFILE_DIRTY)

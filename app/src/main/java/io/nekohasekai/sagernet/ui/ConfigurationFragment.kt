@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.SystemClock
 import android.provider.OpenableColumns
@@ -15,6 +16,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 import android.text.format.Formatter
 import android.text.style.ForegroundColorSpan
+import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -44,10 +46,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import io.nekohasekai.sagernet.Action
+import io.nekohasekai.sagernet.ui.IndicatorStyle
+import io.nekohasekai.sagernet.util.SelectedProfileBannerController
 import io.nekohasekai.sagernet.GroupOrder
 import io.nekohasekai.sagernet.GroupType
 import io.nekohasekai.sagernet.Key
@@ -69,6 +75,7 @@ import io.nekohasekai.sagernet.databinding.LayoutProfileListBinding
 import io.nekohasekai.sagernet.databinding.LayoutProgressListBinding
 import io.nekohasekai.sagernet.fmt.AbstractBean
 import io.nekohasekai.sagernet.fmt.toUniversalLink
+import io.nekohasekai.sagernet.fmt.v2ray.StandardV2RayBean
 import io.nekohasekai.sagernet.group.GroupUpdater
 import io.nekohasekai.sagernet.group.RawUpdater
 import io.nekohasekai.sagernet.ktx.FixedLinearLayoutManager
@@ -1208,6 +1215,7 @@ class ConfigurationFragment @JvmOverloads constructor(
 
         lateinit var undoManager: UndoSnackbarManager<ProxyEntity>
         var adapter: ConfigurationAdapter? = null
+        var selectedBannerController: SelectedProfileBannerController? = null
 
         override fun onSaveInstanceState(outState: Bundle) {
             super.onSaveInstanceState(outState)
@@ -1343,6 +1351,24 @@ class ConfigurationFragment @JvmOverloads constructor(
 
             init {
                 setHasStableIds(true)
+            }
+
+            override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+                super.onAttachedToRecyclerView(recyclerView)
+                val controller = SelectedProfileBannerController(recyclerView.context)
+                selectedBannerController = controller
+                controller.registerChangeListener {
+                    val position = configurationIdList.indexOf(DataStore.selectedProxy)
+                    if (position >= 0) {
+                        notifyItemChanged(position)
+                    }
+                }
+            }
+
+            override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+                super.onDetachedFromRecyclerView(recyclerView)
+                selectedBannerController?.unregisterChangeListener()
+                selectedBannerController = null
             }
 
             var configurationIdList: MutableList<Long> = mutableListOf()
@@ -1586,17 +1612,46 @@ class ConfigurationFragment @JvmOverloads constructor(
             lateinit var entity: ProxyEntity
 
             val profileName: TextView = view.findViewById(R.id.profile_name)
-            val profileType: TextView = view.findViewById(R.id.profile_type)
+            val vStatusDot: View = view.findViewById(R.id.v_status_dot)
+            val profileType: Chip = view.findViewById(R.id.profile_type)
             val profileAddress: TextView = view.findViewById(R.id.profile_address)
             val profileStatus: TextView = view.findViewById(R.id.profile_status)
 
             val trafficText: TextView = view.findViewById(R.id.traffic_text)
-            val selectedView: LinearLayout = view.findViewById(R.id.selected_view)
+            val layoutNetworkSecurity: LinearLayout = view.findViewById(R.id.layout_network_security)
+            val tvNetwork: TextView = view.findViewById(R.id.tv_network)
+            val tvSecurity: TextView = view.findViewById(R.id.tv_security)
+            val layoutCard: MaterialCardView = view.findViewById(R.id.layout_card)
+            val layoutIndicator: LinearLayout = view.findViewById(R.id.layout_indicator)
             val editButton: ImageView = view.findViewById(R.id.edit)
             val shareLayout: LinearLayout = view.findViewById(R.id.share)
             val shareLayer: LinearLayout = view.findViewById(R.id.share_layer)
             val shareButton: ImageView = view.findViewById(R.id.shareIcon)
             val removeButton: ImageView = view.findViewById(R.id.remove)
+
+            // Mirrors MikuRay's selected-profile card/indicator styling (MainRecyclerAdapter)
+            fun applySelectedStyle(selected: Boolean) {
+                if (selected) {
+                    val indicatorStyle = runCatching {
+                        IndicatorStyle.valueOf(DataStore.indicatorStyle)
+                    }.getOrDefault(IndicatorStyle.STYLE_0)
+
+                    val bannerController = selectedBannerController
+                    if (bannerController != null && bannerController.isEnabled() && bannerController.hasBanner()) {
+                        bannerController.applyTo(layoutIndicator)
+                    } else {
+                        bannerController?.clear(layoutIndicator)
+                        layoutIndicator.setBackgroundResource(indicatorStyle.drawableRes)
+                    }
+                    layoutCard.setCardBackgroundColor(Color.TRANSPARENT)
+                } else {
+                    selectedBannerController?.clear(layoutIndicator)
+                    layoutIndicator.setBackgroundResource(0)
+                    val typedValue = TypedValue()
+                    view.context.theme.resolveAttribute(R.attr.colorCard, typedValue, true)
+                    layoutCard.setCardBackgroundColor(typedValue.data)
+                }
+            }
 
             fun bind(proxyEntity: ProxyEntity, trafficData: TrafficData? = null) {
                 val pf = parentFragment as? ConfigurationFragment ?: return
@@ -1617,7 +1672,7 @@ class ConfigurationFragment @JvmOverloads constructor(
                                 lastSelected = DataStore.selectedProxy
                                 DataStore.selectedProxy = proxyEntity.id
                                 onMainDispatcher {
-                                    selectedView.visibility = View.VISIBLE
+                                    applySelectedStyle(true)
                                 }
                             }
 
@@ -1650,7 +1705,7 @@ class ConfigurationFragment @JvmOverloads constructor(
                     rx = trafficData.rx
                 }
 
-                val showTraffic = rx + tx != 0L
+                val showTraffic = DataStore.profileTrafficStatistics && (rx + tx != 0L)
                 trafficText.isVisible = showTraffic
                 if (showTraffic) {
                     trafficText.text = view.context.getString(
@@ -1660,27 +1715,43 @@ class ConfigurationFragment @JvmOverloads constructor(
                     )
                 }
 
+                val bean = proxyEntity.requireBean()
+                val showAddress = bean.name.isNotBlank() && pf.alwaysShowAddress
                 var address = proxyEntity.displayAddress()
                 if (showTraffic && address.length >= 30) {
                     address = address.substring(0, 27) + "..."
                 }
 
-                if (proxyEntity.requireBean().name.isBlank() || !pf.alwaysShowAddress) {
-                    address = ""
+                profileAddress.text = address
+                profileAddress.isVisible = showAddress
+
+                if (bean is StandardV2RayBean) {
+                    val network = bean.type?.takeIf { it.isNotBlank() }
+                    val security = bean.security?.takeIf { it.isNotBlank() }?.let { sec ->
+                        if (bean.allowInsecure == true && sec.equals("tls", ignoreCase = true)) {
+                            "$sec(insecure)"
+                        } else {
+                            sec
+                        }
+                    } ?: "none"
+
+                    layoutNetworkSecurity.isVisible = true
+
+                    if (network != null) {
+                        tvNetwork.text = network
+                        tvNetwork.isVisible = true
+                    } else {
+                        tvNetwork.isVisible = false
+                    }
+
+                    tvSecurity.text = security
+                    tvSecurity.isVisible = true
+                } else {
+                    layoutNetworkSecurity.isVisible = false
                 }
 
-                profileAddress.text = address
-                (trafficText.parent as View).isGone =
-                    (!showTraffic || proxyEntity.status <= 0) && address.isBlank()
-
                 if (proxyEntity.status <= 0) {
-                    if (showTraffic) {
-                        profileStatus.text = trafficText.text
-                        profileStatus.setTextColor(requireContext().getColorAttr(android.R.attr.textColorSecondary))
-                        trafficText.text = ""
-                    } else {
-                        profileStatus.text = ""
-                    }
+                    profileStatus.text = ""
                 } else if (proxyEntity.status == 1) {
                     profileStatus.text = getString(R.string.available, proxyEntity.ping)
                     profileStatus.setTextColor(requireContext().getColour(R.color.material_green_500))
@@ -1734,7 +1805,24 @@ class ConfigurationFragment @JvmOverloads constructor(
                     onMainDispatcher {
                         editButton.isEnabled = !started
                         removeButton.isEnabled = !started
-                        selectedView.visibility = if (selected) View.VISIBLE else View.INVISIBLE
+                        applySelectedStyle(selected)
+
+                        if (started) {
+                            vStatusDot.setBackgroundResource(R.drawable.blink_color)
+                            val blinkAnimDrawable = vStatusDot.background
+                            if (blinkAnimDrawable is AnimationDrawable) {
+                                vStatusDot.isVisible = true
+                                vStatusDot.post {
+                                    if (!blinkAnimDrawable.isRunning) {
+                                        blinkAnimDrawable.start()
+                                    }
+                                }
+                            }
+                        } else {
+                            (vStatusDot.background as? AnimationDrawable)?.stop()
+                            vStatusDot.isVisible = false
+                            vStatusDot.background = null
+                        }
                     }
 
                     fun showShare(anchor: View) {

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardImage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4.0dip"
+    android:layout_marginBottom="4.0dip"
+    android:layout_marginStart="16.0dip"
+    android:layout_marginEnd="16.0dip"
+    android:clickable="false"
+    android:focusable="true"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="16.0dip"
+    app:cardElevation="0.0dip"
+    app:strokeColor="?colorOutlineVariant"
+    app:strokeWidth="0.0dip">
+
+    <FrameLayout
+        android:id="@+id/cardContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground">
+
+        <LinearLayout
+            android:id="@+id/imagePreviewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/contentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="4.0dip"
+                android:paddingTop="12.0dip"
+                android:paddingEnd="4.0dip"
+                android:paddingBottom="12.0dip">
+
+                <LinearLayout
+                    android:layout_width="0.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:orientation="vertical"
+                    android:paddingStart="8.0dip"
+                    android:paddingEnd="8.0dip">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="@string/profile_name"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textColor="?colorOnSurface"
+                        android:textSize="17.0sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4.0dip"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.chip.Chip
+                            android:layout_width="wrap_content"
+                            android:layout_height="28.0dip"
+                            android:layout_marginEnd="8.0dip"
+                            android:checkable="false"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:text="@string/action_vmess"
+                            android:textAppearance="?attr/textAppearanceTitleSmall"
+                            android:textSize="12.0sp"
+                            app:chipBackgroundColor="?colorSecondaryContainer"
+                            app:chipMinTouchTargetSize="0.0dip" />
+
+                        <View
+                            android:layout_width="0.0dip"
+                            android:layout_height="0.0dip"
+                            android:layout_weight="1.0" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:background="@android:color/transparent"
+                                android:layout_width="40.0dip"
+                                android:layout_height="40.0dip"
+                                android:clickable="false"
+                                android:contentDescription="@string/share"
+                                android:focusable="false"
+                                app:srcCompat="@drawable/ic_social_share"
+                                app:tint="?colorOnSurfaceVariant" />
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:background="@android:color/transparent"
+                                android:layout_width="40.0dip"
+                                android:layout_height="40.0dip"
+                                android:clickable="false"
+                                android:contentDescription="@string/edit"
+                                android:focusable="false"
+                                app:srcCompat="@drawable/ic_image_edit"
+                                app:tint="?colorOnSurfaceVariant" />
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:background="@android:color/transparent"
+                                android:layout_width="40.0dip"
+                                android:layout_height="40.0dip"
+                                android:clickable="false"
+                                android:contentDescription="@string/delete"
+                                android:focusable="false"
+                                app:srcCompat="@drawable/ic_action_delete"
+                                app:tint="?colorError" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4.0dip"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:lines="1"
+                            android:text="example.com:443"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?colorOnSurfaceVariant"
+                            android:textSize="14.0sp" />
+
+                        <View
+                            android:layout_width="0.0dip"
+                            android:layout_height="0.0dip"
+                            android:layout_weight="1.0" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:lines="1"
+                            android:text="39ms"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="@color/colorPing"
+                            android:textSize="14.0sp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overlayContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="8dp" />
+
+        <ImageView
+            android:id="@+id/imageCheck"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_check_circle"
+            android:tint="?colorPrimary"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

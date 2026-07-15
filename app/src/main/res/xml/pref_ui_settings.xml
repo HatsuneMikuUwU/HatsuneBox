@@ -119,6 +119,51 @@
     </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
     <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
+        app:title="@string/pref_category_selected_banner"
+        app:sectionIcon="@drawable/ic_cards_variant">
+
+        <Preference
+            app:layout="@layout/uwu_top"
+            app:icon="@drawable/ic_cards_variant"
+            app:key="pref_indicator_style"
+            app:title="@string/pref_indicator_style_title"
+            app:summary="@string/pref_indicator_style_summary" />
+
+        <SwitchPreferenceCompat
+            app:layout="@layout/uwu_mid_switch"
+            app:widgetLayout="@layout/uwu_widget_material_switch"
+            app:defaultValue="false"
+            app:icon="@drawable/ic_cards_variant"
+            app:key="pref_selected_banner_style_enabled"
+            app:title="@string/selected_banner_enable_title"
+            app:summary="@string/selected_banner_enable_summary" />
+
+        <io.nekohasekai.sagernet.ui.dialog.SelectedBannerDimSliderDialog
+            app:layout="@layout/uwu_mid"
+            app:icon="@drawable/ic_baseline_blur_on_24"
+            app:key="pref_selected_banner_dim"
+            app:title="@string/selected_banner_dim_title"
+            app:dependency="pref_selected_banner_style_enabled" />
+
+        <Preference
+            app:layout="@layout/uwu_mid"
+            app:icon="@drawable/ic_image_photo"
+            app:key="action_change_selected_banner_image"
+            app:dependency="pref_selected_banner_style_enabled"
+            app:title="@string/selected_banner_custom_title"
+            app:summary="@string/selected_banner_custom_summary" />
+
+        <Preference
+            app:layout="@layout/uwu_bot"
+            app:icon="@drawable/baseline_delete_sweep_24"
+            app:key="action_delete_selected_banner_image"
+            app:dependency="pref_selected_banner_style_enabled"
+            app:title="@string/selected_banner_delete_title"
+            app:summary="@string/selected_banner_delete_summary" />
+
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
+
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:title="@string/banner_profile_category"
         app:sectionIcon="@drawable/ic_image_camera_alt">
 
@@ -153,6 +198,29 @@
             app:key="action_delete_profile_banner"
             app:summary="@string/delete_custom_banner_profile_summary"
             app:title="@string/delete_custom_banner_profile" />
+
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
+
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
+        app:title="@string/pref_category_profile_list"
+        app:sectionIcon="@drawable/ic_baseline_speed_24">
+
+        <SwitchPreferenceCompat
+            app:layout="@layout/uwu_top_switch"
+            app:widgetLayout="@layout/uwu_widget_material_switch"
+            app:defaultValue="true"
+            app:icon="@drawable/ic_baseline_speed_24"
+            app:key="profileTrafficStatistics"
+            app:summary="@string/profile_traffic_statistics_summary"
+            app:title="@string/profile_traffic_statistics" />
+
+        <SwitchPreferenceCompat
+            app:layout="@layout/uwu_bot_switch"
+            app:widgetLayout="@layout/uwu_widget_material_switch"
+            app:icon="@drawable/ic_baseline_center_focus_weak_24"
+            app:key="alwaysShowAddress"
+            app:summary="@string/always_show_address_sum"
+            app:title="@string/always_show_address" />
 
     </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 

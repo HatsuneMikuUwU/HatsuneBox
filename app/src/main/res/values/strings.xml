@@ -644,6 +644,22 @@
     <string name="sheet_banner_delete_summary">Custom banner removed. Default sheet banner will be used instead</string>
     <string name="sheet_banner_updated">Banner updated</string>
     <string name="sheet_banner_deleted">Banner reset to default</string>
+
+    <string name="pref_category_selected_banner">Selected profile style</string>
+    <string name="pref_indicator_style_title">Server Indicator Style</string>
+    <string name="pref_indicator_style_summary">Select the active server indicator display</string>
+    <string name="pref_indicator_style_summary_disabled_by_banner">Disabled while the selected profile banner style is active</string>
+    <string name="selected_banner_enable_title">Banner style for selected profile</string>
+    <string name="selected_banner_enable_summary">Show a banner image behind the active server card. Uses the default banner unless a custom one is set</string>
+    <string name="selected_banner_dim_title">Banner overlay strength</string>
+    <string name="selected_banner_dim_summary_value">%1$d%%</string>
+    <string name="selected_banner_custom_title">Change selected profile banner</string>
+    <string name="selected_banner_custom_summary">Set a custom image for the selected server card (optional)</string>
+    <string name="selected_banner_delete_title">Remove custom selected profile banner</string>
+    <string name="selected_banner_delete_summary">Custom banner removed. Default banner will be used instead</string>
+    <string name="selected_banner_updated">Selected profile banner updated successfully.</string>
+
+    <string name="pref_category_profile_list">Profile List</string>
     <string name="banner_profile_category">Profile</string>
     <string name="profile_name_custom_title">Header name</string>
     <string name="profile_name_custom_dialog">Change display name</string>

@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import io.nekohasekai.sagernet.Action
@@ -20,9 +21,11 @@ import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.SagerNet
 import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.ktx.app
+import io.nekohasekai.sagernet.ktx.needReload
 import io.nekohasekai.sagernet.utils.Theme
 import io.nekohasekai.sagernet.widget.CategoryStyleHelper
 import io.nekohasekai.sagernet.widget.ListListener
+import io.nekohasekai.sagernet.ui.bottomsheet.IndicatorStyleBottomSheet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -82,6 +85,11 @@ class UiSettingsActivity : ThemedActivity() {
                 if (uri != null) startCropProfileBanner(uri)
             }
 
+        private val pickSelectedBanner =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                if (uri != null) startCropSelectedBanner(uri)
+            }
+
         private val cropHomeBanner =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK && result.data != null) {
@@ -107,6 +115,16 @@ class UiSettingsActivity : ThemedActivity() {
                 if (result.resultCode == Activity.RESULT_OK && result.data != null) {
                     val croppedUri = UCrop.getOutput(result.data!!) ?: return@registerForActivityResult
                     saveProfileBanner(croppedUri)
+                } else if (result.resultCode == UCrop.RESULT_ERROR) {
+                    result.data?.let { UCrop.getError(it) }?.printStackTrace()
+                }
+            }
+
+        private val cropSelectedBanner =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                    val croppedUri = UCrop.getOutput(result.data!!) ?: return@registerForActivityResult
+                    saveSelectedBanner(croppedUri)
                 } else if (result.resultCode == UCrop.RESULT_ERROR) {
                     result.data?.let { UCrop.getError(it) }?.printStackTrace()
                 }
@@ -202,6 +220,56 @@ class UiSettingsActivity : ThemedActivity() {
                 deleteProfileBanner()
                 true
             }
+
+            findPreference<Preference>("pref_indicator_style")?.setOnPreferenceClickListener {
+                IndicatorStyleBottomSheet(requireContext()) {}.show()
+                true
+            }
+
+            findPreference<Preference>("pref_selected_banner_style_enabled")?.setOnPreferenceChangeListener { _, newValue ->
+                DataStore.selectedBannerStyleEnabled = newValue as Boolean
+                updateIndicatorStyleEnabledState()
+                requireContext().sendBroadcast(Intent(Action.SELECTED_STYLE_CHANGED))
+                true
+            }
+
+            findPreference<Preference>("action_change_selected_banner_image")?.setOnPreferenceClickListener {
+                pickSelectedBanner.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+                )
+                true
+            }
+
+            findPreference<Preference>("action_delete_selected_banner_image")?.setOnPreferenceClickListener {
+                if (DataStore.customSelectedBannerUri.isNotEmpty()) {
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.selected_banner_delete_title)
+                        .setMessage(R.string.selected_banner_delete_summary)
+                        .setPositiveButton(android.R.string.ok) { _, _ -> deleteSelectedBanner() }
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show()
+                }
+                true
+            }
+
+            findPreference<Preference>("profileTrafficStatistics")?.setOnPreferenceChangeListener { _, _ ->
+                needReload()
+                true
+            }
+
+            updateIndicatorStyleEnabledState()
+        }
+
+        private fun updateIndicatorStyleEnabledState() {
+            val bannerEnabled = DataStore.selectedBannerStyleEnabled
+            findPreference<Preference>("pref_indicator_style")?.apply {
+                isEnabled = !bannerEnabled
+                summary = if (bannerEnabled) {
+                    getString(R.string.pref_indicator_style_summary_disabled_by_banner)
+                } else {
+                    getString(R.string.pref_indicator_style_summary)
+                }
+            }
         }
 
         override fun onResume() {
@@ -279,6 +347,30 @@ class UiSettingsActivity : ThemedActivity() {
             }
 
             cropProfileBanner.launch(uCrop.getIntent(requireContext()))
+        }
+
+        private fun startCropSelectedBanner(sourceUri: Uri) {
+            val destFile = File(requireContext().cacheDir, "cropped_selected_banner_temp.jpg")
+            val displayMetrics = resources.displayMetrics
+            val screenWidthPx = displayMetrics.widthPixels.toFloat()
+            val targetHeightPx = displayMetrics.density * 120
+
+            val uCrop = UCrop.of(sourceUri, Uri.fromFile(destFile))
+                .withAspectRatio(screenWidthPx, targetHeightPx)
+                .withMaxResultSize(1920, 1080)
+
+            try {
+                uCrop.withOptions(UCrop.Options().apply {
+                    setDimmedLayerColor(Color.parseColor("#CC000000"))
+                    setCircleDimmedLayer(false)
+                    setShowCropGrid(true)
+                    setFreeStyleCropEnabled(false)
+                })
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            cropSelectedBanner.launch(uCrop.getIntent(requireContext()))
         }
 
         private fun saveHomeBannerDirect(sourceUri: Uri) {
@@ -372,6 +464,29 @@ class UiSettingsActivity : ThemedActivity() {
                 DataStore.profileBannerUri = ""
                 requireContext().sendBroadcast(Intent(Action.PROFILE_BANNER_CHANGED))
                 (activity as? UiSettingsActivity)?.snackbar(getString(R.string.custom_banner_profile_deleted))?.show()
+            }
+        }
+
+        private fun saveSelectedBanner(croppedUri: Uri) {
+            lifecycleScope.launch {
+                try {
+                    deleteOldFile(DataStore.customSelectedBannerUri)
+                    val savedUri = saveBannerFile(croppedUri, "selected_banner_", "jpg")
+                    DataStore.customSelectedBannerUri = savedUri.toString()
+                    requireContext().sendBroadcast(Intent(Action.SELECTED_STYLE_CHANGED))
+                    (activity as? UiSettingsActivity)?.snackbar(getString(R.string.selected_banner_updated))?.show()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        private fun deleteSelectedBanner() {
+            lifecycleScope.launch {
+                deleteOldFile(DataStore.customSelectedBannerUri)
+                DataStore.customSelectedBannerUri = ""
+                requireContext().sendBroadcast(Intent(Action.SELECTED_STYLE_CHANGED))
+                (activity as? UiSettingsActivity)?.snackbar(getString(R.string.selected_banner_delete_summary))?.show()
             }
         }
 
