@@ -1,4 +1,6 @@
 import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import com.android.build.api.variant.FilterConfiguration
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByName
@@ -23,7 +25,7 @@ fun Project.requireMetadata(): Properties {
 
 fun Project.previewVersionName(): String {
     val verName = requireMetadata().getProperty("VERSION_NAME")
-    val formatter = java.text.SimpleDateFormat("yyyyMMdd").apply {
+    val formatter = java.text.SimpleDateFormat("yyyyMMdd-HHmm").apply {
         timeZone = java.util.TimeZone.getTimeZone("Asia/Jakarta")
     }
     val buildDate = formatter.format(java.util.Date())
@@ -108,32 +110,15 @@ fun Project.setupAppCommon() {
     setupCommon()
 
     val lp = requireLocalProperties()
-    fun prop(name: String): String? {
-        return findProperty(name)?.toString()?.takeIf { it.isNotBlank() }
-            ?: lp.getProperty(name)?.takeIf { it.isNotBlank() }
-            ?: System.getenv(name)?.takeIf { it.isNotBlank() }
-    }
-
-    val keystorePath = prop("KEYSTORE_PATH")
-    val keystorePwd = prop("KEYSTORE_PASS")
-    val alias = prop("ALIAS_NAME")
-    val pwd = prop("ALIAS_PASS")
+    val keystorePwd = lp.getProperty("KEYSTORE_PASS") ?: System.getenv("KEYSTORE_PASS")
+    val alias = lp.getProperty("ALIAS_NAME") ?: System.getenv("ALIAS_NAME")
+    val pwd = lp.getProperty("ALIAS_PASS") ?: System.getenv("ALIAS_PASS")
 
     android.apply {
         if (keystorePwd != null) {
-            val signingKeystore = file(keystorePath ?: "release.keystore")
-            require(signingKeystore.exists()) {
-                "Keystore not found: ${signingKeystore.absolutePath}"
-            }
-            require(!alias.isNullOrBlank()) {
-                "ALIAS_NAME is required when KEYSTORE_PASS is set."
-            }
-            require(!pwd.isNullOrBlank()) {
-                "ALIAS_PASS is required when KEYSTORE_PASS is set."
-            }
             signingConfigs {
                 create("release") {
-                    storeFile = signingKeystore
+                    storeFile = rootProject.file("release.keystore")
                     storePassword = keystorePwd
                     keyAlias = alias
                     keyPassword = pwd
@@ -157,6 +142,7 @@ fun Project.setupApp() {
     val pkgName = requireMetadata().getProperty("PACKAGE_NAME")
     val verName = requireMetadata().getProperty("VERSION_NAME")
     val verCode = (requireMetadata().getProperty("VERSION_CODE").toInt()) * 5
+    
     android.apply {
         defaultConfig {
             applicationId = pkgName
@@ -209,6 +195,28 @@ fun Project.setupApp() {
 
         sourceSets.getByName("main").apply {
             jniLibs.directories.add("executableSo")
+        }
+    }
+
+    val androidComponents = extensions.getByName<ApplicationAndroidComponentsExtension>("androidComponents")
+    androidComponents.onVariants { variant ->
+        val flavor = variant.flavorName ?: ""
+        val buildType = variant.buildType ?: ""
+        
+        val versionString = if (flavor == "preview") {
+            previewVersionName()
+        } else {
+            if (flavor.isNotEmpty()) "$flavor-v$verName" else "v$verName"
+        }
+
+        variant.outputs.forEach { output ->
+            val abi = output.filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier
+            val abiSuffix = if (abi != null) "-$abi" else ""
+            
+            val appName = "HatsuneBox"
+            val newApkName = "$appName-$versionString$abiSuffix-$buildType.apk"
+            
+            output.outputFileName.set(newApkName)
         }
     }
 }
