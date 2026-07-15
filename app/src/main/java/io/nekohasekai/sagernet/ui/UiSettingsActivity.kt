@@ -21,7 +21,6 @@ import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.SagerNet
 import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.ktx.app
-import io.nekohasekai.sagernet.ktx.needReload
 import io.nekohasekai.sagernet.utils.Theme
 import io.nekohasekai.sagernet.widget.CategoryStyleHelper
 import io.nekohasekai.sagernet.widget.ListListener
@@ -254,8 +253,15 @@ class UiSettingsActivity : ThemedActivity() {
                 true
             }
 
-            findPreference<Preference>("profileTrafficStatistics")?.setOnPreferenceChangeListener { _, _ ->
-                needReload()
+            findPreference<Preference>("profileTrafficStatistics")?.setOnPreferenceChangeListener { _, newValue ->
+                DataStore.profileTrafficStatistics = newValue as Boolean
+                requireContext().sendBroadcast(Intent(Action.SELECTED_STYLE_CHANGED))
+                true
+            }
+
+            findPreference<Preference>("alwaysShowAddress")?.setOnPreferenceChangeListener { _, newValue ->
+                DataStore.alwaysShowAddress = newValue as Boolean
+                requireContext().sendBroadcast(Intent(Action.SELECTED_STYLE_CHANGED))
                 true
             }
 

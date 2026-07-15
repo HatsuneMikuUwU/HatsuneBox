@@ -152,7 +152,6 @@ object Key {
     const val APP_TLS_VERSION = "appTLSVersion"
     const val ENABLE_CLASH_API = "enableClashAPI"
 
-    // Ported from MikuRay: main menu bottom sheet / profile identity / home banner
     const val CUSTOM_PROFILE_NAME = "customProfileName"
     const val ICON_SHAPE = "iconShape"
     const val PROFILE_BANNER_SHAPE = "profileBannerShape"
@@ -166,8 +165,6 @@ object Key {
     const val ACTION_DELETE_HOME_BANNER_IMAGE = "action_delete_home_banner_image"
     const val DISABLE_PARTICLES_SHEET = "disableParticlesSheet"
     const val CATEGORY_STYLE = "categoryStyle"
-
-    // Ported from MikuRay: selected-profile indicator style / banner
     const val INDICATOR_STYLE = "pref_indicator_style"
     const val SELECTED_BANNER_STYLE_ENABLED = "pref_selected_banner_style_enabled"
     const val SELECTED_BANNER_DIM = "pref_selected_banner_dim"
@@ -207,8 +204,7 @@ object Action {
 
     // const val SWITCH_WAKE_LOCK = "io.nekohasekai.sagernet.SWITCH_WAKELOCK"
     const val RESET_UPSTREAM_CONNECTIONS = "moe.nb4a.RESET_UPSTREAM_CONNECTIONS"
-
-    // Ported from MikuRay: live UI style change broadcasts
+    
     const val ICON_SHAPE_CHANGED = "io.nekohasekai.sagernet.ICON_SHAPE_CHANGED"
     const val PROFILE_BANNER_CHANGED = "io.nekohasekai.sagernet.PROFILE_BANNER_CHANGED"
     const val HOME_BANNER_CHANGED = "io.nekohasekai.sagernet.HOME_BANNER_CHANGED"

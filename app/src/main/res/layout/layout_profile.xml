@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Structure mirrors MikuRay's item_recycler_main.xml -->
 <LinearLayout
     android:gravity="center_vertical"
     android:id="@+id/item_bg"
@@ -50,7 +49,6 @@
                     android:paddingStart="8.0dip"
                     android:paddingEnd="8.0dip">
 
-                    <!-- Name row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -78,7 +76,6 @@
                             android:visibility="gone" />
                     </LinearLayout>
 
-                    <!-- Type chip + action buttons row -->
                     <LinearLayout
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
@@ -130,9 +127,9 @@
 
                                     <androidx.appcompat.widget.AppCompatImageView
                                         android:id="@+id/shareIcon"
-                                        android:layout_width="20.0dip"
-                                        android:layout_height="20.0dip"
-                                        app:srcCompat="@drawable/ic_social_share" />
+                                        android:layout_width="40.0dip"
+                                        android:layout_height="40.0dip"
+                                        app:srcCompat="@drawable/ic_share_color" />
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -144,7 +141,7 @@
                                 android:background="@drawable/bg_icon_button"
                                 android:focusable="true"
                                 android:padding="10.0dip"
-                                app:srcCompat="@drawable/ic_image_edit" />
+                                app:srcCompat="@drawable/ic_edit_color" />
 
                             <androidx.appcompat.widget.AppCompatImageButton
                                 android:id="@+id/remove"
@@ -155,11 +152,11 @@
                                 android:focusable="true"
                                 android:padding="10.0dip"
                                 android:visibility="gone"
-                                app:srcCompat="@drawable/ic_action_delete" />
+                                app:srcCompat="@drawable/ic_delete_empty"
+                                app:tint="?colorError" />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Address + status/ping row (mirrors tv_statistics + tv_test_result) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -172,12 +169,16 @@
                             android:textSize="14.0sp"
                             android:textColor="?colorOnSurfaceVariant"
                             android:id="@+id/profile_address"
-                            android:layout_width="0.0dip"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1.0"
                             android:ellipsize="end"
                             android:maxLines="1"
                             tools:text="@string/server_address" />
+                            
+                        <View
+                            android:layout_width="0.0dip"
+                            android:layout_height="0.0dip"
+                            android:layout_weight="1.0" />
 
                         <TextView
                             android:id="@+id/profile_status"
@@ -185,13 +186,11 @@
                             android:textSize="14.0sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8.0dip"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:lines="1" />
                     </LinearLayout>
 
-                    <!-- Network/security + traffic row (mirrors layout_network_security + tv_traffic) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

@@ -2060,12 +2060,18 @@ class ConfigurationFragment @JvmOverloads constructor(
                     Action.HEADER_TOP_ROW_PADDING_CHANGED -> {
                         applyHeaderTopRowPadding()
                     }
+                    Action.SELECTED_STYLE_CHANGED -> {
+                        childFragmentManager.fragments.forEach { fragment ->
+                            (fragment as? GroupFragment)?.adapter?.notifyDataSetChanged()
+                        }
+                    }
                 }
             }
         }
         
         val filter = IntentFilter(Action.HOME_BANNER_CHANGED).apply {
             addAction(Action.HEADER_TOP_ROW_PADDING_CHANGED)
+            addAction(Action.SELECTED_STYLE_CHANGED)
         }
         
         homeBannerReceiver?.let { receiver ->
