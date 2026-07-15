@@ -1,5 +1,7 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.gradle.AppExtension
+import com.android.build.gradle.api.ApplicationVariant
+import com.android.build.gradle.api.BaseVariantOutput
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.gradle.api.Action
 import org.gradle.api.JavaVersion
@@ -117,12 +119,25 @@ fun Project.setupAppCommon() {
 
     android.apply {
         if (keystorePwd != null) {
+            val signingKeystore = file(keystorePath ?: "release.keystore")
+            require(signingKeystore.exists()) {
+                "Keystore not found: ${signingKeystore.absolutePath}"
+            }
+            require(!alias.isNullOrBlank()) {
+                "ALIAS_NAME is required when KEYSTORE_PASS is set."
+            }
+            require(!pwd.isNullOrBlank()) {
+                "ALIAS_PASS is required when KEYSTORE_PASS is set."
+            }
             signingConfigs {
                 create("release") {
-                    storeFile = rootProject.file("release.keystore")
+                    storeFile = signingKeystore
                     storePassword = keystorePwd
                     keyAlias = alias
                     keyPassword = pwd
+                    enableV1Signing = false
+                    enableV2Signing = true
+                    enableV3Signing = true
                 }
             }
         }
@@ -196,8 +211,8 @@ fun Project.setupApp() {
     }
 
     val appExtension = extensions.getByType(AppExtension::class.java)
-    appExtension.applicationVariants.all(Action { variant ->
-        variant.outputs.all(Action { output ->
+    appExtension.applicationVariants.all(Action<ApplicationVariant> { variant ->
+        variant.outputs.all(Action<BaseVariantOutput> { output ->
             val outputImpl = output as BaseVariantOutputImpl
             val isPreview = outputImpl.outputFileName.contains("-preview")
             val abi = outputImpl.filters.find { filter -> filter.filterType == "ABI" }?.identifier
