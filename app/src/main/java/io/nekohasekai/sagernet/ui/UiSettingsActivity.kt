@@ -21,6 +21,7 @@ import io.nekohasekai.sagernet.SagerNet
 import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.ktx.app
 import io.nekohasekai.sagernet.utils.Theme
+import io.nekohasekai.sagernet.widget.CategoryStyleHelper
 import io.nekohasekai.sagernet.widget.ListListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -114,6 +115,22 @@ class UiSettingsActivity : ThemedActivity() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             preferenceManager.preferenceDataStore = DataStore.configurationStore
             addPreferencesFromResource(R.xml.pref_ui_settings)
+
+            CategoryStyleHelper.applyToFragment(this)
+            findPreference<ListPreference>(Key.CATEGORY_STYLE)?.setOnPreferenceChangeListener { pref, newValue ->
+                val styleValue = newValue as String
+                (pref as? ListPreference)?.let { lp ->
+                    val idx = lp.findIndexOfValue(styleValue)
+                    lp.summary = if (idx >= 0) lp.entries[idx] else styleValue
+                }
+                DataStore.categoryStyle = styleValue
+                preferenceScreen?.let { screen ->
+                    CategoryStyleHelper.applyToGroup(styleValue, screen)
+                    listView.adapter?.notifyDataSetChanged()
+                }
+                requireContext().sendBroadcast(Intent(Action.CATEGORY_STYLE_CHANGED))
+                true
+            }
 
             findPreference<ColorPickerPreference>(Key.APP_THEME)?.setOnPreferenceChangeListener { _, newTheme ->
                 if (DataStore.serviceState.started) {

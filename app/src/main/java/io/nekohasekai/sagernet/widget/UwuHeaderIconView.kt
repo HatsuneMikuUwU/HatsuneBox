@@ -13,13 +13,15 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import io.nekohasekai.sagernet.Action
 import io.nekohasekai.sagernet.R
+import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.ktx.getColorAttr
 
 /**
- * Ported from MikuRay's section header icon. Upstream also supports
- * character-art variants (miku/teto/neru); those drawable assets are
- * MikuRay-specific and are not part of this port, so this always renders the
- * gradient badge style.
+ * Ported from MikuRay's section header icon. Renders either the gradient
+ * icon badge (per-item sectionIcon, tinted) or — when a character style is
+ * selected via the "Category Title Style" preference — the matching
+ * Miku/Teto/Neru illustration full-bleed, replacing the per-item icon.
+ * Reacts live to Action.CATEGORY_STYLE_CHANGED broadcasts.
  */
 class UwuHeaderIconView @JvmOverloads constructor(
     context: Context,
@@ -60,6 +62,11 @@ class UwuHeaderIconView @JvmOverloads constructor(
         }
     }
 
+    fun setSectionIcon(iconRes: Int) {
+        sectionIconRes = iconRes
+        if (isAttachedToWindow) applyStyle()
+    }
+
     fun applyStyle() {
         val sizePx = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 40f, resources.displayMetrics,
@@ -68,6 +75,17 @@ class UwuHeaderIconView @JvmOverloads constructor(
             it.width = sizePx
             it.height = sizePx
         }
+
+        val characterRes = CategoryStyleHelper.characterDrawableForStyle(DataStore.categoryStyle)
+        if (characterRes != null) {
+            setPadding(0, 0, 0, 0)
+            background = null
+            scaleType = ScaleType.CENTER_CROP
+            setImageResource(characterRes)
+            imageTintList = null
+            return
+        }
+
         val pad = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 10f, resources.displayMetrics,
         ).toInt()
