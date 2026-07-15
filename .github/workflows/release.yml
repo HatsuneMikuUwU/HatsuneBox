@@ -62,7 +62,6 @@ jobs:
           BUILD_PLUGIN: none
         run: |
           echo "sdk.dir=${ANDROID_HOME}" > local.properties
-          echo "ndk.dir=${ANDROID_HOME}/ndk/27.3.13750724" >> local.properties
           export LOCAL_PROPERTIES="${{ secrets.LOCAL_PROPERTIES }}"
           ./run init action gradle
           KEYSTORE_PASS="${{ secrets.KEYSTORE_PASS }}" ALIAS_NAME="${{ secrets.ALIAS_NAME }}" ALIAS_PASS="${{ secrets.ALIAS_PASS}}" ./gradlew app:assembleOssRelease
@@ -71,7 +70,7 @@ jobs:
           echo "APK=$APK" >> $GITHUB_ENV
       - uses: actions/upload-artifact@v4
         with:
-          name: APKs
+          name: HatsuneBox
           path: ${{ env.APK }}
   publish:
     name: Publish Release
@@ -84,7 +83,7 @@ jobs:
       - name: Donwload Artifacts
         uses: actions/download-artifact@v8
         with:
-          name: APKs
+          name: HatsuneBox
           path: artifacts
       - name: Release
         run: |
