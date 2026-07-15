@@ -1637,12 +1637,9 @@ class ConfigurationFragment @JvmOverloads constructor(
             val layoutCard: MaterialCardView = view.findViewById(R.id.layout_card)
             val layoutIndicator: LinearLayout = view.findViewById(R.id.layout_indicator)
             val editButton: ImageView = view.findViewById(R.id.edit)
-            val shareLayout: LinearLayout = view.findViewById(R.id.share)
-            val shareLayer: LinearLayout = view.findViewById(R.id.share_layer)
-            val shareButton: ImageView = view.findViewById(R.id.shareIcon)
+            val shareButton: ImageView = view.findViewById(R.id.share)
             val removeButton: ImageView = view.findViewById(R.id.remove)
 
-            // Mirrors MikuRay's selected-profile card/indicator styling (MainRecyclerAdapter)
             fun applySelectedStyle(selected: Boolean) {
                 if (selected) {
                     val indicatorStyle = runCatching {
@@ -1820,12 +1817,12 @@ class ConfigurationFragment @JvmOverloads constructor(
                 }
 
                 val selectOrChain = select || proxyEntity.type == ProxyEntity.TYPE_CHAIN
-                shareLayout.isGone = selectOrChain
+                shareButton.isGone = selectOrChain
                 editButton.isGone = select
                 removeButton.isGone = select
 
                 proxyEntity.nekoBean?.apply {
-                    shareLayout.isGone = true
+                    shareButton.isGone = true
                 }
 
                 runOnDefaultDispatcher {
@@ -1883,11 +1880,10 @@ class ConfigurationFragment @JvmOverloads constructor(
 
                     if (!(select || proxyEntity.type == ProxyEntity.TYPE_CHAIN)) {
                         onMainDispatcher {
-                            shareLayer.setBackgroundColor(Color.TRANSPARENT)
                             shareButton.setImageResource(R.drawable.ic_social_share)
                             shareButton.isVisible = true
 
-                            shareLayout.setOnClickListener {
+                            shareButton.setOnClickListener {
                                 showShare(it)
                             }
                         }
