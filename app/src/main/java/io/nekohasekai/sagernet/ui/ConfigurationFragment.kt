@@ -415,6 +415,20 @@ class ConfigurationFragment @JvmOverloads constructor(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Re-resolve tab colors against the current theme. applyTabSelectedStyle()
+        // is otherwise only triggered by tab creation or select/unselect events, so
+        // if the theme changes while this fragment isn't actively receiving those
+        // events, non-selected tabs would keep stale colors until manually tapped.
+        if (this::tabLayout.isInitialized) {
+            for (i in 0 until tabLayout.tabCount) {
+                val tab = tabLayout.getTabAt(i) ?: continue
+                applyTabSelectedStyle(tab, i == tabLayout.selectedTabPosition)
+            }
+        }
+    }
+
     override fun onDestroy() {
         DataStore.profileCacheStore.unregisterChangeListener(this)
         inlineSearchView = null
@@ -1735,14 +1749,31 @@ class ConfigurationFragment @JvmOverloads constructor(
 
                     layoutNetworkSecurity.isVisible = true
 
+                    val iconSize = (14 * resources.displayMetrics.density).toInt()
+                    fun makeIcon(drawableRes: Int): android.graphics.drawable.Drawable? {
+                        val d = ContextCompat.getDrawable(requireContext(), drawableRes) ?: return null
+                        val wrapped = androidx.core.graphics.drawable.DrawableCompat.wrap(d.mutate())
+                        androidx.core.graphics.drawable.DrawableCompat.setTint(
+                            wrapped,
+                            com.google.android.material.color.MaterialColors.getColor(
+                                tvNetwork, R.attr.colorOnSurfaceVariant
+                            )
+                        )
+                        wrapped.setBounds(0, 0, iconSize, iconSize)
+                        return wrapped
+                    }
+
                     if (network != null) {
                         tvNetwork.text = network
+                        tvNetwork.setCompoundDrawables(makeIcon(R.drawable.ic_thumb_up_outline), null, null, null)
                         tvNetwork.isVisible = true
                     } else {
                         tvNetwork.isVisible = false
                     }
 
                     tvSecurity.text = security
+                    val securityIconRes = if (security == "none") R.drawable.ic_unlock_24dp else R.drawable.ic_lock_24dp
+                    tvSecurity.setCompoundDrawables(makeIcon(securityIconRes), null, null, null)
                     tvSecurity.isVisible = true
                 } else {
                     layoutNetworkSecurity.isVisible = false
