@@ -1,6 +1,6 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.android.build.api.variant.ApplicationAndroidComponentsExtension
-import com.android.build.api.variant.FilterConfiguration
+import com.android.build.gradle.AbstractAppExtension
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByName
@@ -139,7 +139,6 @@ fun Project.setupApp() {
     val pkgName = requireMetadata().getProperty("PACKAGE_NAME")
     val verName = requireMetadata().getProperty("VERSION_NAME")
     val verCode = (requireMetadata().getProperty("VERSION_CODE").toInt()) * 5
-    
     android.apply {
         defaultConfig {
             applicationId = pkgName
@@ -184,6 +183,25 @@ fun Project.setupApp() {
             }
         }
 
+        this as AbstractAppExtension
+        applicationVariants.all { variant ->
+            outputs.all {
+                this as BaseVariantOutputImpl
+                val isPreview = outputFileName.contains("-preview")
+                val abi = filters.find { it.filterType == "ABI" }?.identifier
+                val abiSuffix = if (abi != null) "-$abi" else ""
+                val buildTypeName = variant.buildType.name
+
+                outputFileName = if (isPreview) {
+                    "HatsuneBox-${previewVersionName()}$abiSuffix-$buildTypeName.apk"
+                } else {
+                    val flavor = variant.flavorName
+                    val flavorSuffix = if (!flavor.isNullOrEmpty()) "-$flavor" else ""
+                    "HatsuneBox$flavorSuffix-v${variant.versionName}$abiSuffix-$buildTypeName.apk"
+                }
+            }
+        }   
+
         listOf("Arm64", "Arm", "X64", "X86").forEach { abi ->
             tasks.register("assemble${abi}FdroidRelease") {
                 dependsOn("assembleFdroidRelease")
@@ -192,28 +210,6 @@ fun Project.setupApp() {
 
         sourceSets.getByName("main").apply {
             jniLibs.directories.add("executableSo")
-        }
-    }
-
-    val androidComponents = extensions.getByName<ApplicationAndroidComponentsExtension>("androidComponents")
-    androidComponents.onVariants { variant ->
-        val flavor = variant.flavorName ?: ""
-        val buildType = variant.buildType ?: ""
-        
-        val versionString = if (flavor == "preview") {
-            previewVersionName()
-        } else {
-            if (flavor.isNotEmpty()) "$flavor-v$verName" else "v$verName"
-        }
-
-        variant.outputs.forEach { output ->
-            val abi = output.filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier
-            val abiSuffix = if (abi != null) "-$abi" else ""
-            
-            val appName = "HatsuneBox"
-            val newApkName = "$appName-$versionString$abiSuffix-$buildType.apk"
-            
-            output.outputFileName.set(newApkName)
         }
     }
 }
