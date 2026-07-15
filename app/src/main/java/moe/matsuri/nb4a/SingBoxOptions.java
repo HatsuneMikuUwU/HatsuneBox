@@ -6,10 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.ToNumberPolicy;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -21,6 +18,16 @@ import moe.matsuri.nb4a.utils.Util;
 public class SingBoxOptions {
 
     // base
+
+    // Gson biasa TANPA SingBoxOptionSerializer, dipakai di dalam serializer itu sendiri
+    // untuk melakukan serialisasi default/reflektif tanpa memicu rekursi tak terbatas.
+    private static final Gson gsonPlain = new GsonBuilder()
+            .setPrettyPrinting()
+            .setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+            .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+            .setLenient()
+            .disableHtmlEscaping()
+            .create();
 
     private static final Gson gsonSingbox = new GsonBuilder()
             .registerTypeHierarchyAdapter(SingBoxOption.class, new SingBoxOptionSerializer())
@@ -69,21 +76,14 @@ public class SingBoxOptions {
     public static class SingBoxOptionSerializer implements JsonSerializer<SingBoxOption> {
         @Override
         public JsonElement serialize(SingBoxOption src, Type typeOfSrc, JsonSerializationContext context) {
-            // 拿到原始的 delegate（默认序列化器）
-            TypeAdapter<?> delegate = gsonSingbox.getDelegateAdapter(
-                    new TypeAdapterFactory() {
-                        @Override
-                        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-                            return null; // 返回 null，表示只作为“跳过当前自定义”的 marker
-                        }
-                    },
-                    TypeToken.get(src.getClass())
-            );
             Map<String, Object> map;
             if (src instanceof CustomSingBoxOption) {
                 map = ((CustomSingBoxOption) src).getBasicMap();
             } else {
-                map = gsonSingbox.fromJson(((TypeAdapter<SingBoxOption>) delegate).toJson(src), Map.class);
+                // Pakai gsonPlain (tidak mendaftarkan SingBoxOptionSerializer) supaya
+                // serialisasi default/reflektif di sini tidak memicu serialize() ini lagi
+                // secara rekursif (penyebab StackOverflowError sebelumnya).
+                map = gsonPlain.fromJson(gsonPlain.toJson(src), Map.class);
             }
             if (src._hack_config_map != null && !src._hack_config_map.isEmpty()) {
                 Util.INSTANCE.mergeMap(map, src._hack_config_map);
