@@ -185,14 +185,14 @@ fun Project.setupApp() {
 
         this as AbstractAppExtension
         applicationVariants.all { variant ->
-            outputs.all {
-                this as BaseVariantOutputImpl
-                val isPreview = outputFileName.contains("-preview")
-                val abi = filters.find { it.filterType == "ABI" }?.identifier
+            variant.outputs.all { output ->
+                output as BaseVariantOutputImpl
+                val isPreview = output.outputFileName.contains("-preview")
+                val abi = output.filters.find { it.filterType == "ABI" }?.identifier
                 val abiSuffix = if (abi != null) "-$abi" else ""
                 val buildTypeName = variant.buildType.name
 
-                outputFileName = if (isPreview) {
+                output.outputFileName = if (isPreview) {
                     "HatsuneBox-${previewVersionName()}$abiSuffix-$buildTypeName.apk"
                 } else {
                     val flavor = variant.flavorName
@@ -200,7 +200,7 @@ fun Project.setupApp() {
                     "HatsuneBox$flavorSuffix-v${variant.versionName}$abiSuffix-$buildTypeName.apk"
                 }
             }
-        }   
+        }
 
         listOf("Arm64", "Arm", "X64", "X86").forEach { abi ->
             tasks.register("assemble${abi}FdroidRelease") {
