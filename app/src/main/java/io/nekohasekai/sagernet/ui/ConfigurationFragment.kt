@@ -1269,8 +1269,6 @@ class ConfigurationFragment @JvmOverloads constructor(
                 }
             } else if (!::configurationListView.isInitialized) {
                 onViewCreated(requireView(), null)
-            } else {
-                adapter?.notifyDataSetChanged()
             }
             configurationListView.requestFocus()
         }
