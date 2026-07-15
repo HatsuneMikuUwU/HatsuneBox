@@ -17,11 +17,11 @@ import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.ktx.getColorAttr
 
 /**
- * Ported from MikuRay's section header icon. Renders either the gradient
- * icon badge (per-item sectionIcon, tinted) or — when a character style is
- * selected via the "Category Title Style" preference — the matching
- * Miku/Teto/Neru illustration full-bleed, replacing the per-item icon.
- * Reacts live to Action.CATEGORY_STYLE_CHANGED broadcasts.
+ * Ported from MikuRay's com.neko.widget.UwuHeaderIconView 1:1, swapping only
+ * the storage/broadcast plumbing for HatsuneBox's equivalents
+ * (DataStore.categoryStyle instead of MmkvManager.decodeSettingsString,
+ * Action.CATEGORY_STYLE_CHANGED instead of
+ * AppConfig.BROADCAST_ACTION_CATEGORY_STYLE_CHANGED).
  */
 class UwuHeaderIconView @JvmOverloads constructor(
     context: Context,
@@ -62,47 +62,37 @@ class UwuHeaderIconView @JvmOverloads constructor(
         }
     }
 
-    fun setSectionIcon(iconRes: Int) {
-        sectionIconRes = iconRes
-        if (isAttachedToWindow) applyStyle()
-    }
-
     fun applyStyle() {
-        val sizePx = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 40f, resources.displayMetrics,
-        ).toInt()
-        layoutParams = layoutParams?.also {
-            it.width = sizePx
-            it.height = sizePx
-        }
-
-        val characterRes = CategoryStyleHelper.characterDrawableForStyle(DataStore.categoryStyle)
-        if (characterRes != null) {
+        val style = DataStore.categoryStyle
+        if (style == "gradient") {
+            val sizePx = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 40f, resources.displayMetrics,
+            ).toInt()
+            layoutParams = layoutParams?.also {
+                it.width = sizePx
+                it.height = sizePx
+            }
+            val pad = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 10f, resources.displayMetrics,
+            ).toInt()
+            setPadding(pad, pad, pad, pad)
+            background = buildGradientBackground()
+            val iconRes = if (sectionIconRes != 0) sectionIconRes else R.drawable.ic_sparkles_24dp
+            val iconSizePx = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics,
+            ).toInt()
+            val iconDrawable = ContextCompat.getDrawable(context, iconRes)
+                ?.mutate()
+                ?.also { it.setBounds(0, 0, iconSizePx, iconSizePx) }
+            scaleType = ScaleType.CENTER
+            setImageDrawable(iconDrawable)
+            imageTintList = ColorStateList.valueOf(context.getColorAttr(R.attr.colorOnPrimary))
+        } else {
             setPadding(0, 0, 0, 0)
             background = null
-            scaleType = ScaleType.CENTER_CROP
-            setImageResource(characterRes)
             imageTintList = null
-            return
+            setImageResource(CategoryStyleHelper.characterDrawableForStyle(style) ?: R.drawable.uwu_icon_miku)
         }
-
-        val pad = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 10f, resources.displayMetrics,
-        ).toInt()
-        setPadding(pad, pad, pad, pad)
-        background = buildGradientBackground()
-
-        val iconRes = if (sectionIconRes != 0) sectionIconRes else R.drawable.ic_sparkles_24dp
-        val iconSizePx = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics,
-        ).toInt()
-        val iconDrawable = ContextCompat.getDrawable(context, iconRes)
-            ?.mutate()
-            ?.also { it.setBounds(0, 0, iconSizePx, iconSizePx) }
-
-        scaleType = ScaleType.CENTER
-        setImageDrawable(iconDrawable)
-        imageTintList = ColorStateList.valueOf(context.getColorAttr(R.attr.colorOnPrimary))
     }
 
     private fun buildGradientBackground(): GradientDrawable {

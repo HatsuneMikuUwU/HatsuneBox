@@ -345,6 +345,14 @@ class RouteSettingsActivity(
             }
         }
 
+        override fun onResume() {
+            super.onResume()
+            preferenceScreen?.let {
+                io.nekohasekai.sagernet.widget.CategoryStyleHelper.applyToGroup(DataStore.categoryStyle, it)
+                listView.adapter?.notifyDataSetChanged()
+            }
+        }
+
         override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
             R.id.action_delete -> {
                 if (DataStore.editingId == 0L) {

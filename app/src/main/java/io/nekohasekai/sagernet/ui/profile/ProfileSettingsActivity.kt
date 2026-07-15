@@ -241,6 +241,14 @@ abstract class ProfileSettingsActivity<T : AbstractBean>(
             }
         }
 
+        override fun onResume() {
+            super.onResume()
+            preferenceScreen?.let {
+                io.nekohasekai.sagernet.widget.CategoryStyleHelper.applyToGroup(DataStore.categoryStyle, it)
+                listView.adapter?.notifyDataSetChanged()
+            }
+        }
+
         var callbackCustom: ((String) -> Unit)? = null
         var callbackCustomOutbound: ((String) -> Unit)? = null
 

@@ -5,11 +5,13 @@
     android:background="?android:selectableItemBackground"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10.0dip"
-    android:layout_marginBottom="4.0dip"
+    android:layout_marginTop="0.0dip"
+    android:layout_marginBottom="0.0dip"
     android:baselineAligned="false"
-    android:paddingStart="16.0dip"
-    android:paddingEnd="8.0dip"
+    android:paddingStart="24.0dip"
+    android:paddingEnd="16.0dip"
+    android:paddingTop="0.0dip"
+    android:paddingBottom="0.0dip"
     android:orientation="horizontal">
 
     <RelativeLayout

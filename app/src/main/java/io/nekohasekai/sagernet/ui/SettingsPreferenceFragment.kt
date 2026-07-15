@@ -181,6 +181,10 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
         if (::globalCustomConfig.isInitialized) {
             globalCustomConfig.notifyChanged()
         }
+        preferenceScreen?.let {
+            io.nekohasekai.sagernet.widget.CategoryStyleHelper.applyToGroup(DataStore.categoryStyle, it)
+            listView.adapter?.notifyDataSetChanged()
+        }
     }
 
 }

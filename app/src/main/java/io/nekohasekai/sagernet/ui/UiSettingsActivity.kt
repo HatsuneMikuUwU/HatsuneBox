@@ -204,6 +204,14 @@ class UiSettingsActivity : ThemedActivity() {
             }
         }
 
+        override fun onResume() {
+            super.onResume()
+            preferenceScreen?.let {
+                CategoryStyleHelper.applyToGroup(DataStore.categoryStyle, it)
+                listView.adapter?.notifyDataSetChanged()
+            }
+        }
+
         private fun startCropHomeBanner(sourceUri: Uri) {
             val destFile = File(requireContext().cacheDir, "cropped_home_banner_temp.jpg")
             val displayMetrics = resources.displayMetrics

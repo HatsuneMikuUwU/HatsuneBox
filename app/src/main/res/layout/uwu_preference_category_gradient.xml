@@ -1,21 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center_vertical"
     android:background="?android:selectableItemBackground"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10.0dip"
-    android:layout_marginBottom="4.0dip"
+    android:layout_marginTop="0.0dip"
+    android:layout_marginBottom="0.0dip"
     android:baselineAligned="false"
-    android:paddingStart="16.0dip"
+    android:paddingStart="24.0dip"
     android:paddingEnd="16.0dip"
-    android:orientation="horizontal">
+    android:paddingTop="0.0dip"
+    android:paddingBottom="0.0dip"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <io.nekohasekai.sagernet.widget.UwuHeaderIconView
-        android:id="@+id/uwu_category_icon"
+    <FrameLayout
         android:layout_width="40.0dip"
-        android:layout_height="40.0dip" />
+        android:layout_height="40.0dip"
+        android:background="@drawable/uwu_bg_icon_circle"
+        android:layout_gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/uwu_category_icon"
+            android:layout_width="24.0dip"
+            android:layout_height="24.0dip"
+            android:layout_gravity="center"
+            android:src="@drawable/uwu_icon_skip"
+            android:tint="?colorOnPrimary" />
+
+    </FrameLayout>
 
     <RelativeLayout
         android:paddingTop="8.0dip"
@@ -26,29 +39,30 @@
         android:layout_weight="1.0">
 
         <TextView
-            android:id="@android:id/title"
             android:textAppearance="?textAppearanceTitleMedium"
             android:textStyle="bold"
             android:textColor="?colorPrimary"
+            android:id="@android:id/title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:textAlignment="viewStart" />
 
         <TextView
-            android:id="@android:id/summary"
             android:textAppearance="?textAppearanceTitleSmall"
             android:textColor="?android:textColorSecondary"
             android:ellipsize="end"
             android:layout_gravity="start"
+            android:id="@android:id/summary"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="10"
             android:singleLine="true"
             android:layout_below="@android:id/title"
-            android:layout_alignStart="@android:id/title"
-            android:textAlignment="viewStart" />
+            android:layout_alignLeft="@android:id/title"
+            android:textAlignment="viewStart"
+            android:layout_alignStart="@android:id/title" />
 
     </RelativeLayout>
 
