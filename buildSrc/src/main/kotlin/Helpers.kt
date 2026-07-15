@@ -1,9 +1,4 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.android.build.gradle.AppExtension
-import com.android.build.gradle.api.ApplicationVariant
-import com.android.build.gradle.api.BaseVariantOutput
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import org.gradle.api.Action
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByName
@@ -28,7 +23,7 @@ fun Project.requireMetadata(): Properties {
 
 fun Project.previewVersionName(): String {
     val verName = requireMetadata().getProperty("VERSION_NAME")
-    val formatter = java.text.SimpleDateFormat("yyyyMMdd-HHmm").apply {
+    val formatter = java.text.SimpleDateFormat("yyyyMMdd").apply {
         timeZone = java.util.TimeZone.getTimeZone("Asia/Jakarta")
     }
     val buildDate = formatter.format(java.util.Date())
@@ -209,23 +204,4 @@ fun Project.setupApp() {
             jniLibs.directories.add("executableSo")
         }
     }
-
-    val appExtension = extensions.getByType(AppExtension::class.java)
-    appExtension.applicationVariants.all(Action<ApplicationVariant> { variant ->
-        variant.outputs.all(Action<BaseVariantOutput> { output ->
-            val outputImpl = output as BaseVariantOutputImpl
-            val isPreview = outputImpl.outputFileName.contains("-preview")
-            val abi = outputImpl.filters.find { filter -> filter.filterType == "ABI" }?.identifier
-            val abiSuffix = if (abi != null) "-$abi" else ""
-            val buildTypeName = variant.buildType.name
-
-            outputImpl.outputFileName = if (isPreview) {
-                "HatsuneBox-${previewVersionName()}$abiSuffix-$buildTypeName.apk"
-            } else {
-                val flavor = variant.flavorName
-                val flavorSuffix = if (!flavor.isNullOrEmpty()) "-$flavor" else ""
-                "HatsuneBox$flavorSuffix-v${variant.versionName}$abiSuffix-$buildTypeName.apk"
-            }
-        })
-    })
 }
