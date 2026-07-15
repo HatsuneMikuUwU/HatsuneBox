@@ -1,6 +1,7 @@
 import com.android.build.api.dsl.ApplicationExtension
-import com.android.build.gradle.AbstractAppExtension
+import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import org.gradle.api.Action
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByName
@@ -183,25 +184,6 @@ fun Project.setupApp() {
             }
         }
 
-        this as AbstractAppExtension
-        applicationVariants.forEach { variant ->
-            variant.outputs.forEach { output ->
-                output as BaseVariantOutputImpl
-                val isPreview = output.outputFileName.contains("-preview")
-                val abi = output.filters.find { it.filterType == "ABI" }?.identifier
-                val abiSuffix = if (abi != null) "-$abi" else ""
-                val buildTypeName = variant.buildType.name
-
-                output.outputFileName = if (isPreview) {
-                    "HatsuneBox-${previewVersionName()}$abiSuffix-$buildTypeName.apk"
-                } else {
-                    val flavor = variant.flavorName
-                    val flavorSuffix = if (!flavor.isNullOrEmpty()) "-$flavor" else ""
-                    "HatsuneBox$flavorSuffix-v${variant.versionName}$abiSuffix-$buildTypeName.apk"
-                }
-            }
-        }
-
         listOf("Arm64", "Arm", "X64", "X86").forEach { abi ->
             tasks.register("assemble${abi}FdroidRelease") {
                 dependsOn("assembleFdroidRelease")
@@ -212,4 +194,23 @@ fun Project.setupApp() {
             jniLibs.directories.add("executableSo")
         }
     }
+
+    val appExtension = extensions.getByType(AppExtension::class.java)
+    appExtension.applicationVariants.all(Action { variant ->
+        variant.outputs.all(Action { output ->
+            val outputImpl = output as BaseVariantOutputImpl
+            val isPreview = outputImpl.outputFileName.contains("-preview")
+            val abi = outputImpl.filters.find { filter -> filter.filterType == "ABI" }?.identifier
+            val abiSuffix = if (abi != null) "-$abi" else ""
+            val buildTypeName = variant.buildType.name
+
+            outputImpl.outputFileName = if (isPreview) {
+                "HatsuneBox-${previewVersionName()}$abiSuffix-$buildTypeName.apk"
+            } else {
+                val flavor = variant.flavorName
+                val flavorSuffix = if (!flavor.isNullOrEmpty()) "-$flavor" else ""
+                "HatsuneBox$flavorSuffix-v${variant.versionName}$abiSuffix-$buildTypeName.apk"
+            }
+        })
+    })
 }
