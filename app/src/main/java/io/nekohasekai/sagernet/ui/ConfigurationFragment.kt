@@ -1880,7 +1880,7 @@ class ConfigurationFragment @JvmOverloads constructor(
 
                     if (!(select || proxyEntity.type == ProxyEntity.TYPE_CHAIN)) {
                         onMainDispatcher {
-                            shareButton.setImageResource(R.drawable.ic_social_share)
+                            shareButton.setImageResource(R.drawable.ic_share_color)
                             shareButton.isVisible = true
 
                             shareButton.setOnClickListener {
