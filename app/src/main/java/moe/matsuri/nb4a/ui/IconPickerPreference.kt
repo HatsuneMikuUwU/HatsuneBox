@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.TypedArrayUtils
 import androidx.preference.Preference
 import androidx.recyclerview.widget.GridLayoutManager
@@ -72,6 +73,7 @@ class IconPickerPreference
 
     private fun resolveIcon(name: String?): Int {
         if (name == null || name == NONE || name.isBlank()) return 0
+        
         return when (name) {
             "filter_all_solar" -> R.drawable.filter_all_solar
             "filter_airplane_solar" -> R.drawable.filter_airplane_solar
@@ -110,11 +112,16 @@ class IconPickerPreference
     private fun updateIconAndSummary() {
         val current = getPersistedString(NONE)
         val resId = resolveIcon(current)
-        if (resId != 0) {
-            setIcon(resId)
-        } else {
-            setIcon(DEFAULT_ICON_RES)
+        
+        try {
+            val drawableId = if (resId != 0) resId else DEFAULT_ICON_RES
+            val safeDrawable = AppCompatResources.getDrawable(context, drawableId)
+            
+            icon = safeDrawable
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+        
         summary = labelFor(current)
     }
 

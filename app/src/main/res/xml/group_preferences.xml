@@ -37,7 +37,7 @@
     <moe.matsuri.nb4a.ui.IconPickerPreference
         app:layout="@layout/uwu_mid"
         app:defaultValue="none"
-        app:icon="@drawable/ic_palette_24"
+        app:icon="@drawable/filter_all_solar"
         app:key="groupIcon"
         app:title="@string/group_tab_icon" />
 
