@@ -25,7 +25,7 @@ fun Project.requireMetadata(): Properties {
 
 fun Project.previewVersionName(): String {
     val verName = requireMetadata().getProperty("VERSION_NAME")
-    val formatter = java.text.SimpleDateFormat("yyyyMMdd-HH:mm").apply {
+    val formatter = java.text.SimpleDateFormat("yyyyMMdd-HHmm").apply {
         timeZone = java.util.TimeZone.getTimeZone("Asia/Jakarta")
     }
     val buildDate = formatter.format(java.util.Date())
