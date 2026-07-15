@@ -1659,11 +1659,11 @@ class ConfigurationFragment @JvmOverloads constructor(
                 entity = proxyEntity
 
                 if (select) {
-                    view.setOnClickListener {
+                    layoutCard.setOnClickListener {
                         (requireActivity() as SelectCallback).returnProfile(proxyEntity.id)
                     }
                 } else {
-                    view.setOnClickListener {
+                    layoutCard.setOnClickListener {
                         runOnDefaultDispatcher {
                             var update: Boolean
                             var lastSelected: Long
