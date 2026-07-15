@@ -1370,10 +1370,11 @@ class ConfigurationFragment @JvmOverloads constructor(
                 val controller = SelectedProfileBannerController(recyclerView.context)
                 selectedBannerController = controller
                 controller.registerChangeListener {
-                    val position = configurationIdList.indexOf(DataStore.selectedProxy)
-                    if (position >= 0) {
-                        notifyItemChanged(position)
-                    }
+                    // Refresh the whole list rather than looking up a single position:
+                    // the previous single-item lookup only matched DataStore.selectedProxy,
+                    // missing the selectedItem (select/import mode) case bind() itself uses,
+                    // which could silently skip the refresh entirely.
+                    notifyDataSetChanged()
                 }
             }
 

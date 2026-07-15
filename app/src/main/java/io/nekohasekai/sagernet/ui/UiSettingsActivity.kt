@@ -222,7 +222,9 @@ class UiSettingsActivity : ThemedActivity() {
             }
 
             findPreference<Preference>("pref_indicator_style")?.setOnPreferenceClickListener {
-                IndicatorStyleBottomSheet(requireContext()) {}.show()
+                IndicatorStyleBottomSheet(requireContext()) {
+                    requireContext().sendBroadcast(Intent(Action.SELECTED_STYLE_CHANGED))
+                }.show()
                 true
             }
 
