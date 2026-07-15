@@ -184,7 +184,7 @@ fun Project.setupApp() {
         }
 
         this as AbstractAppExtension
-        applicationVariants.all { variant ->
+        applicationVariants.forEach { variant ->
             variant.outputs.forEach { output ->
                 output as BaseVariantOutputImpl
                 val isPreview = output.outputFileName.contains("-preview")
