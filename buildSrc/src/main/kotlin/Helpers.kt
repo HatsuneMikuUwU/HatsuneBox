@@ -1,4 +1,6 @@
 import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import com.android.build.api.variant.FilterConfiguration
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByName
@@ -23,7 +25,7 @@ fun Project.requireMetadata(): Properties {
 
 fun Project.previewVersionName(): String {
     val verName = requireMetadata().getProperty("VERSION_NAME")
-    val formatter = java.text.SimpleDateFormat("yyyyMMdd").apply {
+    val formatter = java.text.SimpleDateFormat("yyyyMMdd-HH:mm").apply {
         timeZone = java.util.TimeZone.getTimeZone("Asia/Jakarta")
     }
     val buildDate = formatter.format(java.util.Date())
@@ -137,6 +139,7 @@ fun Project.setupApp() {
     val pkgName = requireMetadata().getProperty("PACKAGE_NAME")
     val verName = requireMetadata().getProperty("VERSION_NAME")
     val verCode = (requireMetadata().getProperty("VERSION_CODE").toInt()) * 5
+    
     android.apply {
         defaultConfig {
             applicationId = pkgName
@@ -189,6 +192,28 @@ fun Project.setupApp() {
 
         sourceSets.getByName("main").apply {
             jniLibs.directories.add("executableSo")
+        }
+    }
+
+    val androidComponents = extensions.getByName<ApplicationAndroidComponentsExtension>("androidComponents")
+    androidComponents.onVariants { variant ->
+        val flavor = variant.flavorName ?: ""
+        val buildType = variant.buildType ?: ""
+        
+        val versionString = if (flavor == "preview") {
+            previewVersionName()
+        } else {
+            if (flavor.isNotEmpty()) "$flavor-v$verName" else "v$verName"
+        }
+
+        variant.outputs.forEach { output ->
+            val abi = output.filters.find { it.filterType == FilterConfiguration.FilterType.ABI }?.identifier
+            val abiSuffix = if (abi != null) "-$abi" else ""
+            
+            val appName = "HatsuneBox"
+            val newApkName = "$appName-$versionString$abiSuffix-$buildType.apk"
+            
+            output.outputFileName.set(newApkName)
         }
     }
 }
