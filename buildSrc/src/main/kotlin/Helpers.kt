@@ -185,7 +185,7 @@ fun Project.setupApp() {
 
         this as AbstractAppExtension
         applicationVariants.all { variant ->
-            variant.outputs.all { output ->
+            variant.outputs.forEach { output ->
                 output as BaseVariantOutputImpl
                 val isPreview = output.outputFileName.contains("-preview")
                 val abi = output.filters.find { it.filterType == "ABI" }?.identifier
