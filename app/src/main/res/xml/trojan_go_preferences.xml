@@ -7,7 +7,8 @@
         app:title="@string/profile_name"
         app:useSimpleSummaryProvider="true" />
 
-    <PreferenceCategory app:title="@string/proxy_cat">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="@string/proxy_cat"
+        app:sectionIcon="@drawable/ic_hardware_router">
 
         <EditTextPreference
             app:layout="@layout/uwu_top"
@@ -57,11 +58,12 @@
             app:key="serverEncryption"
             app:title="@string/encryption"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:key="serverWsCategory"
-        app:title="@string/cag_ws">
+        app:title="@string/cag_ws"
+        app:sectionIcon="@drawable/ic_baseline_airplanemode_active_24">
         <EditTextPreference
             app:layout="@layout/uwu_top"
             app:icon="@drawable/ic_baseline_airplanemode_active_24"
@@ -74,11 +76,12 @@
             app:key="serverPath"
             app:title="@string/ws_path"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:key="serverSsCategory"
-        app:title="@string/ss_cat">
+        app:title="@string/ss_cat"
+        app:sectionIcon="@drawable/ic_notification_enhanced_encryption">
 
         <ListPreference
             app:layout="@layout/uwu_top"
@@ -95,6 +98,6 @@
             app:icon="@drawable/ic_settings_password"
             app:key="serverPassword1"
             app:title="@string/password" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
 </PreferenceScreen>

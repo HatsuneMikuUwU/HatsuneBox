@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory app:title="@string/general_settings">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="@string/general_settings"
+        app:sectionIcon="@drawable/ic_communication_phonelink_ring">
         <SwitchPreferenceCompat
             app:layout="@layout/uwu_top_switch"
             app:widgetLayout="@layout/uwu_widget_material_switch"
@@ -108,9 +109,10 @@
             app:key="globalCustomConfig"
             app:title="@string/custom_config"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory app:title="@string/cag_route">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="@string/cag_route"
+        app:sectionIcon="@drawable/ic_navigation_apps">
         <SwitchPreferenceCompat
             app:layout="@layout/uwu_top_switch"
             app:widgetLayout="@layout/uwu_widget_material_switch"
@@ -163,9 +165,10 @@
             app:key="rulesProvider"
             app:title="@string/route_rules_provider"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory app:title="@string/cag_dns">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="@string/cag_dns"
+        app:sectionIcon="@drawable/ic_action_dns">
         <EditTextPreference
             app:layout="@layout/uwu_top"
             app:defaultValue="https://dns.google/dns-query"
@@ -220,9 +223,10 @@
             app:key="enableFakeDns"
             app:summary="@string/fakedns_message"
             app:title="@string/enable_fakedns" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory app:title="@string/inbound_settings">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="@string/inbound_settings"
+        app:sectionIcon="@drawable/ic_maps_directions_boat">
         <EditTextPreference
             app:layout="@layout/uwu_top"
             app:icon="@drawable/ic_maps_directions_boat"
@@ -243,9 +247,10 @@
             app:key="allowAccess"
             app:summary="@string/allow_access_sum"
             app:title="@string/allow_access" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory app:title="@string/cag_misc">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="@string/cag_misc"
+        app:sectionIcon="@drawable/ic_baseline_cast_connected_24">
         <moe.matsuri.nb4a.ui.UrlTestPreference
             app:layout="@layout/uwu_top"
             app:defaultValue="http://cp.cloudflare.com/"
@@ -293,5 +298,5 @@
             app:key="appTLSVersion"
             app:title="@string/app_tls_version"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 </PreferenceScreen>

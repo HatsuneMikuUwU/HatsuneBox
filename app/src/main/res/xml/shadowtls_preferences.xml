@@ -6,7 +6,8 @@
         app:title="@string/profile_name"
         app:useSimpleSummaryProvider="true" />
 
-    <PreferenceCategory app:title="@string/proxy_cat">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="@string/proxy_cat"
+        app:sectionIcon="@drawable/ic_hardware_router">
         <EditTextPreference
             app:layout="@layout/uwu_top"
             app:icon="@drawable/ic_hardware_router"
@@ -33,11 +34,12 @@
             app:icon="@drawable/ic_notification_enhanced_encryption"
             app:key="password"
             app:title="@string/password" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:key="serverSecurityCategory"
-        app:title="@string/security_settings">
+        app:title="@string/security_settings"
+        app:sectionIcon="@drawable/ic_action_copyright">
         <EditTextPreference
             app:layout="@layout/uwu_top"
             app:icon="@drawable/ic_action_copyright"
@@ -72,5 +74,5 @@
             app:key="utlsFingerprint"
             app:title="@string/utls_fingerprint"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 </PreferenceScreen>

@@ -13,7 +13,8 @@
         app:key="serverConfig"
         app:title="@string/custom_config"
         app:useSimpleSummaryProvider="true" />
-    <PreferenceCategory app:title="@string/cag_route">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="@string/cag_route"
+        app:sectionIcon="@drawable/ic_baseline_legend_toggle_24">
         <io.nekohasekai.sagernet.widget.AppListPreference
             app:layout="@layout/uwu_top"
             app:icon="@drawable/ic_baseline_legend_toggle_24"
@@ -71,5 +72,5 @@
             app:key="routeOutbound"
             app:title="outbound"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 </PreferenceScreen>

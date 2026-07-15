@@ -634,6 +634,7 @@
     <string name="summary_navigate_ui_settings">General UI, themes, appearance, search chips, blur, banners, sound, etc.</string>
     <string name="title_ui_appearance">Appearance</string>
     <string name="title_pref_icon_shape">Icon Shape</string>
+    <string name="title_pref_category_style">Category Title Style</string>
     <string name="sheet_banner_category">Bottomsheet Banner</string>
     <string name="particles_disable_title">Disable particles animation</string>
     <string name="particles_disable_summary">Hide the particles effect in bottomsheet</string>

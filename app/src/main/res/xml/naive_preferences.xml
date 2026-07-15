@@ -8,7 +8,8 @@
         app:title="@string/profile_name"
         app:useSimpleSummaryProvider="true" />
 
-    <PreferenceCategory app:title="@string/proxy_cat">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="@string/proxy_cat"
+        app:sectionIcon="@drawable/ic_hardware_router">
 
         <EditTextPreference
             app:layout="@layout/uwu_top"
@@ -69,13 +70,14 @@
             app:key="serverInsecureConcurrency"
             app:title="@string/naive_insecure_concurrency"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory app:title="sing-box server">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="sing-box server"
+        app:sectionIcon="@drawable/ic_hardware_router">
         <SwitchPreferenceCompat
             app:layout="@layout/uwu_sin_switch"
             app:widgetLayout="@layout/uwu_widget_material_switch"
             app:key="sUoT"
             app:title="UDP over TCP" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 </PreferenceScreen>

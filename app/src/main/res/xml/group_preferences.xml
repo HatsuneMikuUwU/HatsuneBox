@@ -55,9 +55,10 @@
         app:title="@string/landing_proxy"
         app:useSimpleSummaryProvider="true" />
 
-    <PreferenceCategory
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:key="groupSubscription"
-        app:title="@string/subscription_settings">
+        app:title="@string/subscription_settings"
+        app:sectionIcon="@drawable/ic_baseline_link_24">
 
         <io.nekohasekai.sagernet.widget.LinkOrContentPreference
             app:layout="@layout/uwu_top"
@@ -82,11 +83,12 @@
             app:summary="@string/deduplication_sum"
             app:title="@string/deduplication" />
 
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:key="subscriptionUpdate"
-        app:title="@string/update_settings">
+        app:title="@string/update_settings"
+        app:sectionIcon="@drawable/ic_baseline_security_24">
         <SwitchPreferenceCompat
             app:layout="@layout/uwu_top_switch"
             app:widgetLayout="@layout/uwu_widget_material_switch"
@@ -113,6 +115,6 @@
             app:key="subscriptionAutoUpdateDelay"
             app:title="@string/auto_update_delay"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
 </PreferenceScreen>

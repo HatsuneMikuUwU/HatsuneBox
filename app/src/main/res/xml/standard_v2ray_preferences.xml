@@ -7,7 +7,8 @@
         app:title="@string/profile_name"
         app:useSimpleSummaryProvider="true" />
 
-    <PreferenceCategory app:title="@string/proxy_cat">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory app:title="@string/proxy_cat"
+        app:sectionIcon="@drawable/ic_hardware_router">
 
         <EditTextPreference
             app:layout="@layout/uwu_top"
@@ -89,11 +90,12 @@
             app:key="security"
             app:title="@string/security"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:key="serverWsCategory"
-        app:title="@string/cag_ws">
+        app:title="@string/cag_ws"
+        app:sectionIcon="@drawable/ic_baseline_compare_arrows_24">
         <EditTextPreference
             app:layout="@layout/uwu_top"
             app:defaultValue="0"
@@ -108,11 +110,12 @@
             app:key="earlyDataHeaderName"
             app:title="@string/early_data_header_name"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:key="serverSecurityCategory"
-        app:title="@string/security_settings">
+        app:title="@string/security_settings"
+        app:sectionIcon="@drawable/ic_action_copyright">
         <EditTextPreference
             app:layout="@layout/uwu_top"
             app:icon="@drawable/ic_action_copyright"
@@ -138,11 +141,12 @@
             app:key="allowInsecure"
             app:summary="@string/allow_insecure_sum"
             app:title="@string/allow_insecure" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:key="serverTlsCamouflageCategory"
-        app:title="@string/tls_camouflage_settings">
+        app:title="@string/tls_camouflage_settings"
+        app:sectionIcon="@drawable/ic_baseline_fingerprint_24">
         <ListPreference
             app:layout="@layout/uwu_top"
             app:defaultValue=""
@@ -164,11 +168,12 @@
             app:key="realityShortId"
             app:title="Reality ShortId"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:key="serverMuxCategory"
-        app:title="@string/mux_preference">
+        app:title="@string/mux_preference"
+        app:sectionIcon="@drawable/ic_baseline_compare_arrows_24">
         <SwitchPreferenceCompat
             app:layout="@layout/uwu_top_switch"
             app:widgetLayout="@layout/uwu_widget_material_switch"
@@ -197,11 +202,12 @@
             app:icon="@drawable/baseline_developer_board_24"
             app:key="muxPadding"
             app:title="@string/padding" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
         app:key="serverECHCategory"
-        app:title="ECH">
+        app:title="ECH"
+        app:sectionIcon="@drawable/ic_baseline_security_24">
         <SwitchPreferenceCompat
             app:layout="@layout/uwu_top_switch"
             app:widgetLayout="@layout/uwu_widget_material_switch"
@@ -214,6 +220,6 @@
             app:key="echConfig"
             app:title="@string/ech_config"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
 </PreferenceScreen>

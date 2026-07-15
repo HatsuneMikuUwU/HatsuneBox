@@ -2,7 +2,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/title_ui_appearance">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
+        app:title="@string/title_ui_appearance"
+        app:sectionIcon="@drawable/ic_baseline_color_lens_24">
 
         <moe.matsuri.nb4a.ui.ColorPickerPreference
             app:layout="@layout/uwu_top_switch"
@@ -21,7 +23,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:layout="@layout/uwu_bot"
+            app:layout="@layout/uwu_mid"
             app:defaultValue="uwu_shape_cookie"
             app:entries="@array/icon_shape_entries"
             app:entryValues="@array/icon_shape_values"
@@ -30,9 +32,21 @@
             app:summary="%s"
             app:title="@string/title_pref_icon_shape" />
 
-    </PreferenceCategory>
+        <ListPreference
+            app:layout="@layout/uwu_bot"
+            app:defaultValue="gradient"
+            app:entries="@array/category_style_entries"
+            app:entryValues="@array/category_style_values"
+            app:icon="@drawable/ic_palette_24"
+            app:key="categoryStyle"
+            app:summary="%s"
+            app:title="@string/title_pref_category_style" />
 
-    <PreferenceCategory app:title="@string/home_banner_category">
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
+
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
+        app:title="@string/home_banner_category"
+        app:sectionIcon="@drawable/ic_baseline_home_24">
 
         <SwitchPreferenceCompat
             app:layout="@layout/uwu_top_switch"
@@ -73,9 +87,11 @@
             app:title="@string/home_banner_delete_title"
             app:dependency="pref_show_home_banner" />
 
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sheet_banner_category">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
+        app:title="@string/sheet_banner_category"
+        app:sectionIcon="@drawable/ic_sparkles_24dp">
 
         <SwitchPreferenceCompat
             app:layout="@layout/uwu_top_switch"
@@ -100,9 +116,11 @@
             app:summary="@string/sheet_banner_delete_summary"
             app:title="@string/sheet_banner_delete_title" />
 
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
-    <PreferenceCategory app:title="@string/banner_profile_category">
+    <io.nekohasekai.sagernet.widget.UwuPreferenceCategory
+        app:title="@string/banner_profile_category"
+        app:sectionIcon="@drawable/ic_image_camera_alt">
 
         <EditTextPreference
             app:layout="@layout/uwu_top"
@@ -136,6 +154,6 @@
             app:summary="@string/delete_custom_banner_profile_summary"
             app:title="@string/delete_custom_banner_profile" />
 
-    </PreferenceCategory>
+    </io.nekohasekai.sagernet.widget.UwuPreferenceCategory>
 
 </PreferenceScreen>
